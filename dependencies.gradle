@@ -1,0 +1,22 @@
+// Add your dependencies here
+
+dependencies {
+    compile("com.github.GTNewHorizons:LunatriusCore:master-SNAPSHOT:dev")
+
+    compileOnly("com.github.GTNewHorizons:BloodMagic:master-SNAPSHOT:dev") {
+        transitive = false
+    }
+
+    compileOnly("thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev") {
+        transitive = false
+    }
+    compileOnly("curse.maven:cofh-lib-220333:2388748") {
+        transitive = false
+    }
+    compileOnly("curse.maven:simply-jetpacks-79325:2267185") {
+        transitive = false
+    }
+    compileOnly("curse.maven:tfcraft-302973:2627990") {
+        transitive = false
+    }
+}
