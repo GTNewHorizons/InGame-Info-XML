@@ -141,7 +141,7 @@ public abstract class ValueComplex extends Value {
                 for (int i = 0; i < args.length; i++) {
                     args[i] = getValue(i + 1);
                 }
-                return I18n.format(format, args);
+                return I18n.format(format, (Object[]) args);
             } catch (Exception e) {
                 return "?";
             }
