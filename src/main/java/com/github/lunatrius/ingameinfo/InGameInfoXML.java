@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.Side;
 
 import java.util.Map;
 
-@Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.VERSION, guiFactory = Reference.GUI_FACTORY)
+@Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.VERSION, dependencies = Reference.DEPENDENCIES, guiFactory = Reference.GUI_FACTORY)
 public class InGameInfoXML {
     @Instance(Reference.MODID)
     public static InGameInfoXML instance;

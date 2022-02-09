@@ -1,25 +1,19 @@
-{
-	"modListVersion": 2,
-	"modList": [
-		{
-			"modid": "${modId}",
-			"name": "${modName}",
-			"description": "Display extra information on top of your ingame screen.",
-			"mcversion": "${modVersion}",
-			"version": "${minecraftVersion}",
-			"authorList": [
-				"Lunatrius"
-			],
-			"credits": "DaftPVF, bspkrs",
-			"dependants": [  ],
-			"dependencies": [],
-			"parent": "",
-			"requiredMods": [],
-			"logoFile": "",
-			"screenshots": [  ],
-			"updateUrl": "http://mc.lunatri.us/",
-			"url": "http://mc.lunatri.us/",
-			"useDependencyInformation": true
-		}
-	]
-}
+[{
+	"modid": "${modId}",
+	"name": "${modName}",
+	"description": "Display extra information on top of your ingame screen.",
+	"mcversion": "${modVersion}",
+	"version": "${minecraftVersion}",
+	"authorList": ["Lunatrius"],
+	"credits": "DaftPVF, bspkrs",
+	"dependants": [  ],
+	"dependencies": [],
+	"parent": "",
+	"requiredMods": ["LunatriusCore"],
+	"logoFile": "",
+	"screenshots": [  ],
+	"updateUrl": "",
+	"url": "",
+	"useDependencyInformation": true
+}]
+

@@ -55,11 +55,11 @@ public abstract class ValueComplex extends Value {
 
         @Override
         public String getValue() {
-            String str = "";
+            StringBuilder str = new StringBuilder();
             for (Value val : this.values) {
-                str += replaceVariables(val.getValue());
+                str.append(replaceVariables(val.getValue()));
             }
-            return str;
+            return str.toString();
         }
     }
 
@@ -75,7 +75,7 @@ public abstract class ValueComplex extends Value {
                 double arg0 = getDoubleValue(0);
                 double arg1 = getDoubleValue(1);
                 int shift = this.values.size() - 2;
-                return arg0 < arg1 ? getValue(0 + shift) : getValue(1 + shift);
+                return arg0 < arg1 ? getValue(shift) : getValue(1 + shift);
             } catch (Exception e) {
                 return "0";
             }
@@ -94,7 +94,7 @@ public abstract class ValueComplex extends Value {
                 double arg0 = getDoubleValue(0);
                 double arg1 = getDoubleValue(1);
                 int shift = this.values.size() - 2;
-                return arg0 > arg1 ? getValue(0 + shift) : getValue(1 + shift);
+                return arg0 > arg1 ? getValue(shift) : getValue(1 + shift);
             } catch (Exception e) {
                 return "0";
             }
@@ -168,7 +168,7 @@ public abstract class ValueComplex extends Value {
     public static class ValueFile extends ValueComplex {
         private static int ticks = 0;
 
-        private Map<String, String> cache = new HashMap<String, String>();
+        private final Map<String, String> cache = new HashMap<>();
 
         @Override
         public boolean isValidSize() {
