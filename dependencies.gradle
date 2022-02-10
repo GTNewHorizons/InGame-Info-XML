@@ -1,13 +1,11 @@
 // Add your dependencies here
 
 dependencies {
-    compile('com.github.GTNewHorizons:LunatriusCore:1.1.5-GTNH:dev')
+    implementation('com.github.GTNewHorizons:LunatriusCore:1.1.5-GTNH:dev')
 
-    compileOnly('com.github.GTNewHorizons:BloodMagic:1.3.6:dev') {transitive=false}
-    
-    compileOnly('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev') {transitive=false}
-    compileOnly('curse.maven:cofh-lib-220333:2388748') {transitive=false}
-    compileOnly('curse.maven:simply-jetpacks-79325:2267185') {transitive=false}
-    compileOnly('curse.maven:tfcraft-302973:2627990') {transitive=false}
-
+    compileOnly('com.github.GTNewHorizons:BloodMagic:1.3.6:dev')
+    compileOnly('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
+    compileOnly('curse.maven:cofh-lib-220333:2388748')
+    compileOnly('curse.maven:simply-jetpacks-79325:2267185')
+    compileOnly('curse.maven:tfcraft-302973:2627990')
 }
