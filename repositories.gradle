@@ -7,9 +7,9 @@ repositories {
         allowInsecureProtocol
     }
     maven {
-        url "https://cursemaven.com"
+        url 'https://cursemaven.com'
     }
     maven {
-        url = "https://jitpack.io"
+        url 'https://jitpack.io'
     }
 }

@@ -308,6 +308,9 @@ def mixingConfigRefMap = "mixins." + modId + ".refmap.json"
 def refMap = "${tasks.compileJava.temporaryDir}" + File.separator + mixingConfigRefMap
 def mixinSrg = "${tasks.reobf.temporaryDir}" + File.separator + "mixins.srg"
 
+//println(Project.getConfigurations().getByName("runtime"))
+configurations.implementation.setCanBeResolved(true)
+
 task generateAssets {
     if(usesMixins.toBoolean()) {
         getFile("/src/main/resources/mixins." + modId + ".json").text = """{
