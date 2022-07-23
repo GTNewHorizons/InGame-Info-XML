@@ -4,6 +4,7 @@ import com.github.lunatrius.ingameinfo.client.gui.InfoIcon;
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
 import net.minecraft.client.gui.GuiPlayerInfo;
 import net.minecraft.client.resources.ResourcePackRepository;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.util.List;
 
@@ -156,7 +157,7 @@ public abstract class TagMisc extends Tag {
         public String getValue() {
             List<GuiPlayerInfo> list = player.sendQueue.playerInfoList;
             for (GuiPlayerInfo playerInfo : list) {
-                if (player.getGameProfile().getName().equals(playerInfo.name)) {
+                if (player.getGameProfile().getName().equals(EnumChatFormatting.getTextWithoutFormattingCodes(playerInfo.name))) {
                     int pingIndex = 4;
                     if (playerInfo.responseTime < 0) {
                         pingIndex = 5;
