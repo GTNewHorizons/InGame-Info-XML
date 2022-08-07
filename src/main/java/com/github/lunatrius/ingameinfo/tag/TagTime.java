@@ -12,6 +12,23 @@ public abstract class TagTime extends Tag {
         return "time";
     }
 
+    public static class MinecraftTotal extends TagTime {
+        @Override
+        public String getValue() {
+            long seconds = world.getTotalWorldTime() / 20;
+            long dd = seconds / 86400;
+            long hh = (seconds / 3600) % 24;
+            long mm = (seconds / 60) % 60;
+            long ss = seconds % 60;
+
+            if (dd >= 1) {
+                return String.format("%dd %02d:%02d:%02d", dd, hh, mm, ss);
+            } else {
+                return String.format("%02d:%02d:%02d", hh, mm, ss);
+            }
+        }
+    }
+
     public static class MinecraftDay extends TagTime {
         @Override
         public String getValue() {
@@ -82,6 +99,7 @@ public abstract class TagTime extends Tag {
     }
 
     public static void register() {
+        TagRegistry.INSTANCE.register(new MinecraftTotal().setName("worldtimetotal"));
         TagRegistry.INSTANCE.register(new MinecraftDay().setName("day"));
         TagRegistry.INSTANCE.register(new MinecraftHour().setName("mctimeh"));
         TagRegistry.INSTANCE.register(new MinecraftMinute().setName("mctimem"));
