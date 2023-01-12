@@ -78,7 +78,7 @@ public class ConfigurationHandler {
         fileInterval = propFileInterval.getInt(FILE_INTERVAL_DEFAULT);
 
         for (Alignment alignment : Alignment.values()) {
-            Property property = configuration.get(Names.Config.Category.ALIGNMENT, alignment.toString().toLowerCase(), alignment.getDefaultXY(), String.format(Names.Config.ALIGNMENT_DESC, alignment.toString()));
+            Property property = configuration.get(Names.Config.Category.ALIGNMENT, alignment.toString().toLowerCase(), alignment.getDefaultXY(), String.format(Names.Config.ALIGNMENT_DESC, alignment));
             property.setLanguageKey(Names.Config.LANG_PREFIX + "." + alignment.toString().toLowerCase());
             property.setValidationPattern(Pattern.compile("-?\\d+ -?\\d+"));
             propAlignments.put(alignment, property);
