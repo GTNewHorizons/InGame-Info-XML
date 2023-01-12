@@ -8,7 +8,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
-import javax.xml.bind.annotation.XmlType;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
