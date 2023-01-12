@@ -25,7 +25,8 @@ public class KeyInputHandler {
         for (KeyBinding keyBinding : KEY_BINDINGS) {
             if (keyBinding.isPressed()) {
                 if (this.minecraft.currentScreen == null) {
-                    Ticker.enabled = !Ticker.enabled;
+                    ConfigurationHandler.showHUD = !ConfigurationHandler.showHUD;
+                    ConfigurationHandler.saveHUDsettingToFile();
                 }
             }
         }

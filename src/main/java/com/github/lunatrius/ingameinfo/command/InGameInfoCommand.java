@@ -5,7 +5,6 @@ import com.github.lunatrius.ingameinfo.InGameInfoCore;
 import com.github.lunatrius.ingameinfo.client.gui.GuiModConfig;
 import com.github.lunatrius.ingameinfo.client.gui.GuiTags;
 import com.github.lunatrius.ingameinfo.handler.ConfigurationHandler;
-import com.github.lunatrius.ingameinfo.handler.Ticker;
 import com.github.lunatrius.ingameinfo.reference.Names;
 import java.io.File;
 import java.util.ArrayList;
@@ -104,11 +103,13 @@ public class InGameInfoCommand extends CommandBase {
                 return;
             } else if (args[0].equalsIgnoreCase(Names.Command.ENABLE)) {
                 commandSender.addChatMessage(new ChatComponentTranslation(Names.Command.Message.ENABLE));
-                Ticker.enabled = true;
+                ConfigurationHandler.showHUD = true;
+                ConfigurationHandler.saveHUDsettingToFile();
                 return;
             } else if (args[0].equalsIgnoreCase(Names.Command.DISABLE)) {
                 commandSender.addChatMessage(new ChatComponentTranslation(Names.Command.Message.DISABLE));
-                Ticker.enabled = false;
+                ConfigurationHandler.showHUD = false;
+                ConfigurationHandler.saveHUDsettingToFile();
                 return;
             } else if (args[0].equalsIgnoreCase(Names.Command.TAGLIST)) {
                 DelayedGuiDisplayTicker.create(new GuiTags(), 10);

@@ -46,6 +46,8 @@ public final class Names {
 
         public static final String FILENAME = "filename";
         public static final String FILENAME_DESC = "The configuration that should be loaded on startup.";
+        public static final String SHOW_HUD = "ShowHUD";
+        public static final String SHOW_HUD_DESC = "If this is true, it will render the info overlay";
         public static final String REPLACE_DEBUG = "replaceDebug";
         public static final String REPLACE_DEBUG_DESC =
                 "Replace the debug overlay (F3) with the InGameInfoXML overlay.";

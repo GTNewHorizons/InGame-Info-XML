@@ -1,8 +1,5 @@
 package com.github.lunatrius.ingameinfo.handler;
 
-import static cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
-import static cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
-
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
 import com.github.lunatrius.ingameinfo.tag.Tag;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -13,10 +10,8 @@ import net.minecraft.client.gui.GuiChat;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class Ticker {
+
     public static final Ticker INSTANCE = new Ticker();
-
-    public static boolean enabled = true;
-
     private final Minecraft client = Minecraft.getMinecraft();
     private final InGameInfoCore core = InGameInfoCore.INSTANCE;
 
@@ -24,23 +19,25 @@ public class Ticker {
 
     @SubscribeEvent
     public void onRenderGameOverlayEventPre(RenderGameOverlayEvent.Pre event) {
-        if (enabled && ConfigurationHandler.replaceDebug && event.type == RenderGameOverlayEvent.ElementType.DEBUG) {
+        if (ConfigurationHandler.showHUD
+                && ConfigurationHandler.replaceDebug
+                && event.type == RenderGameOverlayEvent.ElementType.DEBUG) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
-    public void onClientTick(ClientTickEvent event) {
+    public void onClientTick(TickEvent.ClientTickEvent event) {
         onTick(event);
     }
 
     @SubscribeEvent
-    public void onRenderTick(RenderTickEvent event) {
+    public void onRenderTick(TickEvent.RenderTickEvent event) {
         onTick(event);
     }
 
     private boolean isRunning() {
-        if (enabled) {
+        if (ConfigurationHandler.showHUD) {
             if (this.client.mcProfiler.profilingEnabled) {
                 return true;
             }
@@ -81,7 +78,8 @@ public class Ticker {
                 }
             }
 
-            if ((!enabled || this.client.gameSettings == null) && event.type == TickEvent.Type.CLIENT) {
+            if ((!ConfigurationHandler.showHUD || this.client.gameSettings == null)
+                    && event.type == TickEvent.Type.CLIENT) {
                 Tag.setServer(null);
                 Tag.releaseResources();
             }
