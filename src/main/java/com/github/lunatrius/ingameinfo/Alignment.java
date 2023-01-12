@@ -111,8 +111,7 @@ public enum Alignment {
                 this.x = x;
                 this.y = y;
             }
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
     }
 
     static {
