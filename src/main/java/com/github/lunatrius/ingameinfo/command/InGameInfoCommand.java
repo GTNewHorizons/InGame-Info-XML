@@ -13,7 +13,6 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.ChatComponentTranslation;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,12 +55,11 @@ public class InGameInfoCommand extends CommandBase {
 
     private List<String> getFilenames() {
         File[] files = this.core.getConfigDirectory().listFiles((dir, name) -> name.startsWith(Names.Files.NAME) && (name.endsWith(Names.Files.EXT_XML) || name.endsWith(Names.Files.EXT_JSON) || name.endsWith(Names.Files.EXT_TXT)));
-
         List<String> filenames = new ArrayList<>();
+        if (files == null) return filenames;
         for (File file : files) {
             filenames.add(file.getName());
         }
-
         return filenames;
     }
 
