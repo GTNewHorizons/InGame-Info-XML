@@ -39,7 +39,7 @@ public class ConfigurationHandler {
     public static Property propShowOnPlayerList = null;
     public static Property propscale = null;
     public static Property propFileInterval = null;
-    public static final Map<Alignment, Property> propAlignments = new HashMap<Alignment, Property>();
+    public static final Map<Alignment, Property> propAlignments = new HashMap<>();
 
     private ConfigurationHandler() {}
 

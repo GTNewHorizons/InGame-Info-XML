@@ -17,7 +17,7 @@ public class GuiModConfig extends GuiConfig {
     }
 
     private static List<IConfigElement> getConfigElements() {
-        List<IConfigElement> elements = new ArrayList<IConfigElement>();
+        List<IConfigElement> elements = new ArrayList<>();
         for (String name : ConfigurationHandler.configuration.getCategoryNames()) {
             elements.add(new ConfigElement(ConfigurationHandler.configuration.getCategory(name).setLanguageKey(Names.Config.LANG_PREFIX + ".category." + name)));
         }

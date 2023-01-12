@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PluginLoader {
-    private final List<Plugin> plugins = new ArrayList<Plugin>();
+    private final List<Plugin> plugins = new ArrayList<>();
 
     private static PluginLoader instance = null;
 

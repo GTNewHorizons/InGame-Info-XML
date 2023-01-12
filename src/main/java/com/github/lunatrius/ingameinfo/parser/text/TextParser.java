@@ -84,7 +84,7 @@ public class TextParser implements IParser {
         List<List<Value>> lines = format.get(this.alignment);
 
         if (lines == null) {
-            lines = new ArrayList<List<Value>>();
+            lines = new ArrayList<>();
         }
 
         try {
@@ -117,7 +117,7 @@ public class TextParser implements IParser {
 
     private boolean line(List<List<Value>> lines) throws AlignmentException {
         boolean expr;
-        List<Value> values = new ArrayList<Value>();
+        List<Value> values = new ArrayList<>();
 
         expr = values(values);
 

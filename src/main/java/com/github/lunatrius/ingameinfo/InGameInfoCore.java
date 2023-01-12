@@ -47,9 +47,9 @@ public class InGameInfoCore {
     private final Profiler profiler = this.minecraft.mcProfiler;
     private File configDirectory = null;
     private File configFile = null;
-    private final Map<Alignment, List<List<Value>>> format = new HashMap<Alignment, List<List<Value>>>();
-    private final List<Info> info = new ArrayList<Info>();
-    private final List<Info> infoItemQueue = new ArrayList<Info>();
+    private final Map<Alignment, List<List<Value>>> format = new HashMap<>();
+    private final List<Info> info = new ArrayList<>();
+    private final List<Info> infoItemQueue = new ArrayList<>();
 
     private InGameInfoCore() {
         Tag.setInfo(this.infoItemQueue);
@@ -120,7 +120,7 @@ public class InGameInfoCore {
             }
 
             FontRenderer fontRenderer = this.minecraft.fontRenderer;
-            List<Info> queue = new ArrayList<Info>();
+            List<Info> queue = new ArrayList<>();
 
             for (List<Value> line : lines) {
                 String str = "";
