@@ -74,7 +74,7 @@ public abstract class TagNearbyPlayer extends Tag {
                 }
             }
             playerList.sort(PLAYER_DISTANCE_COMPARATOR);
-            nearbyPlayers = playerList.toArray(new EntityPlayer[playerList.size()]);
+            nearbyPlayers = playerList.toArray(new EntityPlayer[0]);
         }
     }
 

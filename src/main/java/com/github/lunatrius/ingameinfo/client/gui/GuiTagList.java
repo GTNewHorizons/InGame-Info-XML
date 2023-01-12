@@ -68,7 +68,7 @@ public class GuiTagList extends GuiListExtended {
             }
         }
 
-        this.entries = list.toArray(new IGuiListEntry[list.size()]);
+        this.entries = list.toArray(new IGuiListEntry[0]);
     }
 
     @Override
@@ -161,7 +161,7 @@ public class GuiTagList extends GuiListExtended {
                 list.add(desc);
             }
 
-            return list.toArray(new String[list.size()]);
+            return list.toArray(new String[0]);
         }
 
         @Override
