@@ -91,7 +91,7 @@ public class GuiTagList extends GuiListExtended {
         return this.width / 2 + getListWidth() / 2 - SCROLLBAR_WIDTH;
     }
 
-    public abstract class ListEntry implements IGuiListEntry, Comparable<ListEntry> {
+    public abstract static class ListEntry implements IGuiListEntry, Comparable<ListEntry> {
         @Override
         public boolean mousePressed(int index, int x, int y, int mouseEvent, int relativeX, int relativeY) {
             return false;
@@ -109,7 +109,7 @@ public class GuiTagList extends GuiListExtended {
         }
     }
 
-    public class CategoryEntry extends ListEntry {
+    public static class CategoryEntry extends ListEntry {
         private final FontRenderer fontRenderer;
         private final String name;
 
