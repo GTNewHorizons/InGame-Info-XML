@@ -4,7 +4,6 @@ import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -66,13 +65,15 @@ public abstract class TagNearbyPlayer extends Tag {
     protected static void updateNearbyPlayers() {
         if (nearbyPlayers == null) {
             List<EntityPlayer> playerList = new ArrayList<>();
-            for (EntityPlayer player : (List<EntityPlayer>) world.playerEntities) {
-                if (player != Tag.player && !player.isSneaking()) {
-                    playerList.add(player);
+            for (Object o : world.playerEntities) {
+                if (o instanceof EntityPlayer) {
+                    EntityPlayer entityPlayer = (EntityPlayer) o;
+                    if (entityPlayer != Tag.player && !entityPlayer.isSneaking()) {
+                        playerList.add(entityPlayer);
+                    }
                 }
             }
-
-            Collections.sort(playerList, PLAYER_DISTANCE_COMPARATOR);
+            playerList.sort(PLAYER_DISTANCE_COMPARATOR);
             nearbyPlayers = playerList.toArray(new EntityPlayer[playerList.size()]);
         }
     }
