@@ -12,22 +12,19 @@ import java.util.Locale;
 public abstract class TagNearbyPlayer extends Tag {
     public static final int MAXIMUM_INDEX = 16;
 
-    private static final Comparator<EntityPlayer> PLAYER_DISTANCE_COMPARATOR = new Comparator<EntityPlayer>() {
-        @Override
-        public int compare(EntityPlayer playerA, EntityPlayer playerB) {
-            if (Tag.player == null) {
-                return 0;
-            }
-
-            double distanceA = Tag.player.getDistanceSqToEntity(playerA);
-            double distanceB = Tag.player.getDistanceSqToEntity(playerB);
-            if (distanceA > distanceB) {
-                return 1;
-            } else if (distanceA < distanceB) {
-                return -1;
-            }
+    private static final Comparator<EntityPlayer> PLAYER_DISTANCE_COMPARATOR = (playerA, playerB) -> {
+        if (Tag.player == null) {
             return 0;
         }
+
+        double distanceA = Tag.player.getDistanceSqToEntity(playerA);
+        double distanceB = Tag.player.getDistanceSqToEntity(playerB);
+        if (distanceA > distanceB) {
+            return 1;
+        } else if (distanceA < distanceB) {
+            return -1;
+        }
+        return 0;
     };
     protected static EntityPlayer[] nearbyPlayers = null;
     protected final int index;

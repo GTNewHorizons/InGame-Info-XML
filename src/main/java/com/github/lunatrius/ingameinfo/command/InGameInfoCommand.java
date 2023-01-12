@@ -55,12 +55,7 @@ public class InGameInfoCommand extends CommandBase {
     }
 
     private List<String> getFilenames() {
-        File[] files = this.core.getConfigDirectory().listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.startsWith(Names.Files.NAME) && (name.endsWith(Names.Files.EXT_XML) || name.endsWith(Names.Files.EXT_JSON) || name.endsWith(Names.Files.EXT_TXT));
-            }
-        });
+        File[] files = this.core.getConfigDirectory().listFiles((dir, name) -> name.startsWith(Names.Files.NAME) && (name.endsWith(Names.Files.EXT_XML) || name.endsWith(Names.Files.EXT_JSON) || name.endsWith(Names.Files.EXT_TXT)));
 
         List<String> filenames = new ArrayList<>();
         for (File file : files) {
