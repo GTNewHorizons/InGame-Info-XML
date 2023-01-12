@@ -79,7 +79,8 @@ public abstract class ValueSimple extends Value {
 
     public static void register() {
         ValueRegistry.INSTANCE.register(new ValueString().setName("str").setAliases("string"));
-        ValueRegistry.INSTANCE.register(new ValueNumber().setName("num").setAliases("number", "int", "integer", "float", "double"));
+        ValueRegistry.INSTANCE.register(
+                new ValueNumber().setName("num").setAliases("number", "int", "integer", "float", "double"));
         ValueRegistry.INSTANCE.register(new ValueVariable().setName("var").setAliases("variable"));
         ValueRegistry.INSTANCE.register(new ValueInvalid().setName("invalid"));
     }

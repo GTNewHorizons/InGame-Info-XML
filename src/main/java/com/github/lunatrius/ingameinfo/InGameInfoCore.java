@@ -16,16 +16,6 @@ import com.github.lunatrius.ingameinfo.reference.Reference;
 import com.github.lunatrius.ingameinfo.tag.Tag;
 import com.github.lunatrius.ingameinfo.value.Value;
 import com.github.lunatrius.ingameinfo.value.ValueComplex;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.resources.IResource;
-import net.minecraft.profiler.Profiler;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -35,6 +25,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.profiler.Profiler;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+import org.lwjgl.opengl.GL11;
 
 public class InGameInfoCore {
     private static final Pattern PATTERN = Pattern.compile("\\{ICON\\|( *)\\}", Pattern.CASE_INSENSITIVE);
@@ -89,8 +88,9 @@ public class InGameInfoCore {
     }
 
     public void onTickClient() {
-        ScaledResolution scaledResolution = new ScaledResolution(this.minecraft, this.minecraft.displayWidth, this.minecraft.displayHeight);
-        float scale = ConfigurationHandler.Scale/10;
+        ScaledResolution scaledResolution =
+                new ScaledResolution(this.minecraft, this.minecraft.displayWidth, this.minecraft.displayHeight);
+        float scale = ConfigurationHandler.Scale / 10;
         int scaledWidth = (int) (scaledResolution.getScaledWidth() / scale);
         int scaledHeight = (int) (scaledResolution.getScaledHeight() / scale);
 
@@ -146,7 +146,8 @@ public class InGameInfoCore {
                             item.x = fontRenderer.getStringWidth(str.substring(0, MATCHER.start()));
                             text.children.add(item);
 
-                            str = new StringBuilder(str.toString().replaceFirst(Pattern.quote(MATCHER.group(0)), MATCHER.group(1)));
+                            str = new StringBuilder(
+                                    str.toString().replaceFirst(Pattern.quote(MATCHER.group(0)), MATCHER.group(1)));
                             MATCHER.reset(str.toString());
                         }
                     }
@@ -173,7 +174,7 @@ public class InGameInfoCore {
     public void onTickRender() {
         // disable blending and reset to default (just in case)
         // fixes "washed-out" / bright text
-        float scale = ConfigurationHandler.Scale/10;
+        float scale = ConfigurationHandler.Scale / 10;
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 

@@ -183,7 +183,8 @@ public abstract class TagFormatting extends Tag {
         TagRegistry.INSTANCE.register(new White().setName("white"));
         TagRegistry.INSTANCE.register(new Obfuscated().setName("obfuscated").setAliases("random"));
         TagRegistry.INSTANCE.register(new Bold().setName("bold").setAliases("b"));
-        TagRegistry.INSTANCE.register(new Strikethrough().setName("strikethrough").setAliases("strike", "s"));
+        TagRegistry.INSTANCE.register(
+                new Strikethrough().setName("strikethrough").setAliases("strike", "s"));
         TagRegistry.INSTANCE.register(new Underline().setName("underline").setAliases("u"));
         TagRegistry.INSTANCE.register(new Italic().setName("italic").setAliases("italics", "i"));
         TagRegistry.INSTANCE.register(new Reset().setName("reset").setAliases("r"));

@@ -15,7 +15,7 @@ public class Token {
         NEWLINE("\\n+"),
         STRING("(\\\\[<>\\[/\\]\\\\]|[^<>\\[/\\]\\n])+");
 
-        public final static EnumSet<TokenType> EXCEPTIONS = EnumSet.of(FUNC_TAIL, ARGS_HEAD, ARGS_SEPARATOR, ARGS_TAIL);
+        public static final EnumSet<TokenType> EXCEPTIONS = EnumSet.of(FUNC_TAIL, ARGS_HEAD, ARGS_SEPARATOR, ARGS_TAIL);
         private final Pattern pattern;
 
         TokenType(String regex) {
@@ -41,7 +41,14 @@ public class Token {
 
     @Override
     public String toString() {
-        return String.format(Locale.ENGLISH, "%s, %s, %s, %s, %s", this.lexem.replace("\r", "\\r").replace("\n", "\\n").replace("\t", "\\t"), this.type, this.locationStart, this.locationEnd, this.isEof());
+        return String.format(
+                Locale.ENGLISH,
+                "%s, %s, %s, %s, %s",
+                this.lexem.replace("\r", "\\r").replace("\n", "\\n").replace("\t", "\\t"),
+                this.type,
+                this.locationStart,
+                this.locationEnd,
+                this.isEof());
     }
 
     public String getLexem() {

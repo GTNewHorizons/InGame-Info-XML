@@ -5,13 +5,12 @@ import com.github.lunatrius.ingameinfo.reference.Names;
 import com.github.lunatrius.ingameinfo.reference.Reference;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 
 public class ConfigurationHandler {
     public static final ConfigurationHandler INSTANCE = new ConfigurationHandler();
@@ -51,6 +50,9 @@ public class ConfigurationHandler {
     }
 
     private static void loadConfiguration() {
+
+        // spotless:off
+
         propConfigName = configuration.get(Names.Config.Category.GENERAL, Names.Config.FILENAME, CONFIG_NAME_DEFAULT, Names.Config.FILENAME_DESC);
         propConfigName.setLanguageKey(Names.Config.LANG_PREFIX + "." + Names.Config.FILENAME);
         propConfigName.setRequiresMcRestart(true);
@@ -83,6 +85,8 @@ public class ConfigurationHandler {
             propAlignments.put(alignment, property);
             alignment.setXY(property.getString());
         }
+
+        // spotless:on
 
         save();
     }

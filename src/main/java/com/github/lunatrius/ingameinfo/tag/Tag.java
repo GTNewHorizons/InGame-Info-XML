@@ -4,13 +4,12 @@ import com.github.lunatrius.core.util.vector.Vector3f;
 import com.github.lunatrius.core.util.vector.Vector3i;
 import com.github.lunatrius.ingameinfo.client.gui.Info;
 import com.github.lunatrius.ingameinfo.reference.Reference;
+import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 public abstract class Tag {
     protected static final Minecraft minecraft = Minecraft.getMinecraft();
@@ -100,8 +99,10 @@ public abstract class Tag {
         Tag.player = player;
 
         if (player != null) {
-            playerPosition.set((int) Math.floor(player.posX), (int) Math.floor(player.posY), (int) Math.floor(player.posZ));
-            playerMotion.set((float) (player.posX - player.prevPosX), (float) (player.posY - player.prevPosY), (float) (player.posZ - player.prevPosZ));
+            playerPosition.set(
+                    (int) Math.floor(player.posX), (int) Math.floor(player.posY), (int) Math.floor(player.posZ));
+            playerMotion.set((float) (player.posX - player.prevPosX), (float) (player.posY - player.prevPosY), (float)
+                    (player.posZ - player.prevPosZ));
         }
     }
 

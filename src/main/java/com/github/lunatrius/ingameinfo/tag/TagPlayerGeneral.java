@@ -1,11 +1,10 @@
 package com.github.lunatrius.ingameinfo.tag;
 
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
+import java.util.Locale;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
-
-import java.util.Locale;
 
 public abstract class TagPlayerGeneral extends Tag {
     @Override
@@ -17,7 +16,12 @@ public abstract class TagPlayerGeneral extends Tag {
         @Override
         public String getValue() {
             try {
-                return String.valueOf(world.getChunkFromBlockCoords(playerPosition.x, playerPosition.z).getBlockLightValue(playerPosition.x & 15, playerPosition.y, playerPosition.z & 15, world.calculateSkylightSubtracted(1.0f)));
+                return String.valueOf(world.getChunkFromBlockCoords(playerPosition.x, playerPosition.z)
+                        .getBlockLightValue(
+                                playerPosition.x & 15,
+                                playerPosition.y,
+                                playerPosition.z & 15,
+                                world.calculateSkylightSubtracted(1.0f)));
             } catch (Exception e) {
                 return "0";
             }
@@ -28,7 +32,12 @@ public abstract class TagPlayerGeneral extends Tag {
         @Override
         public String getValue() {
             try {
-                return String.valueOf(world.getChunkFromBlockCoords(playerPosition.x, playerPosition.z).getBlockLightValue(playerPosition.x & 15, (int) Math.round(player.boundingBox.minY), playerPosition.z & 15, world.calculateSkylightSubtracted(1.0f)));
+                return String.valueOf(world.getChunkFromBlockCoords(playerPosition.x, playerPosition.z)
+                        .getBlockLightValue(
+                                playerPosition.x & 15,
+                                (int) Math.round(player.boundingBox.minY),
+                                playerPosition.z & 15,
+                                world.calculateSkylightSubtracted(1.0f)));
             } catch (Exception e) {
                 return "0";
             }
@@ -39,7 +48,8 @@ public abstract class TagPlayerGeneral extends Tag {
         @Override
         public String getValue() {
             try {
-                return String.valueOf(world.getSavedLightValue(EnumSkyBlock.Block, playerPosition.x, playerPosition.y, playerPosition.z));
+                return String.valueOf(world.getSavedLightValue(
+                        EnumSkyBlock.Block, playerPosition.x, playerPosition.y, playerPosition.z));
             } catch (Exception e) {
                 return "0";
             }
@@ -50,7 +60,11 @@ public abstract class TagPlayerGeneral extends Tag {
         @Override
         public String getValue() {
             try {
-                return String.valueOf(world.getSavedLightValue(EnumSkyBlock.Block, playerPosition.x, (int) Math.round(player.boundingBox.minY), playerPosition.z));
+                return String.valueOf(world.getSavedLightValue(
+                        EnumSkyBlock.Block,
+                        playerPosition.x,
+                        (int) Math.round(player.boundingBox.minY),
+                        playerPosition.z));
             } catch (Exception e) {
                 return "0";
             }
@@ -61,7 +75,8 @@ public abstract class TagPlayerGeneral extends Tag {
         @Override
         public String getValue() {
             try {
-                final int lightValue = world.getSavedLightValue(EnumSkyBlock.Sky, playerPosition.x, playerPosition.y, playerPosition.z);
+                final int lightValue = world.getSavedLightValue(
+                        EnumSkyBlock.Sky, playerPosition.x, playerPosition.y, playerPosition.z);
                 final int subtract = world.calculateSkylightSubtracted(1.0f);
                 return String.valueOf(MathHelper.clamp_int(lightValue - subtract, 0, 15));
             } catch (Exception e) {
@@ -74,7 +89,11 @@ public abstract class TagPlayerGeneral extends Tag {
         @Override
         public String getValue() {
             try {
-                final int lightValue = world.getSavedLightValue(EnumSkyBlock.Sky, playerPosition.x, (int) Math.round(player.boundingBox.minY), playerPosition.z);
+                final int lightValue = world.getSavedLightValue(
+                        EnumSkyBlock.Sky,
+                        playerPosition.x,
+                        (int) Math.round(player.boundingBox.minY),
+                        playerPosition.z);
                 final int subtract = world.calculateSkylightSubtracted(1.0f);
                 return String.valueOf(MathHelper.clamp_int(lightValue - subtract, 0, 15));
             } catch (Exception e) {

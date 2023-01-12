@@ -1,7 +1,6 @@
 package com.github.lunatrius.ingameinfo.value;
 
 import com.github.lunatrius.ingameinfo.value.registry.ValueRegistry;
-
 import java.util.Locale;
 
 public abstract class ValueMath extends ValueComplex {

@@ -6,7 +6,6 @@ import com.github.lunatrius.ingameinfo.value.ValueComplex;
 import com.github.lunatrius.ingameinfo.value.ValueLogic;
 import com.github.lunatrius.ingameinfo.value.ValueMath;
 import com.github.lunatrius.ingameinfo.value.ValueSimple;
-
 import java.util.HashMap;
 import java.util.Map;
 

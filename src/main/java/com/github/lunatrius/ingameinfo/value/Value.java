@@ -4,7 +4,6 @@ import com.github.lunatrius.ingameinfo.client.gui.Info;
 import com.github.lunatrius.ingameinfo.reference.Reference;
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
 import com.github.lunatrius.ingameinfo.value.registry.ValueRegistry;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;

@@ -10,8 +10,9 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 public class InfoItem extends Info {
-    private final static TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
-    private final static RenderItem renderItem = new RenderItem();
+    private static final TextureManager textureManager =
+            Minecraft.getMinecraft().getTextureManager();
+    private static final RenderItem renderItem = new RenderItem();
     private final ItemStack itemStack;
     private final FontRenderer fontRenderer;
     private final boolean large;
@@ -73,7 +74,9 @@ public class InfoItem extends Info {
 
     @Override
     public String toString() {
-        return String.format("InfoItem{itemStack: %s, x: %d, y: %d, offsetX: %d, offsetY: %d, children: %s}", this.itemStack, this.x, this.y, this.offsetX, this.offsetY, this.children);
+        return String.format(
+                "InfoItem{itemStack: %s, x: %d, y: %d, offsetX: %d, offsetY: %d, children: %s}",
+                this.itemStack, this.x, this.y, this.offsetX, this.offsetY, this.children);
     }
 
     static {

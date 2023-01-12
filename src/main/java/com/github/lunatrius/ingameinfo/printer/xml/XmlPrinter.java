@@ -4,9 +4,9 @@ import com.github.lunatrius.ingameinfo.Alignment;
 import com.github.lunatrius.ingameinfo.printer.IPrinter;
 import com.github.lunatrius.ingameinfo.reference.Reference;
 import com.github.lunatrius.ingameinfo.value.Value;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -14,9 +14,8 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.util.List;
-import java.util.Map;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class XmlPrinter implements IPrinter {
     @Override

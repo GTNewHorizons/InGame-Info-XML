@@ -7,7 +7,6 @@ import com.github.lunatrius.ingameinfo.value.Value;
 import com.github.lunatrius.ingameinfo.value.ValueComplex;
 import com.github.lunatrius.ingameinfo.value.ValueLogic;
 import com.github.lunatrius.ingameinfo.value.ValueSimple;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -82,7 +81,8 @@ public class TextPrinter implements IPrinter {
                         writeValue(writer, values.get(2));
                     }
                     writer.write("]");
-                } else if (value.getClass() == ValueComplex.ValueMin.class || value.getClass() == ValueComplex.ValueMax.class) {
+                } else if (value.getClass() == ValueComplex.ValueMin.class
+                        || value.getClass() == ValueComplex.ValueMax.class) {
                     writer.write("/");
                     writeValue(writer, values.get(1));
                     if (size == 4) {

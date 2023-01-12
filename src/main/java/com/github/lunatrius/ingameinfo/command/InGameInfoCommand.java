@@ -7,14 +7,13 @@ import com.github.lunatrius.ingameinfo.client.gui.GuiTags;
 import com.github.lunatrius.ingameinfo.handler.ConfigurationHandler;
 import com.github.lunatrius.ingameinfo.handler.Ticker;
 import com.github.lunatrius.ingameinfo.reference.Names;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.ChatComponentTranslation;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class InGameInfoCommand extends CommandBase {
     public static final InGameInfoCommand INSTANCE = new InGameInfoCommand();
@@ -41,12 +40,21 @@ public class InGameInfoCommand extends CommandBase {
     @Override
     public List addTabCompletionOptions(ICommandSender commandSender, String[] args) {
         if (args.length == 1) {
-            return getListOfStringsMatchingLastWord(args, Names.Command.RELOAD, Names.Command.LOAD, Names.Command.SAVE, Names.Command.ENABLE, Names.Command.DISABLE, Names.Command.TAGLIST, Names.Command.CONFIG);
+            return getListOfStringsMatchingLastWord(
+                    args,
+                    Names.Command.RELOAD,
+                    Names.Command.LOAD,
+                    Names.Command.SAVE,
+                    Names.Command.ENABLE,
+                    Names.Command.DISABLE,
+                    Names.Command.TAGLIST,
+                    Names.Command.CONFIG);
         } else if (args.length == 2) {
             if (args[0].equalsIgnoreCase(Names.Command.LOAD)) {
                 return getListOfStringsFromIterableMatchingLastWord(args, getFilenames());
             } else if (args[0].equalsIgnoreCase(Names.Command.SAVE)) {
-                return CommandBase.getListOfStringsMatchingLastWord(args, Names.Files.FILE_XML, Names.Files.FILE_JSON, Names.Files.FILE_TXT);
+                return CommandBase.getListOfStringsMatchingLastWord(
+                        args, Names.Files.FILE_XML, Names.Files.FILE_JSON, Names.Files.FILE_TXT);
             }
         }
 
@@ -54,7 +62,12 @@ public class InGameInfoCommand extends CommandBase {
     }
 
     private List<String> getFilenames() {
-        File[] files = this.core.getConfigDirectory().listFiles((dir, name) -> name.startsWith(Names.Files.NAME) && (name.endsWith(Names.Files.EXT_XML) || name.endsWith(Names.Files.EXT_JSON) || name.endsWith(Names.Files.EXT_TXT)));
+        File[] files = this.core
+                .getConfigDirectory()
+                .listFiles((dir, name) -> name.startsWith(Names.Files.NAME)
+                        && (name.endsWith(Names.Files.EXT_XML)
+                                || name.endsWith(Names.Files.EXT_JSON)
+                                || name.endsWith(Names.Files.EXT_TXT)));
         List<String> filenames = new ArrayList<>();
         if (files == null) return filenames;
         for (File file : files) {
@@ -70,12 +83,14 @@ public class InGameInfoCommand extends CommandBase {
                 commandSender.addChatMessage(new ChatComponentTranslation(Names.Command.Message.RELOAD));
                 ConfigurationHandler.reload();
                 final boolean success = this.core.reloadConfig();
-                commandSender.addChatMessage(new ChatComponentTranslation(success ? Names.Command.Message.SUCCESS : Names.Command.Message.FAILURE));
+                commandSender.addChatMessage(new ChatComponentTranslation(
+                        success ? Names.Command.Message.SUCCESS : Names.Command.Message.FAILURE));
                 return;
             } else if (args[0].equalsIgnoreCase(Names.Command.LOAD)) {
                 commandSender.addChatMessage(new ChatComponentTranslation(Names.Command.Message.LOAD, args[1]));
                 final boolean success = this.core.loadConfig(args[1]);
-                commandSender.addChatMessage(new ChatComponentTranslation(success ? Names.Command.Message.SUCCESS : Names.Command.Message.FAILURE));
+                commandSender.addChatMessage(new ChatComponentTranslation(
+                        success ? Names.Command.Message.SUCCESS : Names.Command.Message.FAILURE));
                 if (success) {
                     ConfigurationHandler.setConfigName(args[1]);
                     ConfigurationHandler.save();
@@ -84,7 +99,8 @@ public class InGameInfoCommand extends CommandBase {
             } else if (args[0].equalsIgnoreCase(Names.Command.SAVE)) {
                 commandSender.addChatMessage(new ChatComponentTranslation(Names.Command.Message.SAVE, args[1]));
                 final boolean success = this.core.saveConfig(args[1]);
-                commandSender.addChatMessage(new ChatComponentTranslation(success ? Names.Command.Message.SUCCESS : Names.Command.Message.FAILURE));
+                commandSender.addChatMessage(new ChatComponentTranslation(
+                        success ? Names.Command.Message.SUCCESS : Names.Command.Message.FAILURE));
                 return;
             } else if (args[0].equalsIgnoreCase(Names.Command.ENABLE)) {
                 commandSender.addChatMessage(new ChatComponentTranslation(Names.Command.Message.ENABLE));

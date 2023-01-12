@@ -9,8 +9,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public abstract class TagPlayerEquipment extends Tag {
-    public static final String[] TYPES = new String[] { "equipped", "helmet", "chestplate", "leggings", "boots" };
-    public static final int[] SLOTS = new int[] { -1, 3, 2, 1, 0 };
+    public static final String[] TYPES = new String[] {"equipped", "helmet", "chestplate", "leggings", "boots"};
+    public static final int[] SLOTS = new int[] {-1, 3, 2, 1, 0};
     protected final int slot;
 
     public TagPlayerEquipment(int slot) {
@@ -37,7 +37,9 @@ public abstract class TagPlayerEquipment extends Tag {
         @Override
         public String getValue() {
             ItemStack itemStack = getItemStack(this.slot);
-            String arrows = itemStack != null && itemStack.getItem() == Items.bow ? " (" + EntityHelper.getItemCountInInventory(player.inventory, Items.arrow) + ")" : "";
+            String arrows = itemStack != null && itemStack.getItem() == Items.bow
+                    ? " (" + EntityHelper.getItemCountInInventory(player.inventory, Items.arrow) + ")"
+                    : "";
             return itemStack != null ? itemStack.getDisplayName() + arrows : "";
         }
     }
@@ -63,7 +65,8 @@ public abstract class TagPlayerEquipment extends Tag {
         @Override
         public String getValue() {
             ItemStack itemStack = getItemStack(this.slot);
-            return String.valueOf(itemStack != null && itemStack.isItemStackDamageable() ? itemStack.getItemDamageForDisplay() : 0);
+            return String.valueOf(
+                    itemStack != null && itemStack.isItemStackDamageable() ? itemStack.getItemDamageForDisplay() : 0);
         }
     }
 
@@ -75,7 +78,8 @@ public abstract class TagPlayerEquipment extends Tag {
         @Override
         public String getValue() {
             ItemStack itemStack = getItemStack(this.slot);
-            return String.valueOf(itemStack != null && itemStack.isItemStackDamageable() ? itemStack.getMaxDamage() + 1 : 0);
+            return String.valueOf(
+                    itemStack != null && itemStack.isItemStackDamageable() ? itemStack.getMaxDamage() + 1 : 0);
         }
     }
 
@@ -87,7 +91,10 @@ public abstract class TagPlayerEquipment extends Tag {
         @Override
         public String getValue() {
             ItemStack itemStack = getItemStack(this.slot);
-            return String.valueOf(itemStack != null && itemStack.isItemStackDamageable() ? itemStack.getMaxDamage() + 1 - itemStack.getItemDamageForDisplay() : 0);
+            return String.valueOf(
+                    itemStack != null && itemStack.isItemStackDamageable()
+                            ? itemStack.getMaxDamage() + 1 - itemStack.getItemDamageForDisplay()
+                            : 0);
         }
     }
 
@@ -99,7 +106,11 @@ public abstract class TagPlayerEquipment extends Tag {
         @Override
         public String getValue() {
             ItemStack itemStack = getItemStack(this.slot);
-            return String.valueOf(itemStack != null ? EntityHelper.getItemCountInInventory(player.inventory, itemStack.getItem(), itemStack.getItemDamage()) : 0);
+            return String.valueOf(
+                    itemStack != null
+                            ? EntityHelper.getItemCountInInventory(
+                                    player.inventory, itemStack.getItem(), itemStack.getItemDamage())
+                            : 0);
         }
     }
 

@@ -13,7 +13,6 @@ import com.github.lunatrius.ingameinfo.tag.TagPlayerPotion;
 import com.github.lunatrius.ingameinfo.tag.TagRiding;
 import com.github.lunatrius.ingameinfo.tag.TagTime;
 import com.github.lunatrius.ingameinfo.tag.TagWorld;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

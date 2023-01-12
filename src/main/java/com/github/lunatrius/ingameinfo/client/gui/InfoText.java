@@ -34,6 +34,8 @@ public class InfoText extends Info {
 
     @Override
     public String toString() {
-        return String.format("InfoText{text: %s, x: %d, y: %d, offsetX: %d, offsetY: %d, children: %s}", this.text, this.x, this.y, this.offsetX, this.offsetY, this.children);
+        return String.format(
+                "InfoText{text: %s, x: %d, y: %d, offsetX: %d, offsetY: %d, children: %s}",
+                this.text, this.x, this.y, this.offsetX, this.offsetY, this.children);
     }
 }

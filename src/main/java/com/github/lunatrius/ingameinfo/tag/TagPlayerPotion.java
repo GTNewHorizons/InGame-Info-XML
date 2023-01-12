@@ -2,11 +2,10 @@ package com.github.lunatrius.ingameinfo.tag;
 
 import com.github.lunatrius.ingameinfo.client.gui.InfoIcon;
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
+import java.util.Collection;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-
-import java.util.Collection;
 
 public abstract class TagPlayerPotion extends Tag {
     public static final int MAXIMUM_INDEX = Potion.potionTypes.length;
@@ -73,15 +72,15 @@ public abstract class TagPlayerPotion extends Tag {
             if (potionEffects.length > this.index) {
                 String str = I18n.format(potionEffects[this.index].getEffectName());
                 switch (potionEffects[this.index].getAmplifier()) {
-                case 1:
-                    str += " II";
-                    break;
-                case 2:
-                    str += " III";
-                    break;
-                case 3:
-                    str += " IV";
-                    break;
+                    case 1:
+                        str += " II";
+                        break;
+                    case 2:
+                        str += " III";
+                        break;
+                    case 3:
+                        str += " IV";
+                        break;
                 }
                 return str;
             }

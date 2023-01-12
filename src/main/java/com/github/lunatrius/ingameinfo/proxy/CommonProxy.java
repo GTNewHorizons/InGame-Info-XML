@@ -19,12 +19,9 @@ public class CommonProxy {
         PacketHandler.init();
     }
 
-    public void postInit(FMLPostInitializationEvent event) {
-    }
+    public void postInit(FMLPostInitializationEvent event) {}
 
-    public void serverStarting(FMLServerStartingEvent event) {
-    }
+    public void serverStarting(FMLServerStartingEvent event) {}
 
-    public void serverStopping(FMLServerStoppingEvent event) {
-    }
+    public void serverStopping(FMLServerStoppingEvent event) {}
 }

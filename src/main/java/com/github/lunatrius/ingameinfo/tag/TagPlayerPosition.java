@@ -1,25 +1,18 @@
 package com.github.lunatrius.ingameinfo.tag;
 
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
-import net.minecraft.util.MathHelper;
-
 import java.util.Locale;
+import net.minecraft.util.MathHelper;
 
 public abstract class TagPlayerPosition extends Tag {
     private static final int TICKS = 20;
 
-    protected static final String[] ROUGHDIRECTION = {
-            "South", "West", "North", "East"
-    };
+    protected static final String[] ROUGHDIRECTION = {"South", "West", "North", "East"};
     protected static final String[] FINEDIRECTION = {
-            "South", "South West", "West", "North West", "North", "North East", "East", "South East"
+        "South", "South West", "West", "North West", "North", "North East", "East", "South East"
     };
-    protected static final String[] ABRROUGHDIRECTION = {
-            "S", "W", "N", "E"
-    };
-    protected static final String[] ABRFINEDIRECTION = {
-            "S", "SW", "W", "NW", "N", "NE", "E", "SE"
-    };
+    protected static final String[] ABRROUGHDIRECTION = {"S", "W", "N", "E"};
+    protected static final String[] ABRFINEDIRECTION = {"S", "SW", "W", "NW", "N", "NE", "E", "SE"};
 
     @Override
     public String getCategory() {
@@ -113,7 +106,13 @@ public abstract class TagPlayerPosition extends Tag {
     public static class Speed extends TagPlayerPosition {
         @Override
         public String getValue() {
-            return String.format(Locale.ENGLISH, "%.3f", TICKS * Math.sqrt(playerMotion.x * playerMotion.x + playerMotion.y * playerMotion.y + playerMotion.z * playerMotion.z));
+            return String.format(
+                    Locale.ENGLISH,
+                    "%.3f",
+                    TICKS
+                            * Math.sqrt(playerMotion.x * playerMotion.x
+                                    + playerMotion.y * playerMotion.y
+                                    + playerMotion.z * playerMotion.z));
         }
     }
 
@@ -141,7 +140,10 @@ public abstract class TagPlayerPosition extends Tag {
     public static class SpeedXZ extends TagPlayerPosition {
         @Override
         public String getValue() {
-            return String.format(Locale.ENGLISH, "%.3f", TICKS * Math.sqrt(playerMotion.x * playerMotion.x + playerMotion.z * playerMotion.z));
+            return String.format(
+                    Locale.ENGLISH,
+                    "%.3f",
+                    TICKS * Math.sqrt(playerMotion.x * playerMotion.x + playerMotion.z * playerMotion.z));
         }
     }
 

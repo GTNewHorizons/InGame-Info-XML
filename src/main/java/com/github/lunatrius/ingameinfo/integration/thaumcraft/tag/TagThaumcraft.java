@@ -26,7 +26,8 @@ public abstract class TagThaumcraft extends TagIntegration {
         @Override
         public String getValue() {
             try {
-                return String.valueOf(Thaumcraft.proxy.getPlayerKnowledge().getWarpSticky(player.getCommandSenderName()));
+                return String.valueOf(
+                        Thaumcraft.proxy.getPlayerKnowledge().getWarpSticky(player.getCommandSenderName()));
             } catch (Throwable e) {
                 log(this, e);
             }
@@ -50,7 +51,8 @@ public abstract class TagThaumcraft extends TagIntegration {
         @Override
         public String getValue() {
             try {
-                return String.valueOf(Thaumcraft.proxy.getPlayerKnowledge().getWarpTotal(player.getCommandSenderName()));
+                return String.valueOf(
+                        Thaumcraft.proxy.getPlayerKnowledge().getWarpTotal(player.getCommandSenderName()));
             } catch (Throwable e) {
                 log(this, e);
             }

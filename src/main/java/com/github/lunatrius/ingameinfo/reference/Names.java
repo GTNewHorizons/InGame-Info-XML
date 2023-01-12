@@ -47,15 +47,18 @@ public final class Names {
         public static final String FILENAME = "filename";
         public static final String FILENAME_DESC = "The configuration that should be loaded on startup.";
         public static final String REPLACE_DEBUG = "replaceDebug";
-        public static final String REPLACE_DEBUG_DESC = "Replace the debug overlay (F3) with the InGameInfoXML overlay.";
+        public static final String REPLACE_DEBUG_DESC =
+                "Replace the debug overlay (F3) with the InGameInfoXML overlay.";
         public static final String SHOW_IN_CHAT = "showInChat";
         public static final String SHOW_IN_CHAT_DESC = "Display the overlay in chat.";
         public static final String SHOW_ON_PLAYER_LIST = "showOnPlayerList";
         public static final String SHOW_ON_PLAYER_LIST_DESC = "Display the overlay on the player list.";
         public static final String SCALE_NAME = "scale(new)";
-        public static final String SCALE_DESCRIPTION = "The overlay will be scaled by this amount.(use this one, the other is deprecated)";
+        public static final String SCALE_DESCRIPTION =
+                "The overlay will be scaled by this amount.(use this one, the other is deprecated)";
         public static final String FILE_INTERVAL = "fileInterval";
-        public static final String FILE_INTERVAL_DESC = "The interval between file reads for the 'file' tag (in seconds).";
+        public static final String FILE_INTERVAL_DESC =
+                "The interval between file reads for the 'file' tag (in seconds).";
 
         public static final String ALIGNMENT_DESC = "Offsets for %s (X<space>Y).";
 

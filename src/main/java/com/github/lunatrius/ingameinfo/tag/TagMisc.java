@@ -2,11 +2,10 @@ package com.github.lunatrius.ingameinfo.tag;
 
 import com.github.lunatrius.ingameinfo.client.gui.InfoIcon;
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
+import java.util.List;
 import net.minecraft.client.gui.GuiPlayerInfo;
 import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.util.EnumChatFormatting;
-
-import java.util.List;
 
 public abstract class TagMisc extends Tag {
     protected static final ResourcePackRepository resourcePackRepository = minecraft.getResourcePackRepository();
@@ -40,7 +39,8 @@ public abstract class TagMisc extends Tag {
     public static class MemoryUsed extends TagMisc {
         @Override
         public String getValue() {
-            return String.valueOf(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+            return String.valueOf(
+                    Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
         }
     }
 
@@ -157,7 +157,9 @@ public abstract class TagMisc extends Tag {
         public String getValue() {
             List<GuiPlayerInfo> list = player.sendQueue.playerInfoList;
             for (GuiPlayerInfo playerInfo : list) {
-                if (player.getGameProfile().getName().equals(EnumChatFormatting.getTextWithoutFormattingCodes(playerInfo.name))) {
+                if (player.getGameProfile()
+                        .getName()
+                        .equals(EnumChatFormatting.getTextWithoutFormattingCodes(playerInfo.name))) {
                     int pingIndex = 4;
                     if (playerInfo.responseTime < 0) {
                         pingIndex = 5;

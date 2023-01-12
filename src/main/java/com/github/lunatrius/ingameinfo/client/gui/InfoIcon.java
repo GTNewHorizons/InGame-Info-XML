@@ -9,7 +9,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 public class InfoIcon extends Info {
-    private final static TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
+    private static final TextureManager textureManager =
+            Minecraft.getMinecraft().getTextureManager();
     private final ResourceLocation resourceLocation;
     private final Vector2f xy0 = new Vector2f();
     private final Vector2f xy1 = new Vector2f();
@@ -23,7 +24,20 @@ public class InfoIcon extends Info {
         this(location, 0, 0, 8, 8, 0, 0, 8, 8, 8, 8, 0, 0);
     }
 
-    public InfoIcon(String location, int displayX, int displayY, int displayWidth, int displayHeight, int iconX, int iconY, int iconWidth, int iconHeight, int textureWidth, int textureHeight, int x, int y) {
+    public InfoIcon(
+            String location,
+            int displayX,
+            int displayY,
+            int displayWidth,
+            int displayHeight,
+            int iconX,
+            int iconY,
+            int iconWidth,
+            int iconHeight,
+            int textureWidth,
+            int textureHeight,
+            int x,
+            int y) {
         super(x, y);
         this.resourceLocation = new ResourceLocation(location);
         setDisplayDimensions(displayX, displayY, displayWidth, displayHeight);
@@ -38,7 +52,8 @@ public class InfoIcon extends Info {
         this.xy1.set(displayX + displayWidth, displayY + displayHeight);
     }
 
-    public void setTextureData(int iconX, int iconY, int iconWidth, int iconHeight, int textureWidth, int textureHeight) {
+    public void setTextureData(
+            int iconX, int iconY, int iconWidth, int iconHeight, int textureWidth, int textureHeight) {
         this.uv0.set((float) iconX / textureWidth, (float) iconY / textureHeight);
         this.uv1.set((float) (iconX + iconWidth) / textureWidth, (float) (iconY + iconHeight) / textureHeight);
     }
@@ -76,6 +91,8 @@ public class InfoIcon extends Info {
 
     @Override
     public String toString() {
-        return String.format("InfoIcon{resource: %s, x: %d, y: %d, offsetX: %d, offsetY: %d, children: %s}", this.resourceLocation, this.x, this.y, this.offsetX, this.offsetY, this.children);
+        return String.format(
+                "InfoIcon{resource: %s, x: %d, y: %d, offsetX: %d, offsetY: %d, children: %s}",
+                this.resourceLocation, this.x, this.y, this.offsetX, this.offsetY, this.children);
     }
 }

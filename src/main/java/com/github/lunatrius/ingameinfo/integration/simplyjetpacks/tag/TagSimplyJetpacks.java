@@ -3,11 +3,10 @@ package com.github.lunatrius.ingameinfo.integration.simplyjetpacks.tag;
 import cofh.api.energy.IEnergyContainerItem;
 import com.github.lunatrius.ingameinfo.tag.TagIntegration;
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
+import java.util.Locale;
 import net.minecraft.item.ItemStack;
 import tonius.simplyjetpacks.item.ItemPack;
 import tonius.simplyjetpacks.item.meta.Jetpack;
-
-import java.util.Locale;
 
 public abstract class TagSimplyJetpacks extends TagIntegration {
     @Override
@@ -59,7 +58,10 @@ public abstract class TagSimplyJetpacks extends TagIntegration {
                 if (chestplate != null) {
                     if (chestplate.getItem() instanceof IEnergyContainerItem) {
                         final IEnergyContainerItem item = (IEnergyContainerItem) chestplate.getItem();
-                        return String.format(Locale.ENGLISH, "%.2f", 100.0 * item.getEnergyStored(chestplate) / item.getMaxEnergyStored(chestplate));
+                        return String.format(
+                                Locale.ENGLISH,
+                                "%.2f",
+                                100.0 * item.getEnergyStored(chestplate) / item.getMaxEnergyStored(chestplate));
                     }
                 }
             } catch (Throwable e) {

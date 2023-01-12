@@ -22,9 +22,15 @@ public abstract class TagMouseOver extends Tag {
                 if (objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
                     return objectMouseOver.entityHit.func_145748_c_().getFormattedText();
                 } else if (objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                    Block block = world.getBlock(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ);
+                    Block block =
+                            world.getBlock(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ);
                     if (block != null) {
-                        ItemStack pickBlock = block.getPickBlock(objectMouseOver, world, objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ);
+                        ItemStack pickBlock = block.getPickBlock(
+                                objectMouseOver,
+                                world,
+                                objectMouseOver.blockX,
+                                objectMouseOver.blockY,
+                                objectMouseOver.blockZ);
                         if (pickBlock != null) {
                             return pickBlock.getDisplayName();
                         }
@@ -47,7 +53,8 @@ public abstract class TagMouseOver extends Tag {
                         return name;
                     }
                 } else if (objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                    Block block = world.getBlock(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ);
+                    Block block =
+                            world.getBlock(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ);
                     if (block != null) {
                         return GameData.getBlockRegistry().getNameForObject(block);
                     }
@@ -65,7 +72,8 @@ public abstract class TagMouseOver extends Tag {
                 if (objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
                     return String.valueOf(objectMouseOver.entityHit.getEntityId());
                 } else if (objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                    Block block = world.getBlock(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ);
+                    Block block =
+                            world.getBlock(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ);
                     if (block != null) {
                         return String.valueOf(GameData.getBlockRegistry().getId(block));
                     }
@@ -81,7 +89,8 @@ public abstract class TagMouseOver extends Tag {
             MovingObjectPosition objectMouseOver = minecraft.objectMouseOver;
             if (objectMouseOver != null) {
                 if (objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                    return String.valueOf(world.getBlockMetadata(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ));
+                    return String.valueOf(world.getBlockMetadata(
+                            objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ));
                 }
             }
             return "0";
@@ -99,7 +108,8 @@ public abstract class TagMouseOver extends Tag {
                         final int x = objectMouseOver.blockX + side.offsetX;
                         final int y = objectMouseOver.blockY + side.offsetY;
                         final int z = objectMouseOver.blockZ + side.offsetZ;
-                        power = Math.max(power, world.getBlock(x, y, z).isProvidingWeakPower(world, x, y, z, side.ordinal()));
+                        power = Math.max(
+                                power, world.getBlock(x, y, z).isProvidingWeakPower(world, x, y, z, side.ordinal()));
 
                         if (power >= 15) {
                             break;
@@ -118,10 +128,18 @@ public abstract class TagMouseOver extends Tag {
             MovingObjectPosition objectMouseOver = minecraft.objectMouseOver;
             if (objectMouseOver != null) {
                 if (objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                    final Block block = world.getBlock(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ);
+                    final Block block =
+                            world.getBlock(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ);
                     int power = -1;
                     for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
-                        power = Math.max(power, block.isProvidingStrongPower(world, objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ, side.ordinal()));
+                        power = Math.max(
+                                power,
+                                block.isProvidingStrongPower(
+                                        world,
+                                        objectMouseOver.blockX,
+                                        objectMouseOver.blockY,
+                                        objectMouseOver.blockZ,
+                                        side.ordinal()));
 
                         if (power >= 15) {
                             break;
@@ -140,7 +158,8 @@ public abstract class TagMouseOver extends Tag {
             MovingObjectPosition objectMouseOver = minecraft.objectMouseOver;
             if (objectMouseOver != null) {
                 if (objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                    return String.valueOf(world.getBlockPowerInput(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ));
+                    return String.valueOf(world.getBlockPowerInput(
+                            objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ));
                 }
             }
             return "-1";

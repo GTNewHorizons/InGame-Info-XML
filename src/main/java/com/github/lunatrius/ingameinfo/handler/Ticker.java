@@ -1,5 +1,8 @@
 package com.github.lunatrius.ingameinfo.handler;
 
+import static cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import static cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
+
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
 import com.github.lunatrius.ingameinfo.tag.Tag;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -8,9 +11,6 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-
-import static cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
-import static cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
 
 public class Ticker {
     public static final Ticker INSTANCE = new Ticker();
@@ -46,8 +46,10 @@ public class Ticker {
             }
 
             // a && b || !a && !b  -->  a == b
-            if (this.client.gameSettings != null && ConfigurationHandler.replaceDebug == this.client.gameSettings.showDebugInfo) {
-                if (!ConfigurationHandler.showOnPlayerList && this.client.gameSettings.keyBindPlayerList.getIsKeyPressed()) {
+            if (this.client.gameSettings != null
+                    && ConfigurationHandler.replaceDebug == this.client.gameSettings.showDebugInfo) {
+                if (!ConfigurationHandler.showOnPlayerList
+                        && this.client.gameSettings.keyBindPlayerList.getIsKeyPressed()) {
                     return false;
                 }
 

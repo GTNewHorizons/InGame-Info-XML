@@ -1,5 +1,6 @@
 package com.github.lunatrius.ingameinfo.handler;
 
+import static cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 
 import com.github.lunatrius.ingameinfo.reference.Names;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -7,16 +8,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
 
-import static cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
-
 public class KeyInputHandler {
     public static final KeyInputHandler INSTANCE = new KeyInputHandler();
 
-    private static final KeyBinding KEY_BINDING_TOGGLE = new KeyBinding(Names.Keys.TOGGLE, Keyboard.KEY_NONE, Names.Keys.CATEGORY);
+    private static final KeyBinding KEY_BINDING_TOGGLE =
+            new KeyBinding(Names.Keys.TOGGLE, Keyboard.KEY_NONE, Names.Keys.CATEGORY);
 
-    public static final KeyBinding[] KEY_BINDINGS = new KeyBinding[] {
-            KEY_BINDING_TOGGLE
-    };
+    public static final KeyBinding[] KEY_BINDINGS = new KeyBinding[] {KEY_BINDING_TOGGLE};
 
     private final Minecraft minecraft = Minecraft.getMinecraft();
 

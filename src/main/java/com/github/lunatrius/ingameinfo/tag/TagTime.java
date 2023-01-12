@@ -1,7 +1,6 @@
 package com.github.lunatrius.ingameinfo.tag;
 
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
