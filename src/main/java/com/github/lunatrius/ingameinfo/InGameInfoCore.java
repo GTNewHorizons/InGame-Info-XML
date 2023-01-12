@@ -123,31 +123,31 @@ public class InGameInfoCore {
             List<Info> queue = new ArrayList<>();
 
             for (List<Value> line : lines) {
-                String str = "";
+                StringBuilder str = new StringBuilder();
 
                 this.infoItemQueue.clear();
                 this.profiler.startSection("taggathering");
                 for (Value value : line) {
-                    str += getValue(value);
+                    str.append(getValue(value));
                 }
                 this.profiler.endSection();
 
-                if (!str.isEmpty()) {
-                    String processed = str.replaceAll("\\{ICON\\|( *)\\}", "$1");
+                if (str.length() > 0) {
+                    String processed = str.toString().replaceAll("\\{ICON\\|( *)\\}", "$1");
 
                     x = alignment.getX(scaledWidth, fontRenderer.getStringWidth(processed));
                     InfoText text = new InfoText(fontRenderer, processed, x, 0);
 
                     if (this.infoItemQueue.size() > 0) {
-                        MATCHER.reset(str);
+                        MATCHER.reset(str.toString());
 
                         for (int i = 0; i < this.infoItemQueue.size() && MATCHER.find(); i++) {
                             Info item = this.infoItemQueue.get(i);
                             item.x = fontRenderer.getStringWidth(str.substring(0, MATCHER.start()));
                             text.children.add(item);
 
-                            str = str.replaceFirst(Pattern.quote(MATCHER.group(0)), MATCHER.group(1));
-                            MATCHER.reset(str);
+                            str = new StringBuilder(str.toString().replaceFirst(Pattern.quote(MATCHER.group(0)), MATCHER.group(1)));
+                            MATCHER.reset(str.toString());
                         }
                     }
                     queue.add(text);

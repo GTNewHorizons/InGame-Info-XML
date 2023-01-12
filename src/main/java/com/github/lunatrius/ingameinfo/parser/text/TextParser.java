@@ -34,16 +34,17 @@ public class TextParser implements IParser {
         try {
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             BufferedReader reader = new BufferedReader(inputStreamReader);
-            String line, content = "";
+            String line;
+            StringBuilder content = new StringBuilder();
 
             while ((line = reader.readLine()) != null) {
-                content += line + "\n";
+                content.append(line).append("\n");
             }
 
             reader.close();
             inputStreamReader.close();
 
-            this.tokenizer.tokenize(content);
+            this.tokenizer.tokenize(content.toString());
         } catch (Exception e) {
             Reference.logger.fatal("Could not read text configuration file!", e);
             return false;
