@@ -28,12 +28,28 @@ public class Ticker {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        onTick(event);
+        if (event.side == Side.CLIENT && event.phase == TickEvent.Phase.END) {
+            this.client.mcProfiler.startSection("ingameinfo");
+            if (isRunning()) {
+                this.core.onTickClient();
+            }
+            if (!ConfigurationHandler.showHUD || this.client.gameSettings == null) {
+                Tag.setServer(null);
+                Tag.releaseResources();
+            }
+            this.client.mcProfiler.endSection();
+        }
     }
 
     @SubscribeEvent
-    public void onRenderTick(TickEvent.RenderTickEvent event) {
-        onTick(event);
+    public void onRenderGUI(RenderGameOverlayEvent.Post event) {
+        if (event.type == RenderGameOverlayEvent.ElementType.TEXT) {
+            this.client.mcProfiler.startSection("ingameinfo");
+            if (isRunning()) {
+                this.core.onTickRender(event.resolution);
+            }
+            this.client.mcProfiler.endSection();
+        }
     }
 
     private boolean isRunning() {
@@ -65,25 +81,5 @@ public class Ticker {
         }
 
         return false;
-    }
-
-    private void onTick(TickEvent event) {
-        if (event.side == Side.CLIENT && event.phase == TickEvent.Phase.END) {
-            this.client.mcProfiler.startSection("ingameinfo");
-            if (isRunning()) {
-                if (event.type == TickEvent.Type.CLIENT) {
-                    this.core.onTickClient();
-                } else if (event.type == TickEvent.Type.RENDER) {
-                    this.core.onTickRender();
-                }
-            }
-
-            if ((!ConfigurationHandler.showHUD || this.client.gameSettings == null)
-                    && event.type == TickEvent.Type.CLIENT) {
-                Tag.setServer(null);
-                Tag.releaseResources();
-            }
-            this.client.mcProfiler.endSection();
-        }
     }
 }

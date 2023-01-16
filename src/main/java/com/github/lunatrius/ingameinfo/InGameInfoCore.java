@@ -49,6 +49,8 @@ public class InGameInfoCore {
     private final Map<Alignment, List<List<Value>>> format = new HashMap<>();
     private final List<Info> info = new ArrayList<>();
     private final List<Info> infoItemQueue = new ArrayList<>();
+    private ScaledResolution scaledResolution =
+            new ScaledResolution(this.minecraft, this.minecraft.displayWidth, this.minecraft.displayHeight);
 
     private InGameInfoCore() {
         Tag.setInfo(this.infoItemQueue);
@@ -88,8 +90,6 @@ public class InGameInfoCore {
     }
 
     public void onTickClient() {
-        ScaledResolution scaledResolution =
-                new ScaledResolution(this.minecraft, this.minecraft.displayWidth, this.minecraft.displayHeight);
         float scale = ConfigurationHandler.Scale / 10;
         int scaledWidth = (int) (scaledResolution.getScaledWidth() / scale);
         int scaledHeight = (int) (scaledResolution.getScaledHeight() / scale);
@@ -171,22 +171,15 @@ public class InGameInfoCore {
         ValueComplex.ValueFile.tick();
     }
 
-    public void onTickRender() {
-        // disable blending and reset to default (just in case)
-        // fixes "washed-out" / bright text
+    public void onTickRender(ScaledResolution resolution) {
+        this.scaledResolution = resolution;
+        GL11.glPushMatrix();
         float scale = ConfigurationHandler.Scale / 10;
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         GL11.glScalef(scale, scale, scale);
-
         for (Info info : this.info) {
             info.draw();
         }
-
-        GL11.glScalef(1.0f / scale, 1.0f / scale, 1.0f / scale);
-        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        GL11.glPopMatrix();
     }
 
     public boolean loadConfig(String filename) {
