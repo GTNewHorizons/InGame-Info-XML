@@ -17,7 +17,12 @@ public abstract class TagGregtech extends TagIntegration {
         @Override
         public String getValue() {
             try {
-                return String.valueOf(GT_Worldgenerator.useNewOregenPattern);
+                if (GT_Worldgenerator.oregenPattern == GT_Worldgenerator.OregenPattern.EQUAL_SPACING) {
+                    return "true";
+                }
+                if (GT_Worldgenerator.oregenPattern == GT_Worldgenerator.OregenPattern.AXISSYMMETRICAL) {
+                    return "false";
+                }
             } catch (Throwable e) {
                 log(this, e);
             }
