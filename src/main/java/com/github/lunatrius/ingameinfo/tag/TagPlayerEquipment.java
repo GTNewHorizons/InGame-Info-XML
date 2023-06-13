@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import com.github.lunatrius.core.entity.EntityHelper;
 import com.github.lunatrius.ingameinfo.client.gui.InfoItem;
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
+
 import cpw.mods.fml.common.registry.GameData;
 
 public abstract class TagPlayerEquipment extends Tag {

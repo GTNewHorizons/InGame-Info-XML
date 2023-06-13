@@ -8,6 +8,7 @@ import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
 
 import com.github.lunatrius.ingameinfo.reference.Names;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class KeyInputHandler {

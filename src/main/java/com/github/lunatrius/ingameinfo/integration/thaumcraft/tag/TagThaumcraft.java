@@ -1,9 +1,9 @@
 package com.github.lunatrius.ingameinfo.integration.thaumcraft.tag;
 
-import thaumcraft.common.Thaumcraft;
-
 import com.github.lunatrius.ingameinfo.tag.TagIntegration;
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
+
+import thaumcraft.common.Thaumcraft;
 
 public abstract class TagThaumcraft extends TagIntegration {
 

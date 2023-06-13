@@ -1,9 +1,9 @@
 package com.github.lunatrius.ingameinfo.integration.bloodmagic.tag;
 
-import WayofTime.alchemicalWizardry.api.spell.APISpellHelper;
-
 import com.github.lunatrius.ingameinfo.tag.TagIntegration;
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
+
+import WayofTime.alchemicalWizardry.api.spell.APISpellHelper;
 
 public abstract class TagBloodMagic extends TagIntegration {
 

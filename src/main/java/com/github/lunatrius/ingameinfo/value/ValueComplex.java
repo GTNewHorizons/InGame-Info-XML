@@ -23,6 +23,7 @@ import com.github.lunatrius.ingameinfo.handler.ConfigurationHandler;
 import com.github.lunatrius.ingameinfo.reference.Reference;
 import com.github.lunatrius.ingameinfo.tag.Tag;
 import com.github.lunatrius.ingameinfo.value.registry.ValueRegistry;
+
 import cpw.mods.fml.common.registry.GameData;
 
 public abstract class ValueComplex extends Value {

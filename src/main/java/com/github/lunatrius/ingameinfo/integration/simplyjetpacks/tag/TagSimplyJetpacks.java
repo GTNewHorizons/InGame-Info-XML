@@ -4,12 +4,12 @@ import java.util.Locale;
 
 import net.minecraft.item.ItemStack;
 
-import tonius.simplyjetpacks.item.ItemPack;
-import tonius.simplyjetpacks.item.meta.Jetpack;
-import cofh.api.energy.IEnergyContainerItem;
-
 import com.github.lunatrius.ingameinfo.tag.TagIntegration;
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
+
+import cofh.api.energy.IEnergyContainerItem;
+import tonius.simplyjetpacks.item.ItemPack;
+import tonius.simplyjetpacks.item.meta.Jetpack;
 
 public abstract class TagSimplyJetpacks extends TagIntegration {
 

@@ -2,6 +2,7 @@ package com.github.lunatrius.ingameinfo.integration.gregtech.tag;
 
 import com.github.lunatrius.ingameinfo.tag.TagIntegration;
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
+
 import gregtech.common.GT_Worldgenerator;
 
 public abstract class TagBloodMagic extends TagIntegration {

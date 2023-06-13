@@ -7,6 +7,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
+
 import cpw.mods.fml.common.registry.GameData;
 
 public abstract class TagMouseOver extends Tag {
