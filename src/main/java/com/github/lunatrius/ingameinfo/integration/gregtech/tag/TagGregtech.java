@@ -5,7 +5,7 @@ import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
 
 import gregtech.common.GT_Worldgenerator;
 
-public abstract class TagBloodMagic extends TagIntegration {
+public abstract class TagGregtech extends TagIntegration {
 
     @Override
     public String getCategory() {
