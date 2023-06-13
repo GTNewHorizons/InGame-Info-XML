@@ -8,4 +8,5 @@ dependencies {
     compileOnly('curse.maven:cofh-lib-220333:2388748')
     compileOnly('curse.maven:simply-jetpacks-79325:2267185')
     compileOnly('curse.maven:tfcraft-302973:2627990')
+	compileOnly('com.github.GTNewHorizons:GT5-Unofficial:5.09.43.85:dev')
 }

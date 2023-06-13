@@ -26,7 +26,8 @@ public class PluginLoader {
         final String[] names = new String[] { "com.github.lunatrius.ingameinfo.integration.bloodmagic.BloodMagic",
                 "com.github.lunatrius.ingameinfo.integration.simplyjetpacks.SimplyJetpacks",
                 "com.github.lunatrius.ingameinfo.integration.terrafirmacraft.TerraFirmaCraft",
-                "com.github.lunatrius.ingameinfo.integration.thaumcraft.Thaumcraft" };
+                "com.github.lunatrius.ingameinfo.integration.thaumcraft.Thaumcraft",
+                "com.github.lunatrius.ingameinfo.integration.gregtech.Gregtech" };
 
         for (final String name : names) {
             try {
