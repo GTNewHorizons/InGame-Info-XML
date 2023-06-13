@@ -1,9 +1,9 @@
 // Add your dependencies here
 
 dependencies {
-    compile('com.github.GTNewHorizons:LunatriusCore:1.1.5-GTNH:dev')
+    compile('com.github.GTNewHorizons:LunatriusCore:1.1.7-GTNH:dev')
 
-    compileOnly('com.github.GTNewHorizons:BloodMagic:1.3.6:dev')
+    compileOnly('com.github.GTNewHorizons:BloodMagic:1.4.1:dev')
     compileOnly('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
     compileOnly('curse.maven:cofh-lib-220333:2388748')
     compileOnly('curse.maven:simply-jetpacks-79325:2267185')
