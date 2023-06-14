@@ -26,7 +26,7 @@ public abstract class TagGregtech extends TagIntegration {
             } catch (Throwable e) {
                 log(this, e);
             }
-            return "-1";
+            return "false";
         }
     }
 
