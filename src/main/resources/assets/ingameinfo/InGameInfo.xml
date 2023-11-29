@@ -51,7 +51,7 @@
         <line>
             <str>FPS: </str>
             <operation>
-                <str>gt</str>
+                <str>ge</str>
                 <var>fps</var>
                 <num>60</num>
                 <num>45</num>
