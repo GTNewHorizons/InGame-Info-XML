@@ -1,5 +1,7 @@
 package com.github.lunatrius.ingameinfo.proxy;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
@@ -10,6 +12,7 @@ import com.github.lunatrius.ingameinfo.handler.ConfigurationHandler;
 import com.github.lunatrius.ingameinfo.handler.KeyInputHandler;
 import com.github.lunatrius.ingameinfo.handler.Ticker;
 import com.github.lunatrius.ingameinfo.integration.PluginLoader;
+import com.github.lunatrius.ingameinfo.reference.Names;
 import com.github.lunatrius.ingameinfo.tag.Tag;
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
 import com.github.lunatrius.ingameinfo.value.registry.ValueRegistry;
@@ -35,8 +38,10 @@ public class ClientProxy extends CommonProxy {
 
         PluginLoader.getInstance().preInit(event);
 
-        this.core.setConfigDirectory(event.getModConfigurationDirectory());
-        this.core.setConfigFile(ConfigurationHandler.configName);
+        this.core.moveConfig(event.getModConfigurationDirectory(), ConfigurationHandler.configName);
+        this.core.setConfigDirectory(
+                event.getModConfigurationDirectory().toPath().resolve(Names.Files.SUBDIRECTORY).toFile());
+        this.core.setConfigFileWithLocale(ConfigurationHandler.configName);
         this.core.reloadConfig();
 
         ConfigurationHandler.propFileInterval.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
@@ -56,6 +61,8 @@ public class ClientProxy extends CommonProxy {
         FMLCommonHandler.instance().bus().register(ConfigurationHandler.INSTANCE);
         FMLCommonHandler.instance().bus().register(KeyInputHandler.INSTANCE);
         ClientCommandHandler.instance.registerCommand(InGameInfoCommand.INSTANCE);
+        ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager())
+                .registerReloadListener(ConfigurationHandler.INSTANCE);
     }
 
     @Override

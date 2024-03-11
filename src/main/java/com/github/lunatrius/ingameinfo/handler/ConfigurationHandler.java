@@ -5,17 +5,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
 import com.github.lunatrius.ingameinfo.Alignment;
+import com.github.lunatrius.ingameinfo.InGameInfoCore;
 import com.github.lunatrius.ingameinfo.reference.Names;
 import com.github.lunatrius.ingameinfo.reference.Reference;
 
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
-public class ConfigurationHandler {
+public class ConfigurationHandler implements IResourceManagerReloadListener {
 
     public static final ConfigurationHandler INSTANCE = new ConfigurationHandler();
 
@@ -126,6 +129,12 @@ public class ConfigurationHandler {
 
     public static void setConfigName(String name) {
         propConfigName.set(name);
+    }
+
+    @Override
+    public void onResourceManagerReload(IResourceManager p_110549_1_) {
+        InGameInfoCore.INSTANCE.setConfigFileWithLocale();
+        InGameInfoCore.INSTANCE.reloadConfig();
     }
 
     @SubscribeEvent

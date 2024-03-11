@@ -2,7 +2,11 @@ package com.github.lunatrius.ingameinfo;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +54,10 @@ public class InGameInfoCore {
     private final Profiler profiler = this.minecraft.mcProfiler;
     private File configDirectory = null;
     private File configFile = null;
+    /**
+     * Config file name without locale code suffix.
+     */
+    private String baseConfigFileName;
     private final Map<Alignment, List<List<Value>>> format = new HashMap<>();
     private final List<Info> info = new ArrayList<>();
     private final List<Info> infoItemQueue = new ArrayList<>();
@@ -72,26 +80,52 @@ public class InGameInfoCore {
         return this.configDirectory;
     }
 
+    public void setConfigFileWithLocale() {
+        if (baseConfigFileName != null) {
+            setConfigFileWithLocale(baseConfigFileName);
+        }
+    }
+
+    public void setConfigFileWithLocale(String filename) {
+        String userLang = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode();
+        String baseName = filename.split("\\.")[0];
+        String extension = filename.split("\\.").length > 1 ? filename.split("\\.")[1] : "";
+        String localeAwareFileName = baseName + "_" + userLang + "." + extension;
+        if (new File(this.configDirectory, localeAwareFileName).isFile()) {
+            setConfigFile(localeAwareFileName, filename);
+        } else {
+            setConfigFile(filename);
+        }
+    }
+
     public boolean setConfigFile(String filename) {
+        return setConfigFile(filename, filename);
+    }
+
+    public boolean setConfigFile(String filename, String baseConfigFileName) {
         File file = new File(this.configDirectory, filename);
         if (file.exists()) {
             if (filename.endsWith(Names.Files.EXT_XML)) {
                 this.configFile = file;
                 this.parser = new XmlParser();
+                this.baseConfigFileName = baseConfigFileName;
                 return true;
             } else if (filename.endsWith(Names.Files.EXT_JSON)) {
                 this.configFile = file;
                 this.parser = new JsonParser();
+                this.baseConfigFileName = baseConfigFileName;
                 return true;
             } else if (filename.endsWith(Names.Files.EXT_TXT)) {
                 this.configFile = file;
                 this.parser = new TextParser();
+                this.baseConfigFileName = baseConfigFileName;
                 return true;
             }
         }
 
         this.configFile = null;
         this.parser = new XmlParser();
+        this.baseConfigFileName = null;
         return false;
     }
 
@@ -246,6 +280,28 @@ public class InGameInfoCore {
         }
 
         return printer != null && printer.print(file, this.format);
+    }
+
+    public void moveConfig(File directory, String fileName) {
+        File originalFile = new File(directory, fileName);
+        if (!originalFile.isFile()) return;
+        Path source = originalFile.toPath();
+        Path subdirectory = directory.toPath().resolve(Names.Files.SUBDIRECTORY);
+        Path destination = subdirectory.resolve(fileName).normalize();
+        if (!destination.startsWith(directory.toPath())) {
+            // Maybe we don't need but just in case
+            throw new RuntimeException("Failed to move file: " + destination);
+        }
+        try {
+            if (!subdirectory.toFile().isDirectory()) {
+                Files.createDirectory(subdirectory);
+            }
+            // noinspection ResultOfMethodCallIgnored
+            destination.toFile().createNewFile();
+            Files.move(source, destination, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private String getValue(Value value) {

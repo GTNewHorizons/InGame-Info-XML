@@ -77,6 +77,8 @@ public final class Names {
 
         public static final String NAME = "InGameInfo";
 
+        public static final String SUBDIRECTORY = "InGameInfoXML";
+
         public static final String FILE_XML = "InGameInfo.xml";
         public static final String FILE_JSON = "InGameInfo.json";
         public static final String FILE_TXT = "InGameInfo.txt";

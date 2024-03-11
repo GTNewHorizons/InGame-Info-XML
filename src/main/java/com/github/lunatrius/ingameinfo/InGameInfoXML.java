@@ -16,8 +16,13 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.relauncher.Side;
+import reference.VersionReference;
 
-@Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.VERSION, guiFactory = Reference.GUI_FACTORY)
+@Mod(
+        modid = Reference.MODID,
+        name = Reference.NAME,
+        version = VersionReference.VERSION,
+        guiFactory = Reference.GUI_FACTORY)
 public class InGameInfoXML {
 
     @Instance(Reference.MODID)
