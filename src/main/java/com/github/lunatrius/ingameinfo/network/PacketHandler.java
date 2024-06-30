@@ -1,5 +1,6 @@
 package com.github.lunatrius.ingameinfo.network;
 
+import com.github.lunatrius.ingameinfo.network.message.MessageNextRain;
 import com.github.lunatrius.ingameinfo.network.message.MessageSeed;
 import com.github.lunatrius.ingameinfo.reference.Reference;
 
@@ -14,5 +15,6 @@ public class PacketHandler {
 
     public static void init() {
         INSTANCE.registerMessage(MessageSeed.class, MessageSeed.class, 0, Side.CLIENT);
+        INSTANCE.registerMessage(MessageNextRain.class, MessageNextRain.class, 0, Side.CLIENT);
     }
 }

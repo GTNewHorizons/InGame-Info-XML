@@ -27,7 +27,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.github.lunatrius.ingameinfo.client.gui.Info;
 import com.github.lunatrius.ingameinfo.client.gui.InfoText;
-import com.github.lunatrius.ingameinfo.handler.ConfigurationHandler;
+import com.github.lunatrius.ingameinfo.handler.ClientConfigurationHandler;
 import com.github.lunatrius.ingameinfo.parser.IParser;
 import com.github.lunatrius.ingameinfo.parser.json.JsonParser;
 import com.github.lunatrius.ingameinfo.parser.text.TextParser;
@@ -130,7 +130,7 @@ public class InGameInfoCore {
     }
 
     public void onTickClient() {
-        float scale = ConfigurationHandler.Scale / 10;
+        float scale = ClientConfigurationHandler.Scale / 10;
         int scaledWidth = (int) (scaledResolution.getScaledWidth() / scale);
         int scaledHeight = (int) (scaledResolution.getScaledHeight() / scale);
 
@@ -214,7 +214,7 @@ public class InGameInfoCore {
     public void onTickRender(ScaledResolution resolution) {
         this.scaledResolution = resolution;
         GL11.glPushMatrix();
-        float scale = ConfigurationHandler.Scale / 10;
+        float scale = ClientConfigurationHandler.Scale / 10;
         GL11.glScalef(scale, scale, scale);
         for (Info info : this.info) {
             info.draw();

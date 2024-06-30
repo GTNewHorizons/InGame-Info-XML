@@ -8,7 +8,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
 import com.github.lunatrius.ingameinfo.command.InGameInfoCommand;
-import com.github.lunatrius.ingameinfo.handler.ConfigurationHandler;
+import com.github.lunatrius.ingameinfo.handler.ClientConfigurationHandler;
 import com.github.lunatrius.ingameinfo.handler.KeyInputHandler;
 import com.github.lunatrius.ingameinfo.handler.Ticker;
 import com.github.lunatrius.ingameinfo.integration.PluginLoader;
@@ -33,19 +33,20 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
+        ClientConfigurationHandler.init(event.getSuggestedConfigurationFile());
 
         ValueRegistry.INSTANCE.init();
 
         PluginLoader.getInstance().preInit(event);
 
-        this.core.moveConfig(event.getModConfigurationDirectory(), ConfigurationHandler.configName);
+        this.core.moveConfig(event.getModConfigurationDirectory(), ClientConfigurationHandler.configName);
         this.core.setConfigDirectory(
                 event.getModConfigurationDirectory().toPath().resolve(Names.Files.SUBDIRECTORY).toFile());
-        this.core.setConfigFileWithLocale(ConfigurationHandler.configName);
+        this.core.setConfigFileWithLocale(ClientConfigurationHandler.configName);
         this.core.reloadConfig();
 
-        ConfigurationHandler.propFileInterval.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
-        ConfigurationHandler.propscale.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
+        ClientConfigurationHandler.propFileInterval.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
+        ClientConfigurationHandler.propscale.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
 
         for (KeyBinding keyBinding : KeyInputHandler.KEY_BINDINGS) {
             ClientRegistry.registerKeyBinding(keyBinding);
@@ -58,11 +59,11 @@ public class ClientProxy extends CommonProxy {
 
         MinecraftForge.EVENT_BUS.register(Ticker.INSTANCE);
         FMLCommonHandler.instance().bus().register(Ticker.INSTANCE);
-        FMLCommonHandler.instance().bus().register(ConfigurationHandler.INSTANCE);
+        FMLCommonHandler.instance().bus().register(ClientConfigurationHandler.INSTANCE);
         FMLCommonHandler.instance().bus().register(KeyInputHandler.INSTANCE);
         ClientCommandHandler.instance.registerCommand(InGameInfoCommand.INSTANCE);
         ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager())
-                .registerReloadListener(ConfigurationHandler.INSTANCE);
+                .registerReloadListener(ClientConfigurationHandler.INSTANCE);
     }
 
     @Override
