@@ -170,11 +170,17 @@ public abstract class TagWorld extends Tag {
 
         @Override
         public String getValue() {
+            int seconds;
             if (server == null) {
-                return "?";
+                if (hasNextRainTime) {
+                    seconds = nextRainTime / 20;
+                } else {
+                    return "?";
+                }
+            } else {
+                seconds = server.worldServers[0].getWorldInfo().getRainTime() / 20;
             }
 
-            int seconds = server.worldServers[0].getWorldInfo().getRainTime() / 20;
             if (seconds < 60) {
                 return String.format(Locale.ENGLISH, "%ds", seconds);
             } else if (seconds < 3600) {

@@ -24,6 +24,8 @@ public abstract class Tag {
     protected static List<Info> info;
     protected static boolean hasSeed = false;
     protected static long seed = 0;
+    protected static boolean hasNextRainTime = false;
+    protected static int nextRainTime = 0;
 
     private String name = null;
     private String[] aliases = new String[0];
@@ -92,6 +94,16 @@ public abstract class Tag {
     public static void unsetSeed() {
         Tag.hasSeed = false;
         Tag.seed = 0;
+    }
+
+    public static void setNextRain(int rain) {
+        Tag.hasNextRainTime = true;
+        Tag.nextRainTime = rain;
+    }
+
+    public static void unsetNextRain() {
+        Tag.hasNextRainTime = false;
+        Tag.nextRainTime = 0;
     }
 
     public static void setWorld(World world) {
