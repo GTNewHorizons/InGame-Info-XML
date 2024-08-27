@@ -2,6 +2,8 @@ package com.github.lunatrius.ingameinfo.handler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
@@ -54,31 +56,35 @@ public class Ticker {
     }
 
     private boolean isRunning() {
-        if (ConfigurationHandler.showHUD) {
-            if (this.client.mcProfiler.profilingEnabled) {
+        if (!ConfigurationHandler.showHUD) return false;
+
+        if (this.client.mcProfiler.profilingEnabled) {
+            return true;
+        }
+
+        if (ConfigurationHandler.replaceDebug == this.client.gameSettings.showDebugInfo) {
+
+            if (this.client.gameSettings.hideGUI) {
+                return false;
+            }
+
+            if (!ConfigurationHandler.showOnPlayerList
+                    && this.client.gameSettings.keyBindPlayerList.getIsKeyPressed()) {
+                if (this.client.theWorld != null && this.client.thePlayer != null) {
+                    final ScoreObjective scoreobjective = this.client.theWorld.getScoreboard().func_96539_a(0);
+                    final NetHandlerPlayClient handler = this.client.thePlayer.sendQueue;
+                    if (!this.client.isIntegratedServerRunning() || handler.playerInfoList.size() > 1
+                            || scoreobjective != null) {
+                        return false;
+                    }
+                }
+            }
+
+            if (this.client.currentScreen == null) {
                 return true;
             }
 
-            // a && b || !a && !b --> a == b
-            if (this.client.gameSettings != null
-                    && ConfigurationHandler.replaceDebug == this.client.gameSettings.showDebugInfo) {
-                if (!ConfigurationHandler.showOnPlayerList
-                        && this.client.gameSettings.keyBindPlayerList.getIsKeyPressed()) {
-                    return false;
-                }
-
-                if (this.client.gameSettings.hideGUI) {
-                    return false;
-                }
-
-                if (this.client.currentScreen == null) {
-                    return true;
-                }
-
-                if (ConfigurationHandler.showInChat && this.client.currentScreen instanceof GuiChat) {
-                    return true;
-                }
-            }
+            return ConfigurationHandler.showInChat && this.client.currentScreen instanceof GuiChat;
         }
 
         return false;
