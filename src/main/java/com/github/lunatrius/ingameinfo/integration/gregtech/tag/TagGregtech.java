@@ -3,7 +3,7 @@ package com.github.lunatrius.ingameinfo.integration.gregtech.tag;
 import com.github.lunatrius.ingameinfo.tag.TagIntegration;
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
 
-import gregtech.common.GT_Worldgenerator;
+import gregtech.common.GTWorldgenerator;
 
 public abstract class TagGregtech extends TagIntegration {
 
@@ -17,10 +17,10 @@ public abstract class TagGregtech extends TagIntegration {
         @Override
         public String getValue() {
             try {
-                if (GT_Worldgenerator.oregenPattern == GT_Worldgenerator.OregenPattern.EQUAL_SPACING) {
+                if (GTWorldgenerator.oregenPattern == GTWorldgenerator.OregenPattern.EQUAL_SPACING) {
                     return "true";
                 }
-                if (GT_Worldgenerator.oregenPattern == GT_Worldgenerator.OregenPattern.AXISSYMMETRICAL) {
+                if (GTWorldgenerator.oregenPattern == GTWorldgenerator.OregenPattern.AXISSYMMETRICAL) {
                     return "false";
                 }
             } catch (Throwable e) {
