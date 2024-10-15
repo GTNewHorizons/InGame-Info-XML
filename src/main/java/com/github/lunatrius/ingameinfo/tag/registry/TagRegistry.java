@@ -27,7 +27,7 @@ public class TagRegistry {
 
     private void register(String name, Tag tag) {
         if (this.stringTagMap.containsKey(name)) {
-            Reference.logger.error("Duplicate tag key '" + name + "'!");
+            Reference.logger.error("Duplicate tag key '{}'!", name);
             return;
         }
 
@@ -48,16 +48,16 @@ public class TagRegistry {
     }
 
     public String getValue(String name) {
-        Tag tag = this.stringTagMap.get(name.toLowerCase());
+        Tag tag = stringTagMap.get(name.toLowerCase());
         return tag != null ? tag.getValue() : null;
     }
 
+    public Tag getTag(String name) {
+        return stringTagMap.get(name.toLowerCase());
+    }
+
     public List<Tag> getRegisteredTags() {
-        List<Tag> tags = new ArrayList<>();
-        for (Map.Entry<String, Tag> entry : this.stringTagMap.entrySet()) {
-            tags.add(entry.getValue());
-        }
-        return tags;
+        return new ArrayList<>(stringTagMap.values());
     }
 
     public void init() {
@@ -73,6 +73,6 @@ public class TagRegistry {
         TagTime.register();
         TagWorld.register();
 
-        Reference.logger.info("Registered " + this.stringTagMap.size() + " tags.");
+        Reference.logger.info("Registered {} tags.", stringTagMap.size());
     }
 }

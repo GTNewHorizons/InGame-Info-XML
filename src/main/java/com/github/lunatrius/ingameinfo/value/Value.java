@@ -3,20 +3,18 @@ package com.github.lunatrius.ingameinfo.value;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import com.github.lunatrius.ingameinfo.client.gui.Info;
+import org.apache.commons.lang3.StringUtils;
+
+import com.github.lunatrius.ingameinfo.client.gui.InfoText;
 import com.github.lunatrius.ingameinfo.reference.Reference;
+import com.github.lunatrius.ingameinfo.tag.Tag;
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
 import com.github.lunatrius.ingameinfo.value.registry.ValueRegistry;
 
 public abstract class Value {
 
-    private static final Pattern PATTERN = Pattern.compile("\\{([a-z0-9]+)\\}", Pattern.CASE_INSENSITIVE);
-    private static final Matcher MATCHER = PATTERN.matcher("");
-    protected static List<Info> info;
-
+    protected InfoText parent;
     private String name = null;
     private String[] aliases = new String[0];
     protected String value = "";
@@ -54,13 +52,24 @@ public abstract class Value {
     }
 
     protected String replaceVariables(String str) {
-        MATCHER.reset(str);
+        int tagAmount = StringUtils.countMatches(str, "{");
+        if (tagAmount == 0 || tagAmount == 1 && str.contains("ICON")) {
+            return str;
+        }
+        StringBuilder builder = new StringBuilder(str);
 
-        while (MATCHER.find()) {
-            str = str.replace(MATCHER.group(0), getVariableValue(MATCHER.group(1)));
+        for (int i = 0; i < tagAmount; i++) {
+            int start = builder.indexOf("{");
+            if (start == -1) break;
+
+            int end = builder.indexOf("}", start);
+            if (end == -1) break;
+            String var = builder.substring(start + 1, end);
+            String replacement = getVariableValue(var);
+            builder.replace(start, end + 1, replacement);
         }
 
-        return str;
+        return builder.toString();
     }
 
     public abstract boolean isSimple();
@@ -103,16 +112,20 @@ public abstract class Value {
 
     protected String getVariableValue(String var) {
         try {
-            String value = TagRegistry.INSTANCE.getValue(var);
-            if (value != null) {
-                return value;
+            Tag tag = TagRegistry.INSTANCE.getTag(var);
+            String value = tag.getValue();
+            if (value == null) {
+                return "{" + var + "}";
             }
+            if (value.isEmpty()) {
+                value = tag.getValue(this.parent);
+            }
+
+            return value;
         } catch (Exception e) {
             Reference.logger.debug("Failed to get value!", e);
             return "null";
         }
-
-        return "{" + var + "}";
     }
 
     public String getReplacedValue() {
@@ -124,8 +137,8 @@ public abstract class Value {
         return String.format(Locale.ENGLISH, "[%s] '%s'", getClass(), this.value);
     }
 
-    public static void setInfo(List<Info> info) {
-        Value.info = info;
+    public void setParent(InfoText parent) {
+        this.parent = parent;
     }
 
     public static Value fromString(String str) {

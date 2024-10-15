@@ -29,7 +29,7 @@ public abstract class ValueSimple extends Value {
 
     @Override
     public boolean isValidSize() {
-        return this.values.size() == 0;
+        return this.values.isEmpty();
     }
 
     public static class ValueString extends ValueSimple {

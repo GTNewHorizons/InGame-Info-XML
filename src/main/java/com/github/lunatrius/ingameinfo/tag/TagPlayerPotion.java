@@ -6,7 +6,10 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.github.lunatrius.ingameinfo.client.gui.InfoIcon;
+import com.github.lunatrius.ingameinfo.client.gui.InfoText;
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
 
 public abstract class TagPlayerPotion extends Tag {
@@ -54,7 +57,7 @@ public abstract class TagPlayerPotion extends Tag {
         if (potionEffects == null) {
             Collection<PotionEffect> potionEffectCollection = player.getActivePotionEffects();
             potionEffects = new PotionEffect[potionEffectCollection.size()];
-            if (potionEffectCollection.size() > 0) {
+            if (!potionEffectCollection.isEmpty()) {
                 int index = 0;
 
                 for (PotionEffect potionEffect : potionEffectCollection) {
@@ -151,7 +154,7 @@ public abstract class TagPlayerPotion extends Tag {
         }
 
         @Override
-        public String getValue() {
+        public @NotNull String getValue(@NotNull InfoText parent) {
             updatePotionEffects();
             if (potionEffects.length > this.index) {
                 Potion potion = Potion.potionTypes[potionEffects[this.index].getPotionID()];
@@ -164,10 +167,15 @@ public abstract class TagPlayerPotion extends Tag {
                         icon.setDisplayDimensions(1, -1, 18 / 2, 18 / 2);
                     }
                     icon.setTextureData((i % 8) * 18, 198 + (i / 8) * 18, 18, 18, 256, 256);
-                    info.add(icon);
+                    parent.attachValue(getName(), icon);
                     return getIconTag(icon);
                 }
             }
+            return "";
+        }
+
+        @Override
+        public String getValue() {
             return "";
         }
     }

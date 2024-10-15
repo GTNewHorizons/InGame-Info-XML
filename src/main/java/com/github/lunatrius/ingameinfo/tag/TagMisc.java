@@ -6,7 +6,11 @@ import net.minecraft.client.gui.GuiPlayerInfo;
 import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.util.EnumChatFormatting;
 
+import org.jetbrains.annotations.NotNull;
+
+import com.github.lunatrius.ingameinfo.client.gui.Info;
 import com.github.lunatrius.ingameinfo.client.gui.InfoIcon;
+import com.github.lunatrius.ingameinfo.client.gui.InfoText;
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
 
 public abstract class TagMisc extends Tag {
@@ -63,7 +67,7 @@ public abstract class TagMisc extends Tag {
         @Override
         public String getValue() {
             List<ResourcePackRepository.Entry> repositoryEntries = resourcePackRepository.getRepositoryEntries();
-            if (repositoryEntries.size() > 0) {
+            if (!repositoryEntries.isEmpty()) {
                 return repositoryEntries.get(0).getResourcePackName();
             }
             return resourcePackRepository.rprDefaultResourcePack.getPackName();
@@ -170,33 +174,46 @@ public abstract class TagMisc extends Tag {
 
     public static class PingIcon extends TagMisc {
 
+        private boolean needsUpdate(InfoText caller, int ping) {
+            Info value = caller.getAttachedValue(getName());
+            if (value == null) return true;
+            return Integer.parseInt(value.getIdentifier()) != ping;
+        }
+
         @Override
-        public String getValue() {
+        public @NotNull String getValue(@NotNull InfoText caller) {
             List<GuiPlayerInfo> list = player.sendQueue.playerInfoList;
             for (GuiPlayerInfo playerInfo : list) {
                 if (player.getGameProfile().getName()
                         .equals(EnumChatFormatting.getTextWithoutFormattingCodes(playerInfo.name))) {
-                    int pingIndex = 4;
-                    if (playerInfo.responseTime < 0) {
-                        pingIndex = 5;
-                    } else if (playerInfo.responseTime < 150) {
-                        pingIndex = 0;
-                    } else if (playerInfo.responseTime < 300) {
-                        pingIndex = 1;
-                    } else if (playerInfo.responseTime < 600) {
-                        pingIndex = 2;
-                    } else if (playerInfo.responseTime < 1000) {
-                        pingIndex = 3;
+                    int pingIndex = getPingIndex(playerInfo);
+                    if (needsUpdate(caller, playerInfo.responseTime)) {
+                        InfoIcon icon = new InfoIcon("textures/gui/icons.png");
+                        icon.setIdentifier(String.valueOf(playerInfo.responseTime));
+                        icon.setDisplayDimensions(0, 0, 10, 8);
+                        icon.setTextureData(0, 176 + pingIndex * 8, 10, 8, 256, 256);
+                        caller.attachValue(getName(), icon);
+                        return getIconTag(icon);
                     }
-
-                    InfoIcon icon = new InfoIcon("textures/gui/icons.png");
-                    icon.setDisplayDimensions(0, 0, 10, 8);
-                    icon.setTextureData(0, 176 + pingIndex * 8, 10, 8, 256, 256);
-                    info.add(icon);
-                    return getIconTag(icon);
+                    return "";
                 }
             }
             return "-1";
+        }
+
+        private static int getPingIndex(GuiPlayerInfo playerInfo) {
+            int responseTime = playerInfo.responseTime;
+            if (responseTime < 0) return 5;
+            if (responseTime < 150) return 0;
+            if (responseTime < 300) return 1;
+            if (responseTime < 600) return 2;
+            if (responseTime < 1000) return 3;
+            return 4;
+        }
+
+        @Override
+        public String getValue() {
+            return "";
         }
     }
 

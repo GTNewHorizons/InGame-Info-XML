@@ -4,8 +4,12 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.github.lunatrius.core.entity.EntityHelper;
+import com.github.lunatrius.ingameinfo.client.gui.Info;
 import com.github.lunatrius.ingameinfo.client.gui.InfoItem;
+import com.github.lunatrius.ingameinfo.client.gui.InfoText;
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
 
 import cpw.mods.fml.common.registry.GameData;
@@ -132,11 +136,26 @@ public abstract class TagPlayerEquipment extends Tag {
         }
 
         @Override
+        public @NotNull String getValue(@NotNull InfoText caller) {
+            ItemStack itemStack = getItemStack(slot);
+            if (itemStack == null) {
+                caller.removeAttachedValue(getName());
+                return "";
+            }
+
+            Info value = caller.getAttachedValue(getName());
+            if (value == null || !value.getIdentifier().equals(itemStack.getDisplayName())) {
+                InfoItem item = new InfoItem(minecraft.fontRenderer, itemStack, this.large);
+                item.setIdentifier(itemStack.getDisplayName());
+                caller.attachValue(getName(), item);
+                return getIconTag(item);
+            }
+            return "";
+        }
+
+        @Override
         public String getValue() {
-            ItemStack itemStack = getItemStack(this.slot);
-            InfoItem item = new InfoItem(minecraft.fontRenderer, itemStack, this.large);
-            info.add(item);
-            return getIconTag(item);
+            return "";
         }
     }
 

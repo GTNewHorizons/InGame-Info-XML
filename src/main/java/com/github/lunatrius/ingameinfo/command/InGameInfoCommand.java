@@ -40,7 +40,7 @@ public class InGameInfoCommand extends CommandBase {
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender commandSender, String[] args) {
+    public List<String> addTabCompletionOptions(ICommandSender commandSender, String[] args) {
         if (args.length == 1) {
             return getListOfStringsMatchingLastWord(
                     args,

@@ -17,6 +17,7 @@ import net.minecraft.item.ItemStack;
 
 import com.github.lunatrius.core.entity.EntityHelper;
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
+import com.github.lunatrius.ingameinfo.client.gui.Info;
 import com.github.lunatrius.ingameinfo.client.gui.InfoIcon;
 import com.github.lunatrius.ingameinfo.client.gui.InfoItem;
 import com.github.lunatrius.ingameinfo.handler.ConfigurationHandler;
@@ -242,12 +243,18 @@ public abstract class ValueComplex extends Value {
 
     public static class ValueIcon extends ValueComplex {
 
+        private static int lastId;
+
+        public ValueIcon() {
+            this.setName("icon" + lastId++);
+        }
+
         @Override
         public boolean isValidSize() {
-            return this.values.size() == 1 || this.values.size() == 2
+            return (this.values.size() == 1 || this.values.size() == 2
                     || this.values.size() == 5
                     || this.values.size() == 7
-                    || this.values.size() == 11;
+                    || this.values.size() == 11);
         }
 
         @Override
@@ -256,10 +263,12 @@ public abstract class ValueComplex extends Value {
                 int size = this.values.size();
                 String what = getValue(0);
 
-                if (size == 1 || size == 2) {
-                    InfoItem item;
-                    ItemStack itemStack;
+                Info value = parent.getAttachedValue(getName());
+                if (value != null && value.getIdentifier().equals(what)) {
+                    return "";
+                }
 
+                if (size == 1 || size == 2) {
                     int metadata = 0;
                     if (size == 2) {
                         metadata = getIntValue(1);
@@ -270,22 +279,23 @@ public abstract class ValueComplex extends Value {
                         }
                     }
 
-                    itemStack = new ItemStack(GameData.getItemRegistry().getObject(what), 1, metadata);
-                    if (itemStack.getItem() != null) {
-                        item = new InfoItem(Minecraft.getMinecraft().fontRenderer, itemStack);
-                        info.add(item);
-                        return Tag.getIconTag(item);
+                    ItemStack itemStack = new ItemStack(GameData.getItemRegistry().getObject(what), 1, metadata);
+                    if (itemStack.getItem() == null) {
+                        itemStack = new ItemStack(GameData.getBlockRegistry().getObject(what), 1, metadata);
                     }
 
-                    itemStack = new ItemStack(GameData.getBlockRegistry().getObject(what), 1, metadata);
-                    if (itemStack.getItem() != null) {
-                        item = new InfoItem(Minecraft.getMinecraft().fontRenderer, itemStack);
-                        info.add(item);
-                        return Tag.getIconTag(item);
+                    if (itemStack.getItem() == null) return "";
+
+                    InfoItem item = new InfoItem(Minecraft.getMinecraft().fontRenderer, itemStack);
+                    item.setIdentifier(what);
+                    if (parent != null) {
+                        parent.attachValue(getName(), item);
                     }
+                    return Tag.getIconTag(item);
                 }
 
                 InfoIcon icon = new InfoIcon(what);
+                icon.setIdentifier(what);
                 int index = 0;
 
                 if (size == 5 || size == 11) {
@@ -306,7 +316,9 @@ public abstract class ValueComplex extends Value {
                     icon.setTextureData(iconX, iconY, iconWidth, iconHeight, textureWidth, textureHeight);
                 }
 
-                info.add(icon);
+                if (parent != null) {
+                    parent.attachValue(getName(), icon);
+                }
                 return Tag.getIconTag(icon);
             } catch (Exception e) {
                 return "?";
