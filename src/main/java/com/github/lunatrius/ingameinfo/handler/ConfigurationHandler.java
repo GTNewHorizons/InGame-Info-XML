@@ -23,7 +23,6 @@ public class ConfigurationHandler {
 
     public static final String CONFIG_NAME_DEFAULT = Names.Files.FILE_XML;
     public static final boolean SHOW_HUD_DEFAULT = true;
-    // TODO: 1.8 - flip the default to true
     public static final boolean REPLACE_DEBUG_DEFAULT = false;
     public static final boolean SHOW_IN_CHAT_DEFAULT = true;
     public static final boolean SHOW_ON_PLAYER_LIST_DEFAULT = true;

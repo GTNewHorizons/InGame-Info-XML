@@ -22,15 +22,13 @@ public class KeyInputHandler {
 
     public static final KeyBinding[] KEY_BINDINGS = new KeyBinding[] { KEY_BINDING_TOGGLE };
 
-    private final Minecraft minecraft = Minecraft.getMinecraft();
-
     private KeyInputHandler() {}
 
     @SubscribeEvent
     public void onKeyInput(KeyInputEvent event) {
         for (KeyBinding keyBinding : KEY_BINDINGS) {
             if (keyBinding.isPressed()) {
-                if (this.minecraft.currentScreen == null) {
+                if (Minecraft.getMinecraft().currentScreen == null) {
                     ConfigurationHandler.showHUD = !ConfigurationHandler.showHUD;
                     ConfigurationHandler.saveHUDsettingToFile();
                 }
