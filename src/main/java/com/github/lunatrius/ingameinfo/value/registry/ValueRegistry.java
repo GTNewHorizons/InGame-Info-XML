@@ -49,7 +49,7 @@ public class ValueRegistry {
         try {
             final Class<? extends Value> clazz = this.stringClassMap.get(name);
             if (clazz != null) {
-                return clazz.newInstance();
+                return clazz.getDeclaredConstructor().newInstance();
             }
         } catch (Exception e) {
             Reference.logger.error(String.format("Failed to create an instance for %s!", name), e);

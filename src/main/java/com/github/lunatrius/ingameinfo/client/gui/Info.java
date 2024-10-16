@@ -3,10 +3,14 @@ package com.github.lunatrius.ingameinfo.client.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+
 import org.jetbrains.annotations.NotNull;
 
 public abstract class Info {
 
+    protected static final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
     public final List<Info> children = new ArrayList<>();
     public int x;
     public int y;

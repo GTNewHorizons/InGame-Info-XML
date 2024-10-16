@@ -286,7 +286,7 @@ public abstract class ValueComplex extends Value {
 
                     if (itemStack.getItem() == null) return "";
 
-                    InfoItem item = new InfoItem(Minecraft.getMinecraft().fontRenderer, itemStack);
+                    InfoItem item = new InfoItem(itemStack);
                     item.setIdentifier(what);
                     if (parent != null) {
                         parent.attachValue(getName(), item);

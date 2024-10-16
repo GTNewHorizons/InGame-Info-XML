@@ -1,13 +1,9 @@
 package com.github.lunatrius.ingameinfo.handler;
 
+import static com.github.lunatrius.ingameinfo.proxy.ClientProxy.KEY_BINDING_TOGGLE;
 import static cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
-
-import org.lwjgl.input.Keyboard;
-
-import com.github.lunatrius.ingameinfo.reference.Names;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
@@ -15,23 +11,14 @@ public class KeyInputHandler {
 
     public static final KeyInputHandler INSTANCE = new KeyInputHandler();
 
-    private static final KeyBinding KEY_BINDING_TOGGLE = new KeyBinding(
-            Names.Keys.TOGGLE,
-            Keyboard.KEY_NONE,
-            Names.Keys.CATEGORY);
-
-    public static final KeyBinding[] KEY_BINDINGS = new KeyBinding[] { KEY_BINDING_TOGGLE };
-
     private KeyInputHandler() {}
 
     @SubscribeEvent
     public void onKeyInput(KeyInputEvent event) {
-        for (KeyBinding keyBinding : KEY_BINDINGS) {
-            if (keyBinding.isPressed()) {
-                if (Minecraft.getMinecraft().currentScreen == null) {
-                    ConfigurationHandler.showHUD = !ConfigurationHandler.showHUD;
-                    ConfigurationHandler.saveHUDsettingToFile();
-                }
+        if (KEY_BINDING_TOGGLE.isPressed()) {
+            if (Minecraft.getMinecraft().currentScreen == null) {
+                ConfigurationHandler.showHUD = !ConfigurationHandler.showHUD;
+                ConfigurationHandler.saveHUDsettingToFile();
             }
         }
     }

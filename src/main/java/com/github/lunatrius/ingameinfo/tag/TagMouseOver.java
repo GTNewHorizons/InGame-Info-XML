@@ -34,7 +34,8 @@ public abstract class TagMouseOver extends Tag {
                                 world,
                                 objectMouseOver.blockX,
                                 objectMouseOver.blockY,
-                                objectMouseOver.blockZ);
+                                objectMouseOver.blockZ,
+                                player);
                         if (pickBlock != null) {
                             return pickBlock.getDisplayName();
                         }

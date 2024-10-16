@@ -1,7 +1,6 @@
 package com.github.lunatrius.ingameinfo.client.gui;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -12,24 +11,25 @@ import org.lwjgl.opengl.GL12;
 
 public class InfoItem extends Info {
 
-    private static final TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
     private static final RenderItem renderItem = new RenderItem();
     private final ItemStack itemStack;
-    private final FontRenderer fontRenderer;
     private final boolean large;
     private final int size;
 
-    public InfoItem(FontRenderer fontRenderer, ItemStack itemStack) {
-        this(fontRenderer, itemStack, false);
+    static {
+        renderItem.zLevel = 300;
     }
 
-    public InfoItem(FontRenderer fontRenderer, ItemStack itemStack, boolean large) {
-        this(fontRenderer, itemStack, large, 0, 0);
+    public InfoItem(ItemStack itemStack) {
+        this(itemStack, false);
     }
 
-    public InfoItem(FontRenderer fontRenderer, ItemStack itemStack, boolean large, int x, int y) {
+    public InfoItem(ItemStack itemStack, boolean large) {
+        this(itemStack, large, 0, 0);
+    }
+
+    public InfoItem(ItemStack itemStack, boolean large, int x, int y) {
         super(x, y);
-        this.fontRenderer = fontRenderer;
         this.itemStack = itemStack;
         this.large = large;
         this.size = large ? 16 : 8;
@@ -40,19 +40,20 @@ public class InfoItem extends Info {
 
     @Override
     public void drawInfo() {
-        if (this.itemStack != null && this.itemStack.getItem() != null) {
+        if (itemStack != null && itemStack.getItem() != null) {
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
             RenderHelper.enableGUIStandardItemLighting();
 
             GL11.glTranslatef(getX(), getY(), 0);
-            if (!this.large) {
+            if (!large) {
                 GL11.glScalef(0.5f, 0.5f, 0.5f);
             }
 
-            renderItem.renderItemAndEffectIntoGUI(this.fontRenderer, textureManager, this.itemStack, 0, 0);
+            TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
+            renderItem.renderItemAndEffectIntoGUI(fontRenderer, textureManager, itemStack, 0, 0);
 
-            if (!this.large) {
+            if (!large) {
                 GL11.glScalef(2.0f, 2.0f, 2.0f);
             }
             GL11.glTranslatef(-getX(), -getY(), 0);
@@ -65,12 +66,12 @@ public class InfoItem extends Info {
 
     @Override
     public int getWidth() {
-        return this.itemStack != null && this.itemStack.getItem() != null ? this.size : 0;
+        return itemStack != null && itemStack.getItem() != null ? size : 0;
     }
 
     @Override
     public int getHeight() {
-        return this.itemStack != null && this.itemStack.getItem() != null ? this.size : 0;
+        return itemStack != null && itemStack.getItem() != null ? size : 0;
     }
 
     @Override
@@ -83,9 +84,5 @@ public class InfoItem extends Info {
                 this.offsetX,
                 this.offsetY,
                 this.children);
-    }
-
-    static {
-        renderItem.zLevel = 300;
     }
 }

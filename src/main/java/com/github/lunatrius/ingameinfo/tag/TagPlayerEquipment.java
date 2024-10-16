@@ -145,7 +145,7 @@ public abstract class TagPlayerEquipment extends Tag {
 
             Info value = caller.getAttachedValue(getName());
             if (value == null || !value.getIdentifier().equals(itemStack.getDisplayName())) {
-                InfoItem item = new InfoItem(minecraft.fontRenderer, itemStack, this.large);
+                InfoItem item = new InfoItem(itemStack, this.large);
                 item.setIdentifier(itemStack.getDisplayName());
                 caller.attachValue(getName(), item);
                 return getIconTag(item);

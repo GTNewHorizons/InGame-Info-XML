@@ -2,7 +2,6 @@ package com.github.lunatrius.ingameinfo.client.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -12,13 +11,11 @@ import com.github.lunatrius.ingameinfo.reference.Reference;
 
 public class InfoIcon extends Info {
 
-    private static final TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
     private final ResourceLocation resourceLocation;
     private final Vector2f xy0 = new Vector2f();
     private final Vector2f xy1 = new Vector2f();
     private final Vector2f uv0 = new Vector2f();
     private final Vector2f uv1 = new Vector2f();
-    private final double zLevel = 300;
     private int displayWidth;
     private int displayHeight;
 
@@ -51,16 +48,17 @@ public class InfoIcon extends Info {
     @Override
     public void drawInfo() {
         try {
-            textureManager.bindTexture(this.resourceLocation);
+            Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation);
 
             GL11.glTranslatef(getX(), getY(), 0);
 
             Tessellator tess = Tessellator.instance;
             tess.startDrawingQuads();
-            tess.addVertexWithUV(this.xy0.x, this.xy1.y, this.zLevel, this.uv0.x, this.uv1.y);
-            tess.addVertexWithUV(this.xy1.x, this.xy1.y, this.zLevel, this.uv1.x, this.uv1.y);
-            tess.addVertexWithUV(this.xy1.x, this.xy0.y, this.zLevel, this.uv1.x, this.uv0.y);
-            tess.addVertexWithUV(this.xy0.x, this.xy0.y, this.zLevel, this.uv0.x, this.uv0.y);
+            double zLevel = 300;
+            tess.addVertexWithUV(xy0.x, xy1.y, zLevel, uv0.x, uv1.y);
+            tess.addVertexWithUV(xy1.x, xy1.y, zLevel, uv1.x, uv1.y);
+            tess.addVertexWithUV(xy1.x, xy0.y, zLevel, uv1.x, uv0.y);
+            tess.addVertexWithUV(xy0.x, xy0.y, zLevel, uv0.x, uv0.y);
             tess.draw();
 
             GL11.glTranslatef(-getX(), -getY(), 0);

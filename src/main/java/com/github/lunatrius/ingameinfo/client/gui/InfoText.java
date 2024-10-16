@@ -8,9 +8,6 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-
 import org.jetbrains.annotations.NotNull;
 
 import com.github.lunatrius.core.client.gui.FontRendererHelper;
@@ -23,7 +20,6 @@ public class InfoText extends Info {
 
     private static final Pattern ICON_PATTERN = Pattern.compile("\\{ICON\\|( *)\\}", Pattern.CASE_INSENSITIVE);
     private static final Matcher ICON_MATCHER = ICON_PATTERN.matcher("");
-    private final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
     private final Map<String, Info> attachedValues = new HashMap<>();
     private String text;
     private final List<Value> values;
@@ -118,7 +114,7 @@ public class InfoText extends Info {
 
     @Override
     public int getWidth() {
-        return this.fontRenderer.getStringWidth(text);
+        return fontRenderer.getStringWidth(text);
     }
 
     @Override

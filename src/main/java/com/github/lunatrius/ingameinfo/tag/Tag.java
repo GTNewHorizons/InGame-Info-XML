@@ -110,12 +110,9 @@ public abstract class Tag {
         Tag.nextRainTime = 0;
     }
 
-    public static void setWorld(World world) {
-        Tag.world = world;
-    }
-
-    public static void setPlayer(EntityClientPlayerMP player) {
-        Tag.player = player;
+    public static void update() {
+        world = minecraft.theWorld;
+        player = minecraft.thePlayer;
 
         if (player != null) {
             playerPosition
@@ -128,8 +125,6 @@ public abstract class Tag {
     }
 
     public static void releaseResources() {
-        setWorld(null);
-        setPlayer(null);
         TagNearbyPlayer.releaseResources();
         TagPlayerPotion.releaseResources();
     }

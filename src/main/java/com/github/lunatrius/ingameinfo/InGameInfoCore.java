@@ -119,14 +119,12 @@ public class InGameInfoCore {
         float scale = ClientConfigurationHandler.Scale / 10;
         scaledWidth = (int) (scaledResolution.getScaledWidth() / scale);
         scaledHeight = (int) (scaledResolution.getScaledHeight() / scale);
-
         World world = minecraft.theWorld;
         EntityClientPlayerMP player = minecraft.thePlayer;
         if (world == null || player == null) {
             return;
         }
-        Tag.setWorld(world);
-        Tag.setPlayer(player);
+        Tag.update();
 
         if (infoTexts.isEmpty()) {
             refreshInfoTexts();

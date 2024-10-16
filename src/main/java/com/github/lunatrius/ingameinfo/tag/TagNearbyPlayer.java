@@ -67,12 +67,9 @@ public abstract class TagNearbyPlayer extends Tag {
     protected static void updateNearbyPlayers() {
         if (nearbyPlayers == null) {
             List<EntityPlayer> playerList = new ArrayList<>();
-            for (Object o : world.playerEntities) {
-                if (o instanceof EntityPlayer) {
-                    EntityPlayer entityPlayer = (EntityPlayer) o;
-                    if (entityPlayer != Tag.player && !entityPlayer.isSneaking()) {
-                        playerList.add(entityPlayer);
-                    }
+            for (EntityPlayer player : world.playerEntities) {
+                if (player != Tag.player && !player.isSneaking()) {
+                    playerList.add(player);
                 }
             }
             playerList.sort(PLAYER_DISTANCE_COMPARATOR);

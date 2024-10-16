@@ -6,6 +6,8 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 
+import org.lwjgl.input.Keyboard;
+
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
 import com.github.lunatrius.ingameinfo.command.InGameInfoCommand;
 import com.github.lunatrius.ingameinfo.handler.ClientConfigurationHandler;
@@ -28,6 +30,11 @@ import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 
 public class ClientProxy extends CommonProxy {
 
+    public static final KeyBinding KEY_BINDING_TOGGLE = new KeyBinding(
+            Names.Keys.TOGGLE,
+            Keyboard.KEY_NONE,
+            Names.Keys.CATEGORY);
+
     private final InGameInfoCore core = InGameInfoCore.INSTANCE;
 
     @Override
@@ -47,10 +54,7 @@ public class ClientProxy extends CommonProxy {
 
         ClientConfigurationHandler.propFileInterval.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
         ClientConfigurationHandler.propscale.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
-
-        for (KeyBinding keyBinding : KeyInputHandler.KEY_BINDINGS) {
-            ClientRegistry.registerKeyBinding(keyBinding);
-        }
+        ClientRegistry.registerKeyBinding(KEY_BINDING_TOGGLE);
     }
 
     @Override
