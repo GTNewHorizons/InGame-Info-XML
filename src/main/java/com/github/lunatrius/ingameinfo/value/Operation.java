@@ -128,10 +128,12 @@ public enum Operation {
         }
     };
 
+    public static final Operation[] VALUES = values();
+
     public abstract String getValue(Value value);
 
     public static Operation fromString(String str) {
-        for (Operation op : values()) {
+        for (Operation op : VALUES) {
             if (String.valueOf(op).equalsIgnoreCase(str)) {
                 return op;
             }
