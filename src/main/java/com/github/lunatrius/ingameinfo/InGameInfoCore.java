@@ -14,12 +14,10 @@ import java.util.Map;
 import java.util.Set;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
@@ -119,11 +117,6 @@ public class InGameInfoCore {
         float scale = ClientConfigurationHandler.Scale / 10;
         scaledWidth = (int) (scaledResolution.getScaledWidth() / scale);
         scaledHeight = (int) (scaledResolution.getScaledHeight() / scale);
-        World world = minecraft.theWorld;
-        EntityClientPlayerMP player = minecraft.thePlayer;
-        if (world == null || player == null) {
-            return;
-        }
         Tag.update();
 
         if (infoTexts.isEmpty()) {
