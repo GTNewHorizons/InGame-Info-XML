@@ -58,13 +58,18 @@ public abstract class Value {
         }
         StringBuilder builder = new StringBuilder(str);
 
+        int nextStart = 0;
         for (int i = 0; i < tagAmount; i++) {
-            int start = builder.indexOf("{");
+            int start = builder.indexOf("{", nextStart);
             if (start == -1) break;
 
             int end = builder.indexOf("}", start);
             if (end == -1) break;
             String var = builder.substring(start + 1, end);
+            if (var.startsWith("ICON")) {
+                nextStart = end + 1;
+                continue;
+            }
             String replacement = getVariableValue(var);
             builder.replace(start, end + 1, replacement);
         }
@@ -139,6 +144,9 @@ public abstract class Value {
 
     public void setParent(InfoText parent) {
         this.parent = parent;
+        for (Value value : values) {
+            value.setParent(parent);
+        }
     }
 
     public static Value fromString(String str) {

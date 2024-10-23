@@ -77,8 +77,8 @@ public enum Alignment {
 
     public int getY(int screenheight, int textheight) {
         return switch (this.alignment & MASK_Y) {
-            case TOP -> this.y;
-            case MIDDLE -> this.y + (screenheight - textheight) / 2;
+            case TOP -> this.y + textheight;
+            case MIDDLE -> this.y + textheight + screenheight / 2;
             case BOTTOM -> this.y + screenheight - textheight;
             default -> 0;
         };

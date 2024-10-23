@@ -40,7 +40,11 @@ public class InfoText extends Info {
     public void update() {
         StringBuilder builder = new StringBuilder();
         for (Value value : this.values) {
-            builder.append(getValue(value));
+            String valueStr = getValue(value);
+            if (!needsUpdate && valueStr.startsWith("{ICON")) {
+                continue;
+            }
+            builder.append(valueStr);
         }
         text = builder.toString();
         updatePosition();
@@ -86,7 +90,7 @@ public class InfoText extends Info {
         int scaledWidth = InGameInfoCore.INSTANCE.scaledWidth;
         int scaledHeight = InGameInfoCore.INSTANCE.scaledHeight;
         x = alignment.getX(scaledWidth, getWidth());
-        y = alignment.getY(scaledHeight, getHeight()) + getHeight();
+        y = alignment.getY(scaledHeight, getHeight());
     }
 
     public @Nullable Info getAttachedValue(String tag) {
@@ -106,9 +110,6 @@ public class InfoText extends Info {
             needsUpdate = true;
         }
 
-        if (value.x == 0) {
-            offsetX = value.getWidth();
-        }
         attachedValues.put(tag, value);
     }
 

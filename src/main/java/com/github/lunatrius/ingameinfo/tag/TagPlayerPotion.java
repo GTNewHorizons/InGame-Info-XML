@@ -8,6 +8,7 @@ import net.minecraft.potion.PotionEffect;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.github.lunatrius.ingameinfo.client.gui.Info;
 import com.github.lunatrius.ingameinfo.client.gui.InfoIcon;
 import com.github.lunatrius.ingameinfo.client.gui.InfoText;
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
@@ -156,9 +157,10 @@ public abstract class TagPlayerPotion extends Tag {
         @Override
         public @NotNull String getValue(@NotNull InfoText parent) {
             updatePotionEffects();
+            Info value = parent.getAttachedValue(getName());
             if (potionEffects.length > this.index) {
                 Potion potion = Potion.potionTypes[potionEffects[this.index].getPotionID()];
-                if (potion.hasStatusIcon()) {
+                if (potion.hasStatusIcon() && shouldUpdate(value, potion.id)) {
                     InfoIcon icon = new InfoIcon("textures/gui/container/inventory.png");
                     int i = potion.getStatusIconIndex();
                     if (this.large) {
@@ -166,17 +168,26 @@ public abstract class TagPlayerPotion extends Tag {
                     } else {
                         icon.setDisplayDimensions(1, -1, 18 / 2, 18 / 2);
                     }
+
+                    icon.setIdentifier(String.valueOf(potion.id));
                     icon.setTextureData((i % 8) * 18, 198 + (i / 8) * 18, 18, 18, 256, 256);
                     parent.attachValue(getName(), icon);
                     return getIconTag(icon);
                 }
+            } else if (value != null) {
+                parent.removeAttachedValue(getName());
             }
+
             return "";
         }
 
         @Override
         public String getValue() {
             return "";
+        }
+
+        private boolean shouldUpdate(Info value, int potionId) {
+            return value == null || !value.getIdentifier().equals(String.valueOf(potionId));
         }
     }
 
