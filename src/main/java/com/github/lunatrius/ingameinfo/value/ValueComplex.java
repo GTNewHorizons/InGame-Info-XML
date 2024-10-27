@@ -268,7 +268,7 @@ public abstract class ValueComplex extends Value {
                     return "";
                 }
 
-                if (size == 1 || size == 2) {
+                if ((size == 1 || size == 2) && !what.endsWith(".png")) {
                     int metadata = 0;
                     if (size == 2) {
                         metadata = getIntValue(1);
@@ -288,9 +288,7 @@ public abstract class ValueComplex extends Value {
 
                     InfoItem item = new InfoItem(itemStack);
                     item.setIdentifier(what);
-                    if (parent != null) {
-                        parent.attachValue(getName(), item);
-                    }
+                    parent.attachValue(getName(), item);
                     return Tag.getIconTag(item);
                 }
 
@@ -316,9 +314,7 @@ public abstract class ValueComplex extends Value {
                     icon.setTextureData(iconX, iconY, iconWidth, iconHeight, textureWidth, textureHeight);
                 }
 
-                if (parent != null) {
-                    parent.attachValue(getName(), icon);
-                }
+                parent.attachValue(getName(), icon);
                 return Tag.getIconTag(icon);
             } catch (Exception e) {
                 return "?";
