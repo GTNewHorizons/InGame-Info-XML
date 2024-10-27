@@ -286,13 +286,25 @@ public abstract class ValueComplex extends Value {
 
                     if (itemStack.getItem() == null) return "";
 
-                    InfoItem item = new InfoItem(itemStack);
-                    item.setIdentifier(what);
-                    parent.attachValue(getName(), item);
-                    return Tag.getIconTag(item);
+                    if (value == null) {
+                        InfoItem item = new InfoItem(itemStack);
+                        item.setIdentifier(what);
+                        parent.attachValue(getName(), item);
+                        return Tag.getIconTag(item);
+                    } else {
+                        value.setIdentifier(what);
+                        value.setValue(itemStack);
+                        return "";
+                    }
                 }
 
-                InfoIcon icon = new InfoIcon(what);
+                InfoIcon icon;
+                if (value == null) {
+                    icon = new InfoIcon(what);
+                } else {
+                    icon = (InfoIcon) value;
+                }
+
                 icon.setIdentifier(what);
                 int index = 0;
 
@@ -314,8 +326,13 @@ public abstract class ValueComplex extends Value {
                     icon.setTextureData(iconX, iconY, iconWidth, iconHeight, textureWidth, textureHeight);
                 }
 
-                parent.attachValue(getName(), icon);
-                return Tag.getIconTag(icon);
+                if (value == null) {
+                    parent.attachValue(getName(), icon);
+                    return Tag.getIconTag(icon);
+                } else {
+                    value.setValue(what);
+                    return "";
+                }
             } catch (Exception e) {
                 return "?";
             }

@@ -6,13 +6,14 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.ItemStack;
 
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 public class InfoItem extends Info {
 
     private static final RenderItem renderItem = new RenderItem();
-    private final ItemStack itemStack;
+    private ItemStack itemStack;
     private final boolean large;
     private final int size;
 
@@ -62,6 +63,12 @@ public class InfoItem extends Info {
             GL11.glDisable(GL12.GL_RESCALE_NORMAL);
             GL11.glDisable(GL11.GL_BLEND);
         }
+    }
+
+    @Override
+    public void setValue(@NotNull Object value) {
+        if (!(value instanceof ItemStack stack)) return;
+        this.itemStack = stack;
     }
 
     @Override

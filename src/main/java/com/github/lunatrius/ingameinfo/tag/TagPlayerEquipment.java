@@ -144,13 +144,16 @@ public abstract class TagPlayerEquipment extends Tag {
             }
 
             Info value = caller.getAttachedValue(getName());
-            if (value == null || !value.getIdentifier().equals(itemStack.getDisplayName())) {
-                InfoItem item = new InfoItem(itemStack, this.large);
-                item.setIdentifier(itemStack.getDisplayName());
-                caller.attachValue(getName(), item);
-                return getIconTag(item);
+
+            if (value != null) {
+                value.setValue(itemStack);
+                return "";
             }
-            return "";
+
+            InfoItem item = new InfoItem(itemStack, this.large);
+            item.setIdentifier(itemStack.getDisplayName());
+            caller.attachValue(getName(), item);
+            return getIconTag(item);
         }
 
         @Override

@@ -58,6 +58,8 @@ public abstract class Info {
         this.identifier = identifier;
     }
 
+    public void setValue(@NotNull Object value) {}
+
     public String getIdentifier() {
         return this.identifier;
     }

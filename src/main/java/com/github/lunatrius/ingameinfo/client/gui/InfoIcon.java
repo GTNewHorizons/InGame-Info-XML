@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 import com.github.lunatrius.core.util.vector.Vector2f;
@@ -11,7 +12,7 @@ import com.github.lunatrius.ingameinfo.reference.Reference;
 
 public class InfoIcon extends Info {
 
-    private final ResourceLocation resourceLocation;
+    private ResourceLocation resourceLocation;
     private final Vector2f xy0 = new Vector2f();
     private final Vector2f xy1 = new Vector2f();
     private final Vector2f uv0 = new Vector2f();
@@ -65,6 +66,11 @@ public class InfoIcon extends Info {
         } catch (Exception e) {
             Reference.logger.debug(e);
         }
+    }
+
+    @Override
+    public void setValue(@NotNull Object value) {
+        this.resourceLocation = new ResourceLocation(value.toString());
     }
 
     @Override
