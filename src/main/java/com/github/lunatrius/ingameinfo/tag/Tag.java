@@ -130,10 +130,6 @@ public abstract class Tag {
     }
 
     public static String getIconTag(Info info) {
-        String str = "";
-        for (int i = 0; i < info.getWidth() && minecraft.fontRenderer.getStringWidth(str) < info.getWidth(); i++) {
-            str += " ";
-        }
-        return String.format("{ICON|%s}", str);
+        return String.format("{ICON|%s}", info.getIconSpacing());
     }
 }

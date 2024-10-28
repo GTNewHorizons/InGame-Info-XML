@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.minecraft.client.gui.GuiPlayerInfo;
 import net.minecraft.client.resources.ResourcePackRepository;
-import net.minecraft.util.EnumChatFormatting;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -174,31 +173,24 @@ public abstract class TagMisc extends Tag {
 
     public static class PingIcon extends TagMisc {
 
-        private boolean needsUpdate(InfoText caller, int ping) {
-            Info value = caller.getAttachedValue(getName());
-            if (value == null) return true;
-            return Integer.parseInt(value.getIdentifier()) != ping;
-        }
-
         @Override
         public @NotNull String getValue(@NotNull InfoText caller) {
-            List<GuiPlayerInfo> list = player.sendQueue.playerInfoList;
-            for (GuiPlayerInfo playerInfo : list) {
-                if (player.getGameProfile().getName()
-                        .equals(EnumChatFormatting.getTextWithoutFormattingCodes(playerInfo.name))) {
-                    int pingIndex = getPingIndex(playerInfo);
-                    if (needsUpdate(caller, playerInfo.responseTime)) {
-                        InfoIcon icon = new InfoIcon("textures/gui/icons.png");
-                        icon.setIdentifier(String.valueOf(playerInfo.responseTime));
-                        icon.setDisplayDimensions(0, 0, 10, 8);
-                        icon.setTextureData(0, 176 + pingIndex * 8, 10, 8, 256, 256);
-                        caller.attachValue(getName(), icon);
-                        return getIconTag(icon);
-                    }
-                    return "";
-                }
+            GuiPlayerInfo playerInfo = (GuiPlayerInfo) player.sendQueue.playerInfoMap
+                    .get(player.getCommandSenderName());
+            if (playerInfo == null) return "-1";
+            int pingIndex = getPingIndex(playerInfo);
+            Info value = caller.getAttachedValue(getName());
+            if (value == null) {
+                InfoIcon icon = new InfoIcon("textures/gui/icons.png");
+                icon.setIdentifier(String.valueOf(playerInfo.responseTime));
+                icon.setDisplayDimensions(0, 0, 10, 8);
+                icon.setTextureData(0, 176 + pingIndex * 8, 10, 8, 256, 256);
+                caller.attachValue(getName(), icon);
+                return getIconTag(icon);
+            } else {
+                ((InfoIcon) value).setTextureData(0, 176 + pingIndex * 8, 10, 8, 256, 256);
+                return value.getIconSpacing();
             }
-            return "-1";
         }
 
         private static int getPingIndex(GuiPlayerInfo playerInfo) {

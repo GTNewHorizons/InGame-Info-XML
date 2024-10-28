@@ -17,6 +17,9 @@ public abstract class Info {
     public int offsetX;
     public int offsetY;
     private String identifier = "";
+    private String iconSpacing = "";
+    public boolean hasPosition = false;
+    private int oldWidth;
 
     protected Info(int x, int y) {
         this.x = x;
@@ -46,6 +49,14 @@ public abstract class Info {
         return this.y + this.offsetY;
     }
 
+    public String getIconSpacing() {
+        if (oldWidth != getWidth()) {
+            setIconSpacing();
+            oldWidth = getWidth();
+        }
+        return iconSpacing;
+    }
+
     public int getWidth() {
         return 0;
     }
@@ -62,6 +73,14 @@ public abstract class Info {
 
     public String getIdentifier() {
         return this.identifier;
+    }
+
+    private void setIconSpacing() {
+        String str = "";
+        for (int i = 0; i < getWidth() && fontRenderer.getStringWidth(str) < getWidth(); i++) {
+            str += " ";
+        }
+        iconSpacing = str;
     }
 
     @Override

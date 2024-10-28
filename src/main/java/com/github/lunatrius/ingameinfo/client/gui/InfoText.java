@@ -21,8 +21,6 @@ public class InfoText extends Info {
     private final List<Value> values;
     private final Alignment alignment;
     private final int index;
-    private int scaledWidth, scaledHeight;
-    private boolean updatePos = true;
 
     public InfoText(int index, Alignment alignment, List<Value> values) {
         super(0, 0);
@@ -35,15 +33,6 @@ public class InfoText extends Info {
     }
 
     public void update() {
-        int newHeight = InGameInfoCore.INSTANCE.scaledHeight;
-        int newWidth = InGameInfoCore.INSTANCE.scaledWidth;
-        if (newHeight != scaledHeight || newWidth != scaledWidth) {
-            scaledHeight = newHeight;
-            scaledWidth = newWidth;
-            updatePos = true;
-            attachedValues.clear();
-        }
-
         StringBuilder builder = new StringBuilder();
         for (Value value : this.values) {
             builder.append(getValue(value));
@@ -76,32 +65,21 @@ public class InfoText extends Info {
         }
 
         for (Info child : attachedValues.values()) {
-            int index = builder.indexOf(ICON_START);
-            child.x = fontRenderer.getStringWidth(builder.substring(0, index));
-            int end = builder.indexOf("}", index) + 1;
-            builder.replace(index, end + 1, "");
-            updatePos = true;
+            if (child.hasPosition) continue;
+            int iconStart = builder.indexOf(ICON_START);
+            int widthStart = builder.indexOf("|", iconStart) + 1;
+            child.hasPosition = true;
+            child.x = fontRenderer.getStringWidth(builder.substring(0, iconStart));
+            builder.replace(iconStart, widthStart, "");
+            builder.deleteCharAt(builder.indexOf("}"));
         }
     }
 
     private void updatePosition() {
-        if (!updatePos) return;
-        updatePos = false;
+        int scaledWidth = InGameInfoCore.INSTANCE.scaledWidth;
+        int scaledHeight = InGameInfoCore.INSTANCE.scaledHeight;
         x = alignment.getX(scaledWidth, fontRenderer.getStringWidth(text));
         y = alignment.getY(scaledHeight, getHeight());
-
-        for (Info child : attachedValues.values()) {
-            if (child.x == 0) {
-                offsetX = child.getWidth();
-            }
-
-            int actualX = child.x + x + child.getWidth();
-            if (actualX > scaledWidth) {
-                int diff = actualX + 1 - scaledWidth;
-                child.x = child.x - diff;
-                offsetX = -diff;
-            }
-        }
     }
 
     public @Nullable Info getAttachedValue(String tag) {
