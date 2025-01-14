@@ -1,5 +1,10 @@
 package com.github.lunatrius.ingameinfo;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import com.github.lunatrius.ingameinfo.client.gui.InfoText;
+
 public enum Alignment {
 
     TOPLEFT(2, 2),
@@ -12,6 +17,8 @@ public enum Alignment {
     BOTTOMCENTER(0, -45),
     BOTTOMRIGHT(-2, -2);
 
+    public static final Alignment[] VALUES = values();
+
     private static final int MASK_X = 0x0C;
     private static final int MASK_Y = 0x03;
 
@@ -23,6 +30,7 @@ public enum Alignment {
     private static final int CENTER = 0x0C;
     private static final int RIGHT = 0x08;
 
+    private final Collection<InfoText> lines = new ArrayList<>();
     private int alignment;
     public final int defaultX;
     public final int defaultY;
@@ -103,6 +111,10 @@ public enum Alignment {
                 this.y = y;
             }
         } catch (Exception ignored) {}
+    }
+
+    public Collection<InfoText> getLines() {
+        return this.lines;
     }
 
     static {

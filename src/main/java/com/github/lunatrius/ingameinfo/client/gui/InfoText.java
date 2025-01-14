@@ -20,31 +20,38 @@ public class InfoText extends Info {
     private String text;
     private final List<Value> values;
     private final Alignment alignment;
-    private final int index;
+    private int index;
+    private boolean isActive;
 
-    public InfoText(int index, Alignment alignment, List<Value> values) {
+    public InfoText(Alignment alignment, List<Value> values) {
         super(0, 0);
         this.values = values;
         this.alignment = alignment;
-        this.index = index;
         for (Value value : values) {
             value.setParent(this);
         }
     }
 
-    public void update() {
+    public void update(int index) {
+        this.index = index;
         StringBuilder builder = new StringBuilder();
         for (Value value : this.values) {
             builder.append(getValue(value));
         }
 
+        isActive = builder.length() > 0;
         updateChildren(builder);
         text = builder.toString();
         updatePosition();
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
     @Override
     public void drawInfo() {
+        if (!isActive) return;
         fontRenderer.drawStringWithShadow(text, getX(), getY(), 0x00FFFFFF);
 
         for (Info child : attachedValues.values()) {

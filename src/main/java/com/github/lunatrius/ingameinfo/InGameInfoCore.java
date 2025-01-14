@@ -8,10 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -56,9 +54,9 @@ public class InGameInfoCore {
             minecraft,
             minecraft.displayWidth,
             minecraft.displayHeight);
-    private final Set<InfoText> infoTexts = new HashSet<>();
     public int scaledWidth;
     public int scaledHeight;
+    private boolean needsRefresh = true;
 
     private InGameInfoCore() {}
 
@@ -119,12 +117,19 @@ public class InGameInfoCore {
         scaledHeight = (int) (scaledResolution.getScaledHeight() / scale);
         Tag.update();
 
-        if (infoTexts.isEmpty()) {
+        if (needsRefresh) {
             refreshInfoTexts();
+            needsRefresh = false;
         }
 
-        for (InfoText infoText : infoTexts) {
-            infoText.update();
+        for (Alignment alignment : Alignment.VALUES) {
+            int lastActiveIndex = 0;
+            for (InfoText infoText : alignment.getLines()) {
+                infoText.update(lastActiveIndex);
+                if (infoText.isActive()) {
+                    lastActiveIndex++;
+                }
+            }
         }
 
         Tag.releaseResources();
@@ -136,8 +141,10 @@ public class InGameInfoCore {
         GL11.glPushMatrix();
         float scale = ClientConfigurationHandler.Scale / 10;
         GL11.glScalef(scale, scale, scale);
-        for (InfoText info : infoTexts) {
-            info.draw();
+        for (Alignment alignment : Alignment.VALUES) {
+            for (InfoText info : alignment.getLines()) {
+                info.draw();
+            }
         }
         GL11.glPopMatrix();
     }
@@ -147,7 +154,7 @@ public class InGameInfoCore {
     }
 
     public boolean reloadConfig() {
-        infoTexts.clear();
+        needsRefresh = true;
         format.clear();
 
         if (parser == null) {
@@ -188,15 +195,16 @@ public class InGameInfoCore {
     }
 
     public void refreshInfoTexts() {
-        for (Alignment alignment : Alignment.values()) {
+        for (Alignment alignment : Alignment.VALUES) {
             List<List<Value>> lines = format.get(alignment);
+            alignment.getLines().clear();
 
             if (lines == null) {
                 continue;
             }
 
-            for (int i = 0; i < lines.size(); i++) {
-                infoTexts.add(new InfoText(i, alignment, lines.get(i)));
+            for (List<Value> line : lines) {
+                alignment.getLines().add(new InfoText(alignment, line));
             }
         }
     }
