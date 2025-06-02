@@ -132,6 +132,11 @@ public abstract class Tag {
         TagPlayerPotion.releaseResources();
     }
 
+    public static void onClientDisconnect() {
+        world = null;
+        player = null;
+    }
+
     public static String getIconTag(Info info) {
         return String.format("{ICON|%s}", info.getIconSpacing());
     }

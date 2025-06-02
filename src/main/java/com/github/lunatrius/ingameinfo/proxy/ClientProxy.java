@@ -3,13 +3,12 @@ package com.github.lunatrius.ingameinfo.proxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.common.MinecraftForge;
 
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
 import com.github.lunatrius.ingameinfo.command.InGameInfoCommand;
 import com.github.lunatrius.ingameinfo.handler.ClientConfigurationHandler;
 import com.github.lunatrius.ingameinfo.handler.KeyInputHandler;
-import com.github.lunatrius.ingameinfo.handler.Ticker;
+import com.github.lunatrius.ingameinfo.handler.TickerManager;
 import com.github.lunatrius.ingameinfo.integration.PluginLoader;
 import com.github.lunatrius.ingameinfo.reference.Names;
 import com.github.lunatrius.ingameinfo.tag.Tag;
@@ -50,10 +49,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init(FMLInitializationEvent event) {
         super.init(event);
-
-        final Ticker ticker = new Ticker();
-        MinecraftForge.EVENT_BUS.register(ticker);
-        FMLCommonHandler.instance().bus().register(ticker);
+        FMLCommonHandler.instance().bus().register(new TickerManager());
         FMLCommonHandler.instance().bus().register(ClientConfigurationHandler.INSTANCE);
         FMLCommonHandler.instance().bus().register(new KeyInputHandler());
         ClientCommandHandler.instance.registerCommand(new InGameInfoCommand());
