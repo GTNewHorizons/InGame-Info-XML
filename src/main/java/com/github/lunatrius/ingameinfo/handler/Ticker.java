@@ -32,9 +32,7 @@ public class Ticker {
             if (isRunning()) {
                 this.core.onTickClient();
             }
-            if (!ConfigurationHandler.showHUD) {
-                Tag.releaseResources();
-            }
+            Tag.releaseResources();
             this.client.mcProfiler.endSection();
         }
     }
