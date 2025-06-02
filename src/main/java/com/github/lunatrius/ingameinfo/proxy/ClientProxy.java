@@ -2,11 +2,8 @@ package com.github.lunatrius.ingameinfo.proxy;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
-
-import org.lwjgl.input.Keyboard;
 
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
 import com.github.lunatrius.ingameinfo.command.InGameInfoCommand;
@@ -20,7 +17,6 @@ import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
 import com.github.lunatrius.ingameinfo.value.registry.ValueRegistry;
 
 import cpw.mods.fml.client.config.GuiConfigEntries;
-import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -29,11 +25,6 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 
 public class ClientProxy extends CommonProxy {
-
-    public static final KeyBinding KEY_BINDING_TOGGLE = new KeyBinding(
-            Names.Keys.TOGGLE,
-            Keyboard.KEY_NONE,
-            Names.Keys.CATEGORY);
 
     private final InGameInfoCore core = InGameInfoCore.INSTANCE;
 
@@ -54,18 +45,18 @@ public class ClientProxy extends CommonProxy {
 
         ClientConfigurationHandler.propFileInterval.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
         ClientConfigurationHandler.propscale.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
-        ClientRegistry.registerKeyBinding(KEY_BINDING_TOGGLE);
     }
 
     @Override
     public void init(FMLInitializationEvent event) {
         super.init(event);
 
-        MinecraftForge.EVENT_BUS.register(Ticker.INSTANCE);
-        FMLCommonHandler.instance().bus().register(Ticker.INSTANCE);
+        final Ticker ticker = new Ticker();
+        MinecraftForge.EVENT_BUS.register(ticker);
+        FMLCommonHandler.instance().bus().register(ticker);
         FMLCommonHandler.instance().bus().register(ClientConfigurationHandler.INSTANCE);
-        FMLCommonHandler.instance().bus().register(KeyInputHandler.INSTANCE);
-        ClientCommandHandler.instance.registerCommand(InGameInfoCommand.INSTANCE);
+        FMLCommonHandler.instance().bus().register(new KeyInputHandler());
+        ClientCommandHandler.instance.registerCommand(new InGameInfoCommand());
         ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager())
                 .registerReloadListener(ClientConfigurationHandler.INSTANCE);
     }
@@ -73,7 +64,6 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         PluginLoader.getInstance().postInit(event);
-
         TagRegistry.INSTANCE.init();
     }
 

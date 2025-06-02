@@ -15,11 +15,8 @@ import cpw.mods.fml.relauncher.Side;
 
 public class Ticker {
 
-    public static final Ticker INSTANCE = new Ticker();
     private final Minecraft client = Minecraft.getMinecraft();
     private final InGameInfoCore core = InGameInfoCore.INSTANCE;
-
-    private Ticker() {}
 
     @SubscribeEvent
     public void onRenderGameOverlayEventPre(RenderGameOverlayEvent.Pre event) {
