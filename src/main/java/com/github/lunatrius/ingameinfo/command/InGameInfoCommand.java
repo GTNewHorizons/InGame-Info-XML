@@ -18,11 +18,7 @@ import com.github.lunatrius.ingameinfo.reference.Names;
 
 public class InGameInfoCommand extends CommandBase {
 
-    public static final InGameInfoCommand INSTANCE = new InGameInfoCommand();
-
     private final InGameInfoCore core = InGameInfoCore.INSTANCE;
-
-    private InGameInfoCommand() {}
 
     @Override
     public String getCommandName() {

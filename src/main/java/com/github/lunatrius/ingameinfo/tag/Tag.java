@@ -82,11 +82,14 @@ public abstract class Tag {
 
     public static void setServer(MinecraftServer server) {
         Tag.server = server;
-
-        try {
-            setSeed(Tag.server.worldServerForDimension(0).getSeed());
-        } catch (Exception e) {
+        if (Tag.server == null) {
             unsetSeed();
+        } else {
+            try {
+                setSeed(Tag.server.worldServerForDimension(0).getSeed());
+            } catch (Exception e) {
+                unsetSeed();
+            }
         }
     }
 
@@ -127,6 +130,11 @@ public abstract class Tag {
     public static void releaseResources() {
         TagNearbyPlayer.releaseResources();
         TagPlayerPotion.releaseResources();
+    }
+
+    public static void onClientDisconnect() {
+        world = null;
+        player = null;
     }
 
     public static String getIconTag(Info info) {

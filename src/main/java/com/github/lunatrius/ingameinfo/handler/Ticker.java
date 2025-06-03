@@ -11,15 +11,11 @@ import com.github.lunatrius.ingameinfo.tag.Tag;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
 
 public class Ticker {
 
-    public static final Ticker INSTANCE = new Ticker();
     private final Minecraft client = Minecraft.getMinecraft();
     private final InGameInfoCore core = InGameInfoCore.INSTANCE;
-
-    private Ticker() {}
 
     @SubscribeEvent
     public void onRenderGameOverlayEventPre(RenderGameOverlayEvent.Pre event) {
@@ -31,15 +27,12 @@ public class Ticker {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.side == Side.CLIENT && event.phase == TickEvent.Phase.END) {
+        if (event.phase == TickEvent.Phase.END) {
             this.client.mcProfiler.startSection("ingameinfo");
             if (isRunning()) {
                 this.core.onTickClient();
             }
-            if (!ConfigurationHandler.showHUD || this.client.gameSettings == null) {
-                Tag.setServer(null);
-                Tag.releaseResources();
-            }
+            Tag.releaseResources();
             this.client.mcProfiler.endSection();
         }
     }
