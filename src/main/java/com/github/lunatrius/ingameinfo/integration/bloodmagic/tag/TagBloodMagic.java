@@ -17,7 +17,7 @@ public abstract class TagBloodMagic extends TagIntegration {
         @Override
         public String getValue() {
             try {
-                return String.valueOf(APISpellHelper.getPlayerLPTag(player));
+                return String.format("%,d", APISpellHelper.getPlayerLPTag(player));
             } catch (Throwable e) {
                 log(this, e);
             }
@@ -30,7 +30,7 @@ public abstract class TagBloodMagic extends TagIntegration {
         @Override
         public String getValue() {
             try {
-                return String.valueOf(APISpellHelper.getPlayerMaxLPTag(player));
+                return String.format("%,d", APISpellHelper.getPlayerMaxLPTag(player));
             } catch (Throwable e) {
                 log(this, e);
             }
