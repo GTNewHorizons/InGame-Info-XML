@@ -37,6 +37,7 @@ public class PluginLoader {
                     continue;
                 }
 
+                @SuppressWarnings("unchecked")
                 final Class<? extends Plugin> clazzPlugin = (Class<? extends Plugin>) clazz;
                 final Plugin plugin = clazzPlugin.newInstance();
                 if (plugin.canLoad()) {
