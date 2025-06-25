@@ -2,6 +2,7 @@ package com.github.lunatrius.ingameinfo.client.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.util.ResourceLocation;
 
 import org.jetbrains.annotations.NotNull;
@@ -49,7 +50,13 @@ public class InfoIcon extends Info {
     @Override
     public void drawInfo() {
         try {
-            Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation);
+            ITextureObject texture = Minecraft.getMinecraft().getTextureManager().getTexture(resourceLocation);
+            if (texture == null) {
+                Reference.logger.debug("Unable to find texture for icon {}", resourceLocation);
+                return;
+            }
+
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getGlTextureId());
 
             GL11.glTranslatef(getX(), getY(), 0);
 
