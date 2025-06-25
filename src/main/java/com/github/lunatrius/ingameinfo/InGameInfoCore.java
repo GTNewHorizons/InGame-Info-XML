@@ -14,7 +14,6 @@ import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.IResource;
-import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -42,7 +41,6 @@ public class InGameInfoCore {
     private IParser parser;
 
     private final Minecraft minecraft = Minecraft.getMinecraft();
-    private final Profiler profiler = minecraft.mcProfiler;
     private File configDirectory = null;
     private File configFile = null;
     /**
