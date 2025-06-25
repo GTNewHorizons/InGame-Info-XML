@@ -1,5 +1,6 @@
 package com.github.lunatrius.ingameinfo.client.gui;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,11 +68,10 @@ public class InfoText extends Info {
             return;
         }
 
-        if (builder.indexOf(ICON_START) == -1) {
-            return;
-        }
+        Iterator<Info> iter = attachedValues.values().iterator();
 
-        for (Info child : attachedValues.values()) {
+        while (builder.indexOf(ICON_START) >= 0 && iter.hasNext()) {
+            Info child = iter.next();
             if (child.hasPosition) continue;
             int iconStart = builder.indexOf(ICON_START);
             int widthStart = builder.indexOf("|", iconStart) + 1;
