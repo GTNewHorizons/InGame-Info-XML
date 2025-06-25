@@ -185,7 +185,7 @@ public abstract class TagPlayerPotion extends Tag {
 
                     parent.attachValue(getName(), icon);
                     return getIconTag(icon);
-                } else {
+                } else if (value != null) {
                     return value.getIconSpacing();
                 }
             }
