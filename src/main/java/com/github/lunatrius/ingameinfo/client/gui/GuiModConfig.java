@@ -25,6 +25,7 @@ public class GuiModConfig extends GuiConfig {
                 GuiConfig.getAbridgedConfigPath(ConfigurationHandler.configuration.toString()));
     }
 
+    @SuppressWarnings("rawtypes")
     private static List<IConfigElement> getConfigElements() {
         List<IConfigElement> elements = new ArrayList<>();
         for (String name : ConfigurationHandler.configuration.getCategoryNames()) {
