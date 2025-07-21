@@ -57,6 +57,7 @@ public class InfoIcon extends Info {
         } catch (Exception e) {
             Reference.logger.error("\"" + resourceLocation + "\" isn't a valid resource location!", e);
             invalidResource = true;
+            return;
         }
         GL11.glTranslatef(getX(), getY(), 0);
 
