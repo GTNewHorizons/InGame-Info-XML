@@ -2,7 +2,6 @@ package com.github.lunatrius.ingameinfo.client.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.util.ResourceLocation;
 
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +13,7 @@ import com.github.lunatrius.ingameinfo.reference.Reference;
 public class InfoIcon extends Info {
 
     private ResourceLocation resourceLocation;
+    private boolean invalidResource;
     private final Vector2f xy0 = new Vector2f();
     private final Vector2f xy1 = new Vector2f();
     private final Vector2f uv0 = new Vector2f();
@@ -49,30 +49,27 @@ public class InfoIcon extends Info {
 
     @Override
     public void drawInfo() {
-        try {
-            ITextureObject texture = Minecraft.getMinecraft().getTextureManager().getTexture(resourceLocation);
-            if (texture == null) {
-                Reference.logger.debug("Unable to find texture for icon {}", resourceLocation);
-                return;
-            }
-
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getGlTextureId());
-
-            GL11.glTranslatef(getX(), getY(), 0);
-
-            Tessellator tess = Tessellator.instance;
-            tess.startDrawingQuads();
-            double zLevel = 300;
-            tess.addVertexWithUV(xy0.x, xy1.y, zLevel, uv0.x, uv1.y);
-            tess.addVertexWithUV(xy1.x, xy1.y, zLevel, uv1.x, uv1.y);
-            tess.addVertexWithUV(xy1.x, xy0.y, zLevel, uv1.x, uv0.y);
-            tess.addVertexWithUV(xy0.x, xy0.y, zLevel, uv0.x, uv0.y);
-            tess.draw();
-
-            GL11.glTranslatef(-getX(), -getY(), 0);
-        } catch (Exception e) {
-            Reference.logger.debug(e);
+        if (invalidResource) {
+            return;
         }
+        try {
+            Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation);
+        } catch (Exception e) {
+            Reference.logger.error("\"" + resourceLocation + "\" isn't a valid resource location!", e);
+            invalidResource = true;
+        }
+        GL11.glTranslatef(getX(), getY(), 0);
+
+        Tessellator tess = Tessellator.instance;
+        tess.startDrawingQuads();
+        double zLevel = 300;
+        tess.addVertexWithUV(xy0.x, xy1.y, zLevel, uv0.x, uv1.y);
+        tess.addVertexWithUV(xy1.x, xy1.y, zLevel, uv1.x, uv1.y);
+        tess.addVertexWithUV(xy1.x, xy0.y, zLevel, uv1.x, uv0.y);
+        tess.addVertexWithUV(xy0.x, xy0.y, zLevel, uv0.x, uv0.y);
+        tess.draw();
+
+        GL11.glTranslatef(-getX(), -getY(), 0);
     }
 
     @Override
