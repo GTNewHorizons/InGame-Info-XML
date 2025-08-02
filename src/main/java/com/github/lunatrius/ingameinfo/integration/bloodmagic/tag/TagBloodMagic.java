@@ -56,7 +56,7 @@ public abstract class TagBloodMagic extends TagIntegration {
         @Override
         public String getValue() {
             try {
-                return String.valueOf(APISpellHelper.getPlayerLPTag(player));
+                return String.valueOf(APISpellHelper.getPlayerMaxLPTag(player));
             } catch (Throwable e) {
                 log(this, e);
             }
