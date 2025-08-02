@@ -38,8 +38,36 @@ public abstract class TagBloodMagic extends TagIntegration {
         }
     }
 
+    public static class CurrentLPForMath extends TagBloodMagic {
+
+        @Override
+        public String getValue() {
+            try {
+                return String.valueOf(APISpellHelper.getPlayerLPTag(player));
+            } catch (Throwable e) {
+                log(this, e);
+            }
+            return "-1";
+        }
+    }
+
+    public static class MaximumLPForMath extends TagBloodMagic {
+
+        @Override
+        public String getValue() {
+            try {
+                return String.valueOf(APISpellHelper.getPlayerLPTag(player));
+            } catch (Throwable e) {
+                log(this, e);
+            }
+            return "-1";
+        }
+    }
+
     public static void register() {
         TagRegistry.INSTANCE.register(new CurrentLP().setName("bmlp").setAliases("bmcurrentlp"));
         TagRegistry.INSTANCE.register(new MaximumLP().setName("bmmaxlp").setAliases("bmmaximumlp"));
+        TagRegistry.INSTANCE.register(new CurrentLPForMath().setName("bmlpNum").setAliases("bmcurrentlpNum"));
+        TagRegistry.INSTANCE.register(new MaximumLPForMath().setName("bmmaxlpNum").setAliases("bmmaximumlpNum"));
     }
 }
