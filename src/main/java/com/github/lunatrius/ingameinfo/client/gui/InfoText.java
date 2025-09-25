@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 
 import com.github.lunatrius.ingameinfo.Alignment;
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
-import com.github.lunatrius.ingameinfo.reference.Reference;
 import com.github.lunatrius.ingameinfo.value.Value;
 
 public class InfoText extends Info {
@@ -120,8 +119,7 @@ public class InfoText extends Info {
                 return value.getReplacedValue();
             }
         } catch (Exception e) {
-            Reference.logger.debug("Failed to get value!", e);
-            return "null";
+            return "<ERROR>";
         }
 
         return "";
