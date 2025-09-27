@@ -7,7 +7,6 @@ import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 
 import com.github.lunatrius.ingameinfo.client.gui.InfoText;
-import com.github.lunatrius.ingameinfo.reference.Reference;
 import com.github.lunatrius.ingameinfo.tag.Tag;
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
 import com.github.lunatrius.ingameinfo.value.registry.ValueRegistry;
@@ -128,8 +127,7 @@ public abstract class Value {
 
             return value;
         } catch (Exception e) {
-            Reference.logger.debug("Failed to get value!", e);
-            return "null";
+            return "<ERROR>";
         }
     }
 
