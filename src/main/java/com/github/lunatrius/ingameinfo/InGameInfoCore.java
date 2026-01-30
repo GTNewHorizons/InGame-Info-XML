@@ -72,16 +72,38 @@ public class InGameInfoCore {
         }
     }
 
+    public String getBaseConfigFileName() {
+        return baseConfigFileName;
+    }
+
+    public boolean hasConfigFileWithLocale(String filename) {
+        if (configDirectory == null || filename == null) {
+            return false;
+        }
+
+        String localeAwareFileName = getLocaleAwareFilename(filename);
+        if (new File(configDirectory, localeAwareFileName).isFile()) {
+            return true;
+        }
+
+        return new File(configDirectory, filename).isFile();
+    }
+
     public void setConfigFileWithLocale(String filename) {
-        String userLang = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode();
-        String baseName = filename.split("\\.")[0];
-        String extension = filename.split("\\.").length > 1 ? filename.split("\\.")[1] : "";
-        String localeAwareFileName = baseName + "_" + userLang + "." + extension;
+        String localeAwareFileName = getLocaleAwareFilename(filename);
         if (new File(configDirectory, localeAwareFileName).isFile()) {
             setConfigFile(localeAwareFileName, filename);
         } else {
             setConfigFile(filename);
         }
+    }
+
+    public String getLocaleAwareFilename(String filename) {
+        String userLang = minecraft.getLanguageManager().getCurrentLanguage().getLanguageCode();
+        String[] parts = filename.split("\\.", 2);
+        String baseName = parts[0];
+        String extension = parts.length > 1 ? "." + parts[1] : "";
+        return baseName + "_" + userLang + extension;
     }
 
     public boolean setConfigFile(String filename) {
