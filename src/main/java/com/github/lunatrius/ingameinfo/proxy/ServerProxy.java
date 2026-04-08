@@ -17,6 +17,7 @@ public class ServerProxy extends CommonProxy {
 
     @Override
     public void init(FMLInitializationEvent event) {
+        super.init(event);
         FMLCommonHandler.instance().bus().register(new PlayerHandler());
         FMLCommonHandler.instance().bus().register(new WorldHandler());
     }

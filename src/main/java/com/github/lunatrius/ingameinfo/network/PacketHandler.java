@@ -12,9 +12,10 @@ public class PacketHandler {
 
     public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE
             .newSimpleChannel(Reference.MODID.toLowerCase());
+    private static int messageId = 0;
 
     public static void init() {
-        INSTANCE.registerMessage(MessageSeed.class, MessageSeed.class, 0, Side.CLIENT);
-        INSTANCE.registerMessage(MessageNextRain.class, MessageNextRain.class, 0, Side.CLIENT);
+        INSTANCE.registerMessage(MessageSeed.class, MessageSeed.class, messageId++, Side.CLIENT);
+        INSTANCE.registerMessage(MessageNextRain.class, MessageNextRain.class, messageId++, Side.CLIENT);
     }
 }
