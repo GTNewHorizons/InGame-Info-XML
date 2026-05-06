@@ -205,6 +205,8 @@ public abstract class TagPlayerPotion extends Tag {
 
     public static void register() {
         for (int i = 0; i < MAXIMUM_INDEX; i++) {
+            final Potion potion = Potion.potionTypes[i];
+            if (potion == null) continue;
             TagRegistry.INSTANCE.register(new Effect(i).setName("potioneffect"));
             TagRegistry.INSTANCE.register(new Duration(i).setName("potionduration"));
             TagRegistry.INSTANCE.register(new DurationTicks(i).setName("potiondurationticks"));
