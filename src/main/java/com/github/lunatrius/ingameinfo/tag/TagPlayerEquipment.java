@@ -110,6 +110,33 @@ public abstract class TagPlayerEquipment extends Tag {
         }
     }
 
+    public static class ItemMeta extends TagPlayerEquipment {
+
+        public ItemMeta(int slot) {
+            super(slot);
+        }
+
+        @Override
+        public String getValue() {
+            ItemStack itemStack = getItemStack(this.slot);
+            return itemStack != null ? String.valueOf(itemStack.getItemDamage()) : "";
+        }
+    }
+
+    public static class ItemId extends TagPlayerEquipment {
+
+        public ItemId(int slot) {
+            super(slot);
+        }
+
+        @Override
+        public String getValue() {
+            ItemStack itemStack = getItemStack(this.slot);
+            Item item = itemStack != null ? itemStack.getItem() : null;
+            return item != null ? String.valueOf(Item.getIdFromItem(item)) : "0";
+        }
+    }
+
     public static class Quantity extends TagPlayerEquipment {
 
         public Quantity(int slot) {
@@ -169,6 +196,8 @@ public abstract class TagPlayerEquipment extends Tag {
             TagRegistry.INSTANCE.register(new Damage(SLOTS[i]).setName(TYPES[i] + "damage"));
             TagRegistry.INSTANCE.register(new MaximumDamage(SLOTS[i]).setName(TYPES[i] + "maxdamage"));
             TagRegistry.INSTANCE.register(new DamageLeft(SLOTS[i]).setName(TYPES[i] + "damageleft"));
+            TagRegistry.INSTANCE.register(new ItemMeta(SLOTS[i]).setName(TYPES[i] + "itemmeta"));
+            TagRegistry.INSTANCE.register(new ItemId(SLOTS[i]).setName(TYPES[i] + "itemid"));
             TagRegistry.INSTANCE.register(new Quantity(SLOTS[i]).setName(TYPES[i] + "quantity"));
             TagRegistry.INSTANCE.register(new Icon(SLOTS[i], false).setName(TYPES[i] + "icon"));
             TagRegistry.INSTANCE.register(new Icon(SLOTS[i], true).setName(TYPES[i] + "largeicon"));
