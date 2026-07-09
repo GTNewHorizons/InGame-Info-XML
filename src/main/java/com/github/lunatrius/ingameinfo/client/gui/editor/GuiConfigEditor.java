@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
 import com.github.lunatrius.ingameinfo.Alignment;
+import com.github.lunatrius.ingameinfo.InGameInfoCore;
 import com.github.lunatrius.ingameinfo.reference.Names;
 
 public class GuiConfigEditor extends GuiThemedScreen {
@@ -59,10 +60,19 @@ public class GuiConfigEditor extends GuiThemedScreen {
     }
 
     @Override
+    protected void onDone() {
+        String filename = InGameInfoCore.INSTANCE.getBaseConfigFileName();
+        if (filename != null) {
+            InGameInfoCore.INSTANCE.saveConfig(filename);
+        }
+        super.onDone();
+    }
+
+    @Override
     protected void mouseClicked(int x, int y, int action) {
         if (action == 0) {
             if (this.btnDone.mousePressed(x, y)) {
-                this.mc.displayGuiScreen(this.parentScreen);
+                onDone();
                 return;
             }
             for (AlignmentButton alignmentButton : this.alignmentButtons) {

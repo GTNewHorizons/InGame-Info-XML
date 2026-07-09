@@ -152,7 +152,7 @@ public class GuiLineList extends GuiThemedScreen {
     protected void mouseClicked(int x, int y, int action) {
         if (action == 0) {
             if (this.btnDone.mousePressed(x, y)) {
-                this.mc.displayGuiScreen(this.parentScreen);
+                onDone();
                 return;
             }
             if (this.btnAddLine.mousePressed(x, y)) {

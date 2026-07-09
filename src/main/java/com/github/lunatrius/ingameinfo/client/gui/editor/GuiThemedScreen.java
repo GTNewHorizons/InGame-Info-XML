@@ -3,6 +3,8 @@ package com.github.lunatrius.ingameinfo.client.gui.editor;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
+import org.lwjgl.input.Keyboard;
+
 public abstract class GuiThemedScreen extends GuiScreen {
 
     protected static final int BUTTON_MARGIN_BOTTOM = 24;
@@ -37,6 +39,17 @@ public abstract class GuiThemedScreen extends GuiScreen {
         this.panelHeight = Math.min(getPreferredPanelHeight(), this.height - 40);
         this.panelX = (this.width - this.panelWidth) / 2;
         this.panelY = (this.height - this.panelHeight) / 2;
+    }
+
+    protected void onDone() {
+        this.mc.displayGuiScreen(this.parentScreen);
+    }
+
+    @Override
+    protected void keyTyped(char character, int code) {
+        if (code == Keyboard.KEY_ESCAPE) {
+            onDone();
+        }
     }
 
     protected GuiTexturedButton createDoneButton(int id) {
