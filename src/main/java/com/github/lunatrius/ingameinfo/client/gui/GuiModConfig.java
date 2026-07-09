@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;
 
+import com.github.lunatrius.ingameinfo.client.gui.editor.VisualConfigEntry;
 import com.github.lunatrius.ingameinfo.handler.ConfigurationHandler;
 import com.github.lunatrius.ingameinfo.reference.Names;
 import com.github.lunatrius.ingameinfo.reference.Reference;
@@ -28,6 +29,7 @@ public class GuiModConfig extends GuiConfig {
     @SuppressWarnings("rawtypes")
     private static List<IConfigElement> getConfigElements() {
         List<IConfigElement> elements = new ArrayList<>();
+        elements.add(VisualConfigEntry.createConfigElement());
         for (String name : ConfigurationHandler.configuration.getCategoryNames()) {
             elements.add(
                     new ConfigElement(

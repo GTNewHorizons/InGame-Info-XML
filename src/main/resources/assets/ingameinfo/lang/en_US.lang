@@ -3,6 +3,8 @@ ingameinfoxml.config.category.general=General
 ingameinfoxml.config.category.general.tooltip=General options.
 ingameinfoxml.config.category.alignment=Alignment
 ingameinfoxml.config.category.alignment.tooltip=Alignment offset options.
+ingameinfoxml.config.category.visualconfig=Visual Config
+ingameinfoxml.config.category.visualconfig.tooltip=Edit the overlay layout visually.\nCommand: /igi visualconfig
 
 # gui - config - general
 ingameinfoxml.config.filename=Filename
@@ -321,6 +323,5 @@ commands.ingameinfoxml.disable=InGame Info XML overlay is now disabled.
 
 # visual config
 gui.ingameinfoxml.visualconfig=Visual Config
-gui.ingameinfoxml.visualconfig.button=Visual Config
 ingameinfoxml.visual.config.text.enabled=§f
 ingameinfoxml.visual.config.text.disabled=§8

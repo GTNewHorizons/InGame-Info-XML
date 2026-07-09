@@ -1,6 +1,9 @@
 package com.github.lunatrius.ingameinfo.client.gui.editor;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.ResourceLocation;
 
 public class GuiTexturedButton {
 
@@ -33,6 +36,16 @@ public class GuiTexturedButton {
                 && mouseY < this.y + VisualConfigTheme.BUTTON_HEIGHT;
     }
 
+    public boolean mousePressed(int mouseX, int mouseY) {
+        if (!isMouseOver(mouseX, mouseY)) {
+            return false;
+        }
+
+        Minecraft.getMinecraft().getSoundHandler()
+                .playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+        return true;
+    }
+
     public void draw(FontRenderer fontRenderer, int mouseX, int mouseY) {
         if (!this.visible) {
             return;
@@ -50,7 +63,7 @@ public class GuiTexturedButton {
         VisualConfigTheme.drawButton(this.x, this.y, this.width, state);
 
         String text = VisualConfigTheme.colorize(this.label, this.enabled);
-        fontRenderer.drawString(
+        fontRenderer.drawStringWithShadow(
                 text,
                 this.x + (this.width - fontRenderer.getStringWidth(text)) / 2,
                 this.y + (VisualConfigTheme.BUTTON_HEIGHT - fontRenderer.FONT_HEIGHT) / 2 + 1,
