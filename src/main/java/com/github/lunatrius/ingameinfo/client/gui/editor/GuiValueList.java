@@ -38,6 +38,7 @@ public class GuiValueList extends GuiThemedScreen {
     private int visibleRows;
     private int scrollOffset;
     private int textRight;
+    private boolean scrollbarDragging;
 
     public GuiValueList(GuiScreen parentScreen, List<Value> values) {
         super(parentScreen);
@@ -170,6 +171,25 @@ public class GuiValueList extends GuiThemedScreen {
     }
 
     @Override
+    protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
+        if (this.scrollbarDragging && clickedMouseButton == 0) {
+            this.scrollOffset = VisualConfigTheme.scrollOffsetForY(
+                    mouseY,
+                    this.contentTop,
+                    this.contentBottom - this.contentTop,
+                    this.values.size(),
+                    this.visibleRows);
+            rebuildRows();
+        }
+    }
+
+    @Override
+    protected void mouseMovedOrUp(int x, int y, int mouseEvent) {
+        this.scrollbarDragging = false;
+        super.mouseMovedOrUp(x, y, mouseEvent);
+    }
+
+    @Override
     protected void mouseClicked(int x, int y, int action) {
         if (action == 0) {
             if (this.btnDone.mousePressed(x, y)) {
@@ -182,6 +202,20 @@ public class GuiValueList extends GuiThemedScreen {
             }
             if (this.btnAddTag.mousePressed(x, y)) {
                 this.mc.displayGuiScreen(new GuiTags(this, this::addTag));
+                return;
+            }
+            int scrollbarX = this.panelX + this.panelWidth - 10 - VisualConfigTheme.SCROLLBAR_RAIL_WIDTH;
+            if (x >= scrollbarX && x < scrollbarX + VisualConfigTheme.SCROLLBAR_RAIL_WIDTH
+                    && y >= this.contentTop
+                    && y < this.contentBottom) {
+                this.scrollbarDragging = true;
+                this.scrollOffset = VisualConfigTheme.scrollOffsetForY(
+                        y,
+                        this.contentTop,
+                        this.contentBottom - this.contentTop,
+                        this.values.size(),
+                        this.visibleRows);
+                rebuildRows();
                 return;
             }
             for (ValueRow row : this.rows) {
