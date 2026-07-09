@@ -15,16 +15,16 @@ public final class VisualConfigTheme {
 
     private static final int PANEL_U = 0;
     private static final int PANEL_V = 0;
-    private static final int PANEL_SIZE = 20;
+    private static final int PANEL_SIZE = 21;
     private static final int PANEL_CORNER = 7;
 
-    private static final int BUTTON_WIDTH = 15;
-    public static final int BUTTON_HEIGHT = 15;
+    private static final int BUTTON_WIDTH = 16;
+    public static final int BUTTON_HEIGHT = 16;
     private static final int BUTTON_CAP = 2;
 
-    private static final int SCROLLBAR_THUMB_WIDTH = 6;
-    private static final int SCROLLBAR_RAIL_WIDTH = 8;
-    private static final int SCROLLBAR_HEIGHT = 11;
+    private static final int SCROLLBAR_THUMB_WIDTH = 7;
+    private static final int SCROLLBAR_RAIL_WIDTH = 9;
+    private static final int SCROLLBAR_HEIGHT = 12;
     private static final int SCROLLBAR_CAP = 4;
 
     public enum ButtonState {
