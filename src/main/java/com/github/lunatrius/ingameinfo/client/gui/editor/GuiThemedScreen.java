@@ -4,6 +4,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
 
@@ -107,6 +108,10 @@ public abstract class GuiThemedScreen extends GuiScreen {
 
     protected void drawPreview(int mouseX, int mouseY) {
         if (previewEnabled) {
+            GL11.glDisable(GL11.GL_LIGHTING);
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
             InGameInfoCore core = InGameInfoCore.INSTANCE;
             core.onTickRender(core.scaledResolution);
         }
