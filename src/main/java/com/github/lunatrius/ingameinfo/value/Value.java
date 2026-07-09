@@ -147,6 +147,10 @@ public abstract class Value {
         }
     }
 
+    public InfoText getParent() {
+        return this.parent;
+    }
+
     public static Value fromString(String str) {
         return ValueRegistry.INSTANCE.forName(str);
     }
