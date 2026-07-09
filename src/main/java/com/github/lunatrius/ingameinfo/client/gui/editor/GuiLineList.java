@@ -357,7 +357,11 @@ public class GuiLineList extends GuiThemedScreen {
                 int ellipsisWidth = this.fontRendererObj.getStringWidth("...");
                 trimmedRaw = this.fontRendererObj.trimStringToWidth(rawPreview, maxTextWidth - ellipsisWidth) + "...";
             }
-            String text = VisualConfigTheme.colorize(trimmedRaw, true);
+            // Rendered mode already carries its own color codes from resolved tags - force a white base ("§f")
+            // instead of VisualConfigTheme's UI tint, so unformatted portions match the real HUD instead of
+            // whatever color happened to be left active by the last tag.
+            String text = isRenderedPreviewEnabled() ? "§f" + trimmedRaw
+                    : VisualConfigTheme.colorize(trimmedRaw, true);
             int textY = row.rowY + (ROW_HEIGHT - this.fontRendererObj.FONT_HEIGHT) / 2 + 1;
             this.fontRendererObj.drawStringWithShadow(text, this.panelX + 10, textY, 0xFFFFFF);
 
