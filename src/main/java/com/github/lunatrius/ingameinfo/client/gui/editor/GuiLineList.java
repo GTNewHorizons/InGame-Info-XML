@@ -333,7 +333,7 @@ public class GuiLineList extends GuiThemedScreen {
         int maxTextWidth = this.textRight - (this.panelX + 10);
 
         int scrollbarX = this.panelX + this.panelWidth - 10 - VisualConfigTheme.SCROLLBAR_RAIL_WIDTH;
-        int backgroundWidth = this.rowRight - (this.panelX + 8);
+        int backgroundWidth = this.rowRight - (this.panelX + 8) + 1;
 
         String hoveredTooltip = null;
         List<String> hoveredTooltipLines = null;
