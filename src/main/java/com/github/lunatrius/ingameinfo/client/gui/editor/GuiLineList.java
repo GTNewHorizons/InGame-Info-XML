@@ -189,8 +189,14 @@ public class GuiLineList extends GuiThemedScreen {
         for (LineRow row : this.rows) {
             VisualConfigTheme.drawLineBackground(this.panelX + 8, row.rowY, backgroundWidth);
 
-            String text = VisualConfigTheme.colorize(preview(row.line), true);
-            text = this.fontRendererObj.trimStringToWidth(text, maxTextWidth);
+            String rawPreview = preview(row.line);
+            String trimmedRaw = this.fontRendererObj.trimStringToWidth(rawPreview, maxTextWidth);
+            boolean truncated = !trimmedRaw.equals(rawPreview);
+            if (truncated) {
+                int ellipsisWidth = this.fontRendererObj.getStringWidth("...");
+                trimmedRaw = this.fontRendererObj.trimStringToWidth(rawPreview, maxTextWidth - ellipsisWidth) + "...";
+            }
+            String text = VisualConfigTheme.colorize(trimmedRaw, true);
             int textY = row.rowY + (ROW_HEIGHT - this.fontRendererObj.FONT_HEIGHT) / 2;
             this.fontRendererObj.drawStringWithShadow(text, this.panelX + 10, textY, 0xFFFFFF);
 
@@ -198,12 +204,19 @@ public class GuiLineList extends GuiThemedScreen {
             row.btnDown.draw(mouseX, mouseY);
             row.btnDelete.draw(mouseX, mouseY);
 
+            boolean textHovered = mouseX >= this.panelX + 10
+                    && mouseX < textRight
+                    && mouseY >= row.rowY
+                    && mouseY < row.rowY + ROW_HEIGHT;
+
             if (row.btnUp.containsMouse(mouseX, mouseY)) {
                 hoveredTooltip = row.btnUp.getTooltip();
             } else if (row.btnDown.containsMouse(mouseX, mouseY)) {
                 hoveredTooltip = row.btnDown.getTooltip();
             } else if (row.btnDelete.containsMouse(mouseX, mouseY)) {
                 hoveredTooltip = row.btnDelete.getTooltip();
+            } else if (truncated && textHovered) {
+                hoveredTooltip = rawPreview;
             }
         }
 
