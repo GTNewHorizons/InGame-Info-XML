@@ -1,5 +1,8 @@
 package com.github.lunatrius.ingameinfo.client.gui.editor;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
@@ -20,10 +23,14 @@ public class GuiValueEditor extends GuiThemedScreen {
     private static final int BUTTON_EDIT_CHILDREN = 1;
     private static final int BUTTON_PICK_TAG = 2;
 
+    private static final char CTRL_Z = 26;
+    private static final int UNDO_HISTORY_LIMIT = 100;
+
     private final Value value;
     private final boolean isVariable;
 
     private String currentText;
+    private final Deque<String> undoHistory = new ArrayDeque<>();
 
     private GuiTextField textField;
     private GuiTexturedButton btnDone;
@@ -88,8 +95,25 @@ public class GuiValueEditor extends GuiThemedScreen {
     }
 
     private void onTagPicked(String rawName) {
+        pushUndo(this.currentText);
         this.currentText = rawName;
         this.textField.setText(rawName);
+    }
+
+    private void pushUndo(String previousText) {
+        this.undoHistory.push(previousText);
+        while (this.undoHistory.size() > UNDO_HISTORY_LIMIT) {
+            this.undoHistory.removeLast();
+        }
+    }
+
+    private void undo() {
+        if (this.undoHistory.isEmpty()) {
+            return;
+        }
+        String previousText = this.undoHistory.pop();
+        this.textField.setText(previousText);
+        this.currentText = previousText;
     }
 
     @Override
@@ -121,8 +145,17 @@ public class GuiValueEditor extends GuiThemedScreen {
             this.mc.displayGuiScreen(this.parentScreen);
             return;
         }
+        if (character == CTRL_Z) {
+            undo();
+            return;
+        }
+
+        String before = this.textField.getText();
         this.textField.textboxKeyTyped(character, code);
         this.currentText = this.textField.getText();
+        if (!this.currentText.equals(before)) {
+            pushUndo(before);
+        }
     }
 
     @Override
