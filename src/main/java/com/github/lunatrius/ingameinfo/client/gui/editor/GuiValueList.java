@@ -55,7 +55,7 @@ public class GuiValueList extends GuiThemedScreen {
 
     @Override
     protected int getPreferredPanelWidth() {
-        return 512;
+        return 300;
     }
 
     @Override

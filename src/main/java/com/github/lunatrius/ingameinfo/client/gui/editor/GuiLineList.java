@@ -69,12 +69,12 @@ public class GuiLineList extends GuiThemedScreen {
 
     @Override
     protected int getPreferredPanelWidth() {
-        return 512;
+        return 300;
     }
 
     @Override
     protected int getPreferredPanelHeight() {
-        return 270;
+        return 275;
     }
 
     @Override

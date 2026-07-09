@@ -50,7 +50,7 @@ public class GuiConfigEditor extends GuiThemedScreen implements GuiYesNoCallback
 
     @Override
     protected int getPreferredPanelHeight() {
-        return 270;
+        return 150;
     }
 
     @Override
