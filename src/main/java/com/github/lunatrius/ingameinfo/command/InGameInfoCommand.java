@@ -12,6 +12,7 @@ import net.minecraft.util.ChatComponentTranslation;
 import com.github.lunatrius.core.handler.DelayedGuiDisplayTicker;
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
 import com.github.lunatrius.ingameinfo.client.gui.GuiModConfig;
+import com.github.lunatrius.ingameinfo.client.gui.editor.GuiConfigEditor;
 import com.github.lunatrius.ingameinfo.client.gui.GuiTags;
 import com.github.lunatrius.ingameinfo.handler.ConfigurationHandler;
 import com.github.lunatrius.ingameinfo.reference.Names;
@@ -46,7 +47,8 @@ public class InGameInfoCommand extends CommandBase {
                     Names.Command.ENABLE,
                     Names.Command.DISABLE,
                     Names.Command.TAGLIST,
-                    Names.Command.CONFIG);
+                    Names.Command.CONFIG,
+                    Names.Command.VISUALCONFIG);
         } else if (args.length == 2) {
             if (args[0].equalsIgnoreCase(Names.Command.LOAD)) {
                 return getListOfStringsFromIterableMatchingLastWord(args, getFilenames());
@@ -119,6 +121,9 @@ public class InGameInfoCommand extends CommandBase {
                 return;
             } else if (args[0].equalsIgnoreCase(Names.Command.CONFIG)) {
                 DelayedGuiDisplayTicker.create(new GuiModConfig(null), 0);
+                return;
+            } else if (args[0].equalsIgnoreCase(Names.Command.VISUALCONFIG)) {
+                DelayedGuiDisplayTicker.create(new GuiConfigEditor(null), 0);
                 return;
             }
         }

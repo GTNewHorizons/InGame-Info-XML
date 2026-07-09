@@ -213,6 +213,10 @@ public class InGameInfoCore {
         return inputStream;
     }
 
+    public Map<Alignment, List<List<Value>>> getFormat() {
+        return format;
+    }
+
     public void refreshInfoTexts() {
         for (Alignment alignment : Alignment.VALUES) {
             List<List<Value>> lines = format.get(alignment);
