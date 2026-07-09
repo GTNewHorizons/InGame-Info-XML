@@ -1,9 +1,6 @@
 package com.github.lunatrius.ingameinfo.client.gui.editor;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.ResourceLocation;
 
 public class GuiTexturedButton {
 
@@ -41,8 +38,7 @@ public class GuiTexturedButton {
             return false;
         }
 
-        Minecraft.getMinecraft().getSoundHandler()
-                .playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+        VisualConfigTheme.playClickSound();
         return true;
     }
 

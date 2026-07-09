@@ -1,6 +1,7 @@
 package com.github.lunatrius.ingameinfo.client.gui.editor;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
@@ -23,9 +24,31 @@ public final class VisualConfigTheme {
     private static final int BUTTON_CAP = 2;
 
     private static final int SCROLLBAR_THUMB_WIDTH = 7;
-    private static final int SCROLLBAR_RAIL_WIDTH = 9;
+    public static final int SCROLLBAR_RAIL_WIDTH = 9;
     private static final int SCROLLBAR_HEIGHT = 12;
     private static final int SCROLLBAR_CAP = 4;
+    private static final int SCROLLBAR_THUMB_MIN_HEIGHT = 10;
+
+    private static final int ICON_SIZE = 16;
+    private static final int ICON_V_NORMAL = 64;
+    private static final int ICON_V_DISABLED = 80;
+
+    private static final int ROW_BACKGROUND_U = 0;
+    private static final int ROW_BACKGROUND_V = 32;
+    private static final int ROW_BACKGROUND_SIZE = 20;
+
+    public enum RowIcon {
+
+        UP(0),
+        DOWN(16),
+        DELETE(32);
+
+        private final int u;
+
+        RowIcon(int u) {
+            this.u = u;
+        }
+    }
 
     public enum ButtonState {
 
@@ -52,8 +75,43 @@ public final class VisualConfigTheme {
         return colorPrefix + text;
     }
 
+    public static void playClickSound() {
+        Minecraft.getMinecraft().getSoundHandler()
+                .playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+    }
+
     public static void bind() {
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
+    }
+
+    public static void drawIcon(int x, int y, RowIcon icon, boolean enabled) {
+        bind();
+        int v = enabled ? ICON_V_NORMAL : ICON_V_DISABLED;
+        drawStretched(x, y, ICON_SIZE, ICON_SIZE, icon.u, v, ICON_SIZE, ICON_SIZE);
+    }
+
+    /**
+     * Tiles the 20x20 row-background pattern across the given width instead of stretching it, so the
+     * pattern repeats cleanly regardless of row width. The trailing partial tile (if width isn't a
+     * multiple of 20) is cropped from the source rather than squashed.
+     */
+    public static void drawLineBackground(int x, int y, int width) {
+        bind();
+        int fullTiles = width / ROW_BACKGROUND_SIZE;
+        int remainder = width % ROW_BACKGROUND_SIZE;
+
+        int drawX = x;
+        for (int i = 0; i < fullTiles; i++) {
+            drawStretched(
+                    drawX, y, ROW_BACKGROUND_SIZE, ROW_BACKGROUND_SIZE,
+                    ROW_BACKGROUND_U, ROW_BACKGROUND_V, ROW_BACKGROUND_SIZE, ROW_BACKGROUND_SIZE);
+            drawX += ROW_BACKGROUND_SIZE;
+        }
+        if (remainder > 0) {
+            drawStretched(
+                    drawX, y, remainder, ROW_BACKGROUND_SIZE,
+                    ROW_BACKGROUND_U, ROW_BACKGROUND_V, remainder, ROW_BACKGROUND_SIZE);
+        }
     }
 
     public static void drawPanel(int x, int y, int width, int height) {
@@ -87,6 +145,27 @@ public final class VisualConfigTheme {
                 x, y, SCROLLBAR_RAIL_WIDTH, height,
                 83, 0, SCROLLBAR_RAIL_WIDTH, SCROLLBAR_HEIGHT,
                 0, 0, SCROLLBAR_CAP, SCROLLBAR_CAP);
+    }
+
+    /**
+     * Draws a rail spanning the full content height, plus a thumb sized/positioned to reflect how much of
+     * totalItems is visible and how far scrolled. Draws no thumb if everything already fits.
+     */
+    public static void drawScrollbar(int x, int y, int height, int totalItems, int visibleItems, int scrollOffset) {
+        drawScrollbarRail(x, y, height);
+
+        if (totalItems <= visibleItems) {
+            return;
+        }
+
+        int thumbX = x + (SCROLLBAR_RAIL_WIDTH - SCROLLBAR_THUMB_WIDTH) / 2;
+        int margin = 1;
+        int travelHeight = height - margin * 2;
+        int thumbHeight = Math.min(travelHeight, Math.max(SCROLLBAR_THUMB_MIN_HEIGHT, travelHeight * visibleItems / totalItems));
+
+        int maxOffset = totalItems - visibleItems;
+        int thumbY = y + margin + (travelHeight - thumbHeight) * scrollOffset / maxOffset;
+        drawScrollbarThumb(thumbX, thumbY, thumbHeight, false);
     }
 
     /**
