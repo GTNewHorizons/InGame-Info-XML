@@ -198,7 +198,7 @@ public class GuiTagList extends GuiListExtended {
 
             VisualConfigTheme.playClickSound();
             int bracketIndex = this.name.indexOf('[');
-            String rawName = bracketIndex < 0 ? this.name : this.name.substring(0, bracketIndex);
+            String rawName = bracketIndex < 0 ? this.name : this.name.substring(0, bracketIndex) + "0";
             onPick.accept(rawName);
             return true;
         }
