@@ -10,6 +10,7 @@ import net.minecraft.client.resources.I18n;
 
 import com.github.lunatrius.ingameinfo.Alignment;
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
+import com.github.lunatrius.ingameinfo.client.gui.GuiModConfig;
 import com.github.lunatrius.ingameinfo.handler.ConfigurationHandler;
 import com.github.lunatrius.ingameinfo.handler.KeyInputHandler;
 import com.github.lunatrius.ingameinfo.reference.Names;
@@ -19,6 +20,10 @@ public class GuiConfigEditor extends GuiThemedScreen implements GuiYesNoCallback
     private static final int BUTTON_DONE = 0;
     private static final int BUTTON_PREVIEW_PRIMARY = 97;
     private static final int BUTTON_PREVIEW_SECONDARY = 98;
+    private static final int BUTTON_MOD_CONFIG = 96;
+    private static final int BUTTON_SCALE_DOWN = 94;
+    private static final int BUTTON_SCALE_UP = 95;
+    private static final int BUTTON_SCALE_RESET = 93;
     private static final Alignment[][] GRID = { { Alignment.TOPLEFT, Alignment.TOPCENTER, Alignment.TOPRIGHT },
             { Alignment.MIDDLELEFT, Alignment.MIDDLECENTER, Alignment.MIDDLERIGHT },
             { Alignment.BOTTOMLEFT, Alignment.BOTTOMCENTER, Alignment.BOTTOMRIGHT } };
@@ -26,6 +31,10 @@ public class GuiConfigEditor extends GuiThemedScreen implements GuiYesNoCallback
     private GuiTexturedButton btnDone;
     private GuiTexturedButton btnPreviewPrimary;
     private GuiTexturedButton btnPreviewSecondary;
+    private GuiTexturedButton btnModConfig;
+    private GuiTexturedButton btnScaleDown;
+    private GuiTexturedButton btnScaleUp;
+    private GuiTexturedButton btnScaleReset;
     private String secondaryConfigName;
     private String pendingSwitchFilename;
     private final List<AlignmentButton> alignmentButtons = new ArrayList<>();
@@ -37,6 +46,11 @@ public class GuiConfigEditor extends GuiThemedScreen implements GuiYesNoCallback
     @Override
     protected String getTitleSegment() {
         return I18n.format("gui.ingameinfoxml.visualconfig");
+    }
+
+    @Override
+    protected int getPreferredPanelHeight() {
+        return 270;
     }
 
     @Override
@@ -54,13 +68,32 @@ public class GuiConfigEditor extends GuiThemedScreen implements GuiYesNoCallback
         this.btnPreviewSecondary.enabled = hasSecondary;
         updatePreviewSelection();
 
+        this.btnModConfig = createOutsideButton(
+                BUTTON_MOD_CONFIG,
+                2,
+                I18n.format("gui.ingameinfoxml.visualconfig.modconfig"));
+
+        int scaleY = this.panelY + 22;
+        int centerX = this.width / 2;
+        this.btnScaleDown = new GuiTexturedButton(BUTTON_SCALE_DOWN, centerX - 70, scaleY, 20, "-");
+        this.btnScaleUp = new GuiTexturedButton(BUTTON_SCALE_UP, centerX + 50, scaleY, 20, "+");
+
+        int resetY = scaleY + 20;
+        this.btnScaleReset = new GuiTexturedButton(
+                BUTTON_SCALE_RESET,
+                centerX - 25,
+                resetY,
+                50,
+                I18n.format("gui.ingameinfoxml.visualconfig.reset"));
+
         this.alignmentButtons.clear();
         int rows = GRID.length;
         int cols = GRID[0].length;
-        int top = this.panelY + 22;
+        int top = resetY + 22;
         int bottom = this.btnDone.y - 6;
         int cellHeight = (bottom - top) / rows;
-        int cellWidth = (this.panelWidth - 20) / cols;
+        int columnGap = 4;
+        int cellWidth = (this.panelWidth - 20 - columnGap * (cols - 1)) / cols;
         int left = this.panelX + 10;
 
         for (int row = 0; row < rows; row++) {
@@ -69,13 +102,30 @@ public class GuiConfigEditor extends GuiThemedScreen implements GuiYesNoCallback
                 String label = I18n.format(Names.Config.LANG_PREFIX + "." + alignment.toString().toLowerCase());
                 GuiTexturedButton button = new GuiTexturedButton(
                         100 + row * cols + col,
-                        left + col * cellWidth,
+                        left + col * (cellWidth + columnGap),
                         top + row * cellHeight,
-                        cellWidth - 4,
+                        cellWidth,
                         label);
                 this.alignmentButtons.add(new AlignmentButton(button, alignment));
             }
         }
+    }
+
+    private void adjustScale(int delta) {
+        int current = ConfigurationHandler.propscale.getInt(ConfigurationHandler.DEFAULT_SCALE);
+        int next = Math.max(1, Math.min(20, current + delta));
+        if (next == current) {
+            return;
+        }
+        ConfigurationHandler.propscale.set(next);
+        ConfigurationHandler.Scale = next;
+        ConfigurationHandler.save();
+    }
+
+    private void resetScale() {
+        ConfigurationHandler.propscale.set(ConfigurationHandler.DEFAULT_SCALE);
+        ConfigurationHandler.Scale = ConfigurationHandler.DEFAULT_SCALE;
+        ConfigurationHandler.save();
     }
 
     private void updatePreviewSelection() {
@@ -150,6 +200,22 @@ public class GuiConfigEditor extends GuiThemedScreen implements GuiYesNoCallback
                 requestPreview(this.secondaryConfigName);
                 return;
             }
+            if (this.btnModConfig.mousePressed(x, y)) {
+                this.mc.displayGuiScreen(new GuiModConfig(this));
+                return;
+            }
+            if (this.btnScaleDown.mousePressed(x, y)) {
+                adjustScale(-1);
+                return;
+            }
+            if (this.btnScaleUp.mousePressed(x, y)) {
+                adjustScale(1);
+                return;
+            }
+            if (this.btnScaleReset.mousePressed(x, y)) {
+                resetScale();
+                return;
+            }
             for (AlignmentButton alignmentButton : this.alignmentButtons) {
                 if (alignmentButton.button.mousePressed(x, y)) {
                     this.mc.displayGuiScreen(new GuiLineList(this, alignmentButton.alignment));
@@ -174,6 +240,18 @@ public class GuiConfigEditor extends GuiThemedScreen implements GuiYesNoCallback
         this.btnDone.draw(this.fontRendererObj, mouseX, mouseY);
         this.btnPreviewPrimary.draw(this.fontRendererObj, mouseX, mouseY);
         this.btnPreviewSecondary.draw(this.fontRendererObj, mouseX, mouseY);
+        this.btnModConfig.draw(this.fontRendererObj, mouseX, mouseY);
+        this.btnScaleDown.draw(this.fontRendererObj, mouseX, mouseY);
+        this.btnScaleUp.draw(this.fontRendererObj, mouseX, mouseY);
+        this.btnScaleReset.draw(this.fontRendererObj, mouseX, mouseY);
+
+        String scaleLabel = VisualConfigTheme
+                .colorize(I18n.format("gui.ingameinfoxml.visualconfig.scale", ConfigurationHandler.Scale / 10F), true);
+        this.fontRendererObj.drawStringWithShadow(
+                scaleLabel,
+                this.width / 2 - this.fontRendererObj.getStringWidth(scaleLabel) / 2,
+                this.btnScaleDown.y + 4,
+                0xFFFFFF);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
 

@@ -39,6 +39,8 @@ public class GuiValueList extends GuiThemedScreen {
     private int visibleRows;
     private int scrollOffset;
     private int textRight;
+    private int rowRight;
+    private boolean needsScrollbar;
     private boolean scrollbarDragging;
 
     public GuiValueList(GuiScreen parentScreen, List<Value> values) {
@@ -92,12 +94,14 @@ public class GuiValueList extends GuiThemedScreen {
 
     private void rebuildRows() {
         this.visibleRows = Math.max(1, (this.contentBottom - this.contentTop) / ROW_HEIGHT);
+        this.needsScrollbar = this.values.size() > this.visibleRows;
         int maxScroll = Math.max(0, this.values.size() - this.visibleRows);
         this.scrollOffset = Math.max(0, Math.min(this.scrollOffset, maxScroll));
 
         this.rows.clear();
-        int rightEdge = this.panelX + this.panelWidth - 10 - VisualConfigTheme.SCROLLBAR_RAIL_WIDTH - 4;
-        int buttonsX = rightEdge - (ROW_BUTTON_WIDTH * 3 + ROW_BUTTON_GAP * 2);
+        int scrollbarReserve = this.needsScrollbar ? VisualConfigTheme.SCROLLBAR_RAIL_WIDTH + 4 : 0;
+        this.rowRight = this.panelX + this.panelWidth - 10 - scrollbarReserve;
+        int buttonsX = this.rowRight - (ROW_BUTTON_WIDTH * 3 + ROW_BUTTON_GAP * 2);
         this.textRight = buttonsX - ROW_BUTTON_GAP;
 
         int iconY = (ROW_HEIGHT - VisualConfigTheme.BUTTON_HEIGHT) / 2;
@@ -211,7 +215,8 @@ public class GuiValueList extends GuiThemedScreen {
                 return;
             }
             int scrollbarX = this.panelX + this.panelWidth - 10 - VisualConfigTheme.SCROLLBAR_RAIL_WIDTH;
-            if (x >= scrollbarX && x < scrollbarX + VisualConfigTheme.SCROLLBAR_RAIL_WIDTH
+            if (this.needsScrollbar && x >= scrollbarX
+                    && x < scrollbarX + VisualConfigTheme.SCROLLBAR_RAIL_WIDTH
                     && y >= this.contentTop
                     && y < this.contentBottom) {
                 this.scrollbarDragging = true;
@@ -256,7 +261,7 @@ public class GuiValueList extends GuiThemedScreen {
         int maxTextWidth = this.textRight - (this.panelX + 10);
 
         int scrollbarX = this.panelX + this.panelWidth - 10 - VisualConfigTheme.SCROLLBAR_RAIL_WIDTH;
-        int backgroundWidth = scrollbarX - 3 - (this.panelX + 8);
+        int backgroundWidth = this.rowRight - (this.panelX + 8);
 
         String hoveredTooltip = null;
         for (ValueRow row : this.rows) {
@@ -295,13 +300,15 @@ public class GuiValueList extends GuiThemedScreen {
             }
         }
 
-        VisualConfigTheme.drawScrollbar(
-                scrollbarX,
-                this.contentTop,
-                this.contentBottom - this.contentTop,
-                this.values.size(),
-                this.visibleRows,
-                this.scrollOffset);
+        if (this.needsScrollbar) {
+            VisualConfigTheme.drawScrollbar(
+                    scrollbarX,
+                    this.contentTop,
+                    this.contentBottom - this.contentTop,
+                    this.values.size(),
+                    this.visibleRows,
+                    this.scrollOffset);
+        }
 
         this.btnAddValue.draw(this.fontRendererObj, mouseX, mouseY);
         this.btnAddTag.draw(this.fontRendererObj, mouseX, mouseY);

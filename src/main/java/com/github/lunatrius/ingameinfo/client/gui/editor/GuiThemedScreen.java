@@ -12,7 +12,7 @@ public abstract class GuiThemedScreen extends GuiScreen {
     protected static final int BUTTON_MARGIN_BOTTOM = 24;
 
     private static final int OUTSIDE_ROW_MARGIN = 6;
-    private static final int OUTSIDE_BUTTON_WIDTH = 60;
+    private static final int OUTSIDE_BUTTON_WIDTH = 64;
     private static final int OUTSIDE_BUTTON_GAP = 5;
 
     // Shared across every editor screen so the toggle sticks as you navigate between them.

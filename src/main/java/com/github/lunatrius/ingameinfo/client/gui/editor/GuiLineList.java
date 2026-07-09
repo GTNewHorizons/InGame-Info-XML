@@ -1,16 +1,20 @@
 package com.github.lunatrius.ingameinfo.client.gui.editor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.common.config.Property;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.github.lunatrius.ingameinfo.Alignment;
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
+import com.github.lunatrius.ingameinfo.handler.ConfigurationHandler;
 import com.github.lunatrius.ingameinfo.reference.Names;
 import com.github.lunatrius.ingameinfo.value.Value;
 import com.github.lunatrius.ingameinfo.value.ValueSimple;
@@ -20,15 +24,28 @@ public class GuiLineList extends GuiThemedScreen {
     private static final int BUTTON_DONE = 0;
     private static final int BUTTON_ADD_LINE = 1;
     private static final int BUTTON_PREVIEW = 99;
+    private static final int BUTTON_OFFSET_X_DOWN = 90;
+    private static final int BUTTON_OFFSET_X_UP = 91;
+    private static final int BUTTON_OFFSET_Y_DOWN = 92;
+    private static final int BUTTON_OFFSET_Y_UP = 93;
+    private static final int BUTTON_OFFSET_RESET = 89;
     private static final int ROW_HEIGHT = 20;
     private static final int ROW_BUTTON_WIDTH = 16;
     private static final int ROW_BUTTON_GAP = 2;
+
+    private static final List<String> OFFSET_TOOLTIP = Arrays
+            .asList("Hold", "> Shift: x10", "> Ctrl: x100", "> Alt: x5");
 
     private final Alignment alignment;
     private List<List<Value>> lines;
 
     private GuiTexturedButton btnDone;
     private GuiTexturedButton btnAddLine;
+    private GuiTexturedButton btnOffsetXDown;
+    private GuiTexturedButton btnOffsetXUp;
+    private GuiTexturedButton btnOffsetYDown;
+    private GuiTexturedButton btnOffsetYUp;
+    private GuiTexturedButton btnOffsetReset;
     private final List<LineRow> rows = new ArrayList<>();
 
     private int contentTop;
@@ -36,6 +53,8 @@ public class GuiLineList extends GuiThemedScreen {
     private int visibleRows;
     private int scrollOffset;
     private int textRight;
+    private int rowRight;
+    private boolean needsScrollbar;
     private boolean scrollbarDragging;
 
     public GuiLineList(GuiScreen parentScreen, Alignment alignment) {
@@ -54,6 +73,11 @@ public class GuiLineList extends GuiThemedScreen {
     }
 
     @Override
+    protected int getPreferredPanelHeight() {
+        return 270;
+    }
+
+    @Override
     public void initGui() {
         super.initGui();
 
@@ -69,7 +93,22 @@ public class GuiLineList extends GuiThemedScreen {
         this.btnDone.x = this.width / 2 + 10;
         initPreviewButton(BUTTON_PREVIEW);
 
-        this.contentTop = this.panelY + 22;
+        int offsetY = this.panelY + 22;
+        int centerX = this.width / 2;
+        this.btnOffsetXDown = new GuiTexturedButton(BUTTON_OFFSET_X_DOWN, centerX - 130, offsetY, 20, "-");
+        this.btnOffsetXUp = new GuiTexturedButton(BUTTON_OFFSET_X_UP, centerX - 30, offsetY, 20, "+");
+        this.btnOffsetYDown = new GuiTexturedButton(BUTTON_OFFSET_Y_DOWN, centerX + 10, offsetY, 20, "-");
+        this.btnOffsetYUp = new GuiTexturedButton(BUTTON_OFFSET_Y_UP, centerX + 110, offsetY, 20, "+");
+
+        int resetY = offsetY + 20;
+        this.btnOffsetReset = new GuiTexturedButton(
+                BUTTON_OFFSET_RESET,
+                centerX - 25,
+                resetY,
+                50,
+                I18n.format("gui.ingameinfoxml.visualconfig.reset"));
+
+        this.contentTop = resetY + 22;
         this.contentBottom = this.btnDone.y - 6;
 
         rebuildRows();
@@ -77,12 +116,14 @@ public class GuiLineList extends GuiThemedScreen {
 
     private void rebuildRows() {
         this.visibleRows = Math.max(1, (this.contentBottom - this.contentTop) / ROW_HEIGHT);
+        this.needsScrollbar = this.lines.size() > this.visibleRows;
         int maxScroll = Math.max(0, this.lines.size() - this.visibleRows);
         this.scrollOffset = Math.max(0, Math.min(this.scrollOffset, maxScroll));
 
         this.rows.clear();
-        int rightEdge = this.panelX + this.panelWidth - 10 - VisualConfigTheme.SCROLLBAR_RAIL_WIDTH - 4;
-        int buttonsX = rightEdge - (ROW_BUTTON_WIDTH * 3 + ROW_BUTTON_GAP * 2);
+        int scrollbarReserve = this.needsScrollbar ? VisualConfigTheme.SCROLLBAR_RAIL_WIDTH + 4 : 0;
+        this.rowRight = this.panelX + this.panelWidth - 10 - scrollbarReserve;
+        int buttonsX = this.rowRight - (ROW_BUTTON_WIDTH * 3 + ROW_BUTTON_GAP * 2);
         this.textRight = buttonsX - ROW_BUTTON_GAP;
 
         int iconY = (ROW_HEIGHT - VisualConfigTheme.BUTTON_HEIGHT) / 2;
@@ -112,6 +153,46 @@ public class GuiLineList extends GuiThemedScreen {
             this.rows.add(new LineRow(line, index, y, up, down, delete));
             y += ROW_HEIGHT;
         }
+    }
+
+    private void adjustOffsetX(int sign) {
+        this.alignment.x += sign * getOffsetStep();
+        persistOffset();
+    }
+
+    private void adjustOffsetY(int sign) {
+        this.alignment.y += sign * getOffsetStep();
+        persistOffset();
+    }
+
+    /**
+     * Ctrl/Shift/Alt take bigger steps so large repositions don't need dozens of clicks.
+     */
+    private static int getOffsetStep() {
+        if (isCtrlKeyDown()) {
+            return 100;
+        }
+        if (isShiftKeyDown()) {
+            return 10;
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_RMENU)) {
+            return 5;
+        }
+        return 1;
+    }
+
+    private void persistOffset() {
+        Property property = ConfigurationHandler.propAlignments.get(this.alignment);
+        if (property != null) {
+            property.set(this.alignment.getXY());
+            ConfigurationHandler.save();
+        }
+    }
+
+    private void resetOffset() {
+        this.alignment.x = this.alignment.defaultX;
+        this.alignment.y = this.alignment.defaultY;
+        persistOffset();
     }
 
     private void moveLine(int index, int delta) {
@@ -185,8 +266,29 @@ public class GuiLineList extends GuiThemedScreen {
             if (handlePreviewClick(x, y)) {
                 return;
             }
+            if (this.btnOffsetXDown.mousePressed(x, y)) {
+                adjustOffsetX(-1);
+                return;
+            }
+            if (this.btnOffsetXUp.mousePressed(x, y)) {
+                adjustOffsetX(1);
+                return;
+            }
+            if (this.btnOffsetYDown.mousePressed(x, y)) {
+                adjustOffsetY(-1);
+                return;
+            }
+            if (this.btnOffsetYUp.mousePressed(x, y)) {
+                adjustOffsetY(1);
+                return;
+            }
+            if (this.btnOffsetReset.mousePressed(x, y)) {
+                resetOffset();
+                return;
+            }
             int scrollbarX = this.panelX + this.panelWidth - 10 - VisualConfigTheme.SCROLLBAR_RAIL_WIDTH;
-            if (x >= scrollbarX && x < scrollbarX + VisualConfigTheme.SCROLLBAR_RAIL_WIDTH
+            if (this.needsScrollbar && x >= scrollbarX
+                    && x < scrollbarX + VisualConfigTheme.SCROLLBAR_RAIL_WIDTH
                     && y >= this.contentTop
                     && y < this.contentBottom) {
                 this.scrollbarDragging = true;
@@ -231,9 +333,10 @@ public class GuiLineList extends GuiThemedScreen {
         int maxTextWidth = this.textRight - (this.panelX + 10);
 
         int scrollbarX = this.panelX + this.panelWidth - 10 - VisualConfigTheme.SCROLLBAR_RAIL_WIDTH;
-        int backgroundWidth = scrollbarX - 3 - (this.panelX + 8);
+        int backgroundWidth = this.rowRight - (this.panelX + 8);
 
         String hoveredTooltip = null;
+        List<String> hoveredTooltipLines = null;
         for (LineRow row : this.rows) {
             boolean rowHovered = mouseY >= row.rowY && mouseY < row.rowY + ROW_HEIGHT
                     && mouseX >= this.panelX + 8
@@ -270,20 +373,54 @@ public class GuiLineList extends GuiThemedScreen {
             }
         }
 
-        VisualConfigTheme.drawScrollbar(
-                scrollbarX,
-                this.contentTop,
-                this.contentBottom - this.contentTop,
-                this.lines.size(),
-                this.visibleRows,
-                this.scrollOffset);
+        if (this.needsScrollbar) {
+            VisualConfigTheme.drawScrollbar(
+                    scrollbarX,
+                    this.contentTop,
+                    this.contentBottom - this.contentTop,
+                    this.lines.size(),
+                    this.visibleRows,
+                    this.scrollOffset);
+        }
 
         this.btnAddLine.draw(this.fontRendererObj, mouseX, mouseY);
         this.btnDone.draw(this.fontRendererObj, mouseX, mouseY);
 
+        this.btnOffsetXDown.draw(this.fontRendererObj, mouseX, mouseY);
+        this.btnOffsetXUp.draw(this.fontRendererObj, mouseX, mouseY);
+        this.btnOffsetYDown.draw(this.fontRendererObj, mouseX, mouseY);
+        this.btnOffsetYUp.draw(this.fontRendererObj, mouseX, mouseY);
+        this.btnOffsetReset.draw(this.fontRendererObj, mouseX, mouseY);
+
+        if (this.btnOffsetXDown.isMouseOver(mouseX, mouseY) || this.btnOffsetXUp.isMouseOver(mouseX, mouseY)
+                || this.btnOffsetYDown.isMouseOver(mouseX, mouseY)
+                || this.btnOffsetYUp.isMouseOver(mouseX, mouseY)) {
+            hoveredTooltipLines = OFFSET_TOOLTIP;
+        }
+
+        String xLabel = VisualConfigTheme
+                .colorize(I18n.format("gui.ingameinfoxml.visualconfig.offset_x", this.alignment.x), true);
+        this.fontRendererObj.drawStringWithShadow(
+                xLabel,
+                (this.btnOffsetXDown.x + this.btnOffsetXUp.x + 20) / 2
+                        - this.fontRendererObj.getStringWidth(xLabel) / 2,
+                this.btnOffsetXDown.y + 4,
+                0xFFFFFF);
+
+        String yLabel = VisualConfigTheme
+                .colorize(I18n.format("gui.ingameinfoxml.visualconfig.offset_y", this.alignment.y), true);
+        this.fontRendererObj.drawStringWithShadow(
+                yLabel,
+                (this.btnOffsetYDown.x + this.btnOffsetYUp.x + 20) / 2
+                        - this.fontRendererObj.getStringWidth(yLabel) / 2,
+                this.btnOffsetYDown.y + 4,
+                0xFFFFFF);
+
         super.drawScreen(mouseX, mouseY, partialTicks);
 
-        if (hoveredTooltip != null) {
+        if (hoveredTooltipLines != null) {
+            drawHoveringText(hoveredTooltipLines, mouseX, mouseY, this.fontRendererObj);
+        } else if (hoveredTooltip != null) {
             drawHoveringText(Collections.singletonList(hoveredTooltip), mouseX, mouseY, this.fontRendererObj);
         }
 
