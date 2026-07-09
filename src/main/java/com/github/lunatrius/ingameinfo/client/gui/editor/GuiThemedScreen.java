@@ -144,7 +144,15 @@ public abstract class GuiThemedScreen extends GuiScreen {
     }
 
     private void drawTitle(String title) {
-        String colored = VisualConfigTheme.colorize(title, true);
+        int maxWidth = this.panelWidth - 20;
+        String display = title;
+        if (this.fontRendererObj.getStringWidth(title) > maxWidth) {
+            String ellipsis = "...";
+            int ellipsisWidth = this.fontRendererObj.getStringWidth(ellipsis);
+            display = ellipsis + this.fontRendererObj.trimStringToWidth(title, maxWidth - ellipsisWidth, true);
+        }
+
+        String colored = VisualConfigTheme.colorize(display, true);
         this.fontRendererObj.drawStringWithShadow(
                 colored,
                 this.width / 2 - this.fontRendererObj.getStringWidth(colored) / 2,
