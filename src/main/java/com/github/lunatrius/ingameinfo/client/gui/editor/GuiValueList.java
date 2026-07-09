@@ -324,6 +324,9 @@ public class GuiValueList extends GuiThemedScreen {
     }
 
     private static String preview(Value value) {
+        if (isRenderedPreviewEnabled()) {
+            return resolveValue(value);
+        }
         if (value instanceof ValueSimple.ValueVariable) {
             return "{" + value.getRawValue(false) + "}";
         } else if (value.isSimple()) {

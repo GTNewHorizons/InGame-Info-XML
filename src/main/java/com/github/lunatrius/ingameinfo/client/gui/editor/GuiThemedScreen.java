@@ -1,5 +1,7 @@
 package com.github.lunatrius.ingameinfo.client.gui.editor;
 
+import java.util.regex.Pattern;
+
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
@@ -7,6 +9,8 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
+import com.github.lunatrius.ingameinfo.client.gui.Info;
+import com.github.lunatrius.ingameinfo.value.Value;
 
 public abstract class GuiThemedScreen extends GuiScreen {
 
@@ -16,8 +20,12 @@ public abstract class GuiThemedScreen extends GuiScreen {
     private static final int OUTSIDE_BUTTON_WIDTH = 64;
     private static final int OUTSIDE_BUTTON_GAP = 5;
 
+    private static final Pattern ICON_MARKER_PATTERN = Pattern.compile("\\{ICON\\|[^}]*\\}");
+
     // Shared across every editor screen so the toggle sticks as you navigate between them.
     private static boolean previewEnabled = false;
+    // Whether line/value previews show the actual resolved, colored HUD text or the raw tag syntax.
+    private static boolean renderedPreviewEnabled = true; //TODO
 
     protected final GuiScreen parentScreen;
 
@@ -104,6 +112,49 @@ public abstract class GuiThemedScreen extends GuiScreen {
 
     protected static void setPreviewEnabled(boolean enabled) {
         previewEnabled = enabled;
+    }
+
+    protected static boolean isRenderedPreviewEnabled() {
+        return renderedPreviewEnabled;
+    }
+
+    protected static void setRenderedPreviewEnabled(boolean enabled) {
+        renderedPreviewEnabled = enabled;
+    }
+
+    /**
+     * Resolves a value the same way the real HUD does (tags replaced, color codes intact), for use in rendered
+     * previews. Icon markers are stripped since there's no icon graphic to show in a text row.
+     */
+    protected static String resolveValue(Value value) {
+        try {
+            if (value.isValidSize()) {
+                return ICON_MARKER_PATTERN.matcher(value.getReplacedValue()).replaceAll("");
+            }
+        } catch (Exception e) {
+            return "<ERROR>";
+        }
+        return "";
+    }
+
+    /**
+     * Draws an icon/item attached to a live HUD line using its own drawInfo() - the exact same code the real HUD
+     * uses - repositioned to an arbitrary spot instead of its actual on-screen HUD position.
+     */
+    protected static void drawInlineIcon(Info icon, int x, int y) {
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+        icon.offsetX = x;
+        icon.offsetY = y;
+        icon.draw();
+
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     protected void drawPreview(int mouseX, int mouseY) {

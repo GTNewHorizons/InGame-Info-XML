@@ -14,6 +14,8 @@ import org.lwjgl.input.Mouse;
 
 import com.github.lunatrius.ingameinfo.Alignment;
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
+import com.github.lunatrius.ingameinfo.client.gui.Info;
+import com.github.lunatrius.ingameinfo.client.gui.InfoText;
 import com.github.lunatrius.ingameinfo.handler.ConfigurationHandler;
 import com.github.lunatrius.ingameinfo.reference.Names;
 import com.github.lunatrius.ingameinfo.value.Value;
@@ -335,6 +337,11 @@ public class GuiLineList extends GuiThemedScreen {
         int scrollbarX = this.panelX + this.panelWidth - 10 - VisualConfigTheme.SCROLLBAR_RAIL_WIDTH;
         int backgroundWidth = this.rowRight - (this.panelX + 8) + 1;
 
+        // Icons are only resolved on live InfoText objects, kept up to date while Preview is ticking.
+        List<InfoText> liveLines = (isRenderedPreviewEnabled() && isPreviewEnabled())
+                ? new ArrayList<>(this.alignment.getLines())
+                : Collections.emptyList();
+
         String hoveredTooltip = null;
         List<String> hoveredTooltipLines = null;
         for (LineRow row : this.rows) {
@@ -353,6 +360,14 @@ public class GuiLineList extends GuiThemedScreen {
             String text = VisualConfigTheme.colorize(trimmedRaw, true);
             int textY = row.rowY + (ROW_HEIGHT - this.fontRendererObj.FONT_HEIGHT) / 2 + 1;
             this.fontRendererObj.drawStringWithShadow(text, this.panelX + 10, textY, 0xFFFFFF);
+
+            if (row.index < liveLines.size()) {
+                for (Info icon : liveLines.get(row.index).getAttachedValues()) {
+                    if (icon.x + icon.getWidth() <= maxTextWidth) {
+                        drawInlineIcon(icon, this.panelX + 10, textY);
+                    }
+                }
+            }
 
             row.btnUp.draw(mouseX, mouseY);
             row.btnDown.draw(mouseX, mouseY);
@@ -430,6 +445,15 @@ public class GuiLineList extends GuiThemedScreen {
     private static String preview(List<Value> line) {
         if (line.isEmpty()) {
             return I18n.format("gui.ingameinfoxml.visualconfig.emptyline");
+        }
+
+        if (isRenderedPreviewEnabled()) {
+            StringBuilder rendered = new StringBuilder();
+            for (Value value : line) {
+                rendered.append(resolveValue(value));
+            }
+            return rendered.length() == 0 ? I18n.format("gui.ingameinfoxml.visualconfig.emptyline")
+                    : rendered.toString();
         }
 
         StringBuilder builder = new StringBuilder();

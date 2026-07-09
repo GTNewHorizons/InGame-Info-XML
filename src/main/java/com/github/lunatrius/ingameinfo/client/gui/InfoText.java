@@ -1,5 +1,6 @@
 package com.github.lunatrius.ingameinfo.client.gui;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -90,6 +91,10 @@ public class InfoText extends Info {
 
     public @Nullable Info getAttachedValue(String tag) {
         return attachedValues.get(tag);
+    }
+
+    public Collection<Info> getAttachedValues() {
+        return attachedValues.values();
     }
 
     public void removeAttachedValue(String tag) {
