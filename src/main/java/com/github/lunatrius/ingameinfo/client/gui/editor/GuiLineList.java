@@ -35,6 +35,7 @@ public class GuiLineList extends GuiThemedScreen {
     private int visibleRows;
     private int scrollOffset;
     private int textRight;
+    private boolean scrollbarDragging;
 
     public GuiLineList(GuiScreen parentScreen, Alignment alignment) {
         super(parentScreen);
@@ -149,6 +150,21 @@ public class GuiLineList extends GuiThemedScreen {
     }
 
     @Override
+    protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
+        if (this.scrollbarDragging && clickedMouseButton == 0) {
+            this.scrollOffset = VisualConfigTheme
+                    .scrollOffsetForY(mouseY, this.contentTop, this.contentBottom - this.contentTop, this.lines.size(), this.visibleRows);
+            rebuildRows();
+        }
+    }
+
+    @Override
+    protected void mouseMovedOrUp(int x, int y, int mouseEvent) {
+        this.scrollbarDragging = false;
+        super.mouseMovedOrUp(x, y, mouseEvent);
+    }
+
+    @Override
     protected void mouseClicked(int x, int y, int action) {
         if (action == 0) {
             if (this.btnDone.mousePressed(x, y)) {
@@ -157,6 +173,20 @@ public class GuiLineList extends GuiThemedScreen {
             }
             if (this.btnAddLine.mousePressed(x, y)) {
                 addLine();
+                return;
+            }
+            int scrollbarX = this.panelX + this.panelWidth - 10 - VisualConfigTheme.SCROLLBAR_RAIL_WIDTH;
+            if (x >= scrollbarX && x < scrollbarX + VisualConfigTheme.SCROLLBAR_RAIL_WIDTH
+                    && y >= this.contentTop
+                    && y < this.contentBottom) {
+                this.scrollbarDragging = true;
+                this.scrollOffset = VisualConfigTheme.scrollOffsetForY(
+                        y,
+                        this.contentTop,
+                        this.contentBottom - this.contentTop,
+                        this.lines.size(),
+                        this.visibleRows);
+                rebuildRows();
                 return;
             }
             for (LineRow row : this.rows) {

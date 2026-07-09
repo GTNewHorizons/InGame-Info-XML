@@ -175,6 +175,28 @@ public final class VisualConfigTheme {
     }
 
     /**
+     * Inverse of drawScrollbar's thumb positioning: given a click/drag Y on the track, returns the
+     * scrollOffset that would center the thumb under that point. Mirrors the same thumb-size math so
+     * dragging feels 1:1 with what's rendered.
+     */
+    public static int scrollOffsetForY(int mouseY, int trackY, int trackHeight, int totalItems, int visibleItems) {
+        int maxOffset = totalItems - visibleItems;
+        if (maxOffset <= 0) {
+            return 0;
+        }
+
+        int margin = 1;
+        int travelHeight = trackHeight - margin * 2;
+        int thumbHeight = Math
+                .min(travelHeight, Math.max(SCROLLBAR_THUMB_MIN_HEIGHT, travelHeight * visibleItems / totalItems));
+        int usableTravel = Math.max(1, travelHeight - thumbHeight);
+
+        int relativeY = mouseY - trackY - margin - thumbHeight / 2;
+        float ratio = Math.max(0F, Math.min(1F, relativeY / (float) usableTravel));
+        return Math.round(ratio * maxOffset);
+    }
+
+    /**
      * Draws a 9-slice: fixed-size corners, edges stretched along one axis, center stretched along both.
      * A cap of 0 on an axis collapses that axis down to a single stretched strip (used for 3-slice buttons/scrollbar).
      */
