@@ -25,7 +25,7 @@ public abstract class GuiThemedScreen extends GuiScreen {
     // Shared across every editor screen so the toggle sticks as you navigate between them.
     private static boolean previewEnabled = false;
     // Whether line/value previews show the actual resolved, colored HUD text or the raw tag syntax.
-    private static boolean renderedPreviewEnabled = true; //TODO
+    private static boolean renderedPreviewEnabled = false; // TODO
 
     protected final GuiScreen parentScreen;
 
@@ -138,8 +138,8 @@ public abstract class GuiThemedScreen extends GuiScreen {
     }
 
     /**
-     * Draws an icon/item attached to a live HUD line using its own drawInfo() - the exact same code the real HUD
-     * uses - repositioned to an arbitrary spot instead of its actual on-screen HUD position.
+     * Draws an icon/item attached to a live HUD line using its own drawInfo() - the exact same code the real HUD uses -
+     * repositioned to an arbitrary spot instead of its actual on-screen HUD position.
      */
     protected static void drawInlineIcon(Info icon, int x, int y) {
         GL11.glDisable(GL11.GL_LIGHTING);

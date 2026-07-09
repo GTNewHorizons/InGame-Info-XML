@@ -24,6 +24,8 @@ public class GuiValueList extends GuiThemedScreen {
     private static final int BUTTON_DONE = 0;
     private static final int BUTTON_ADD_VALUE = 1;
     private static final int BUTTON_ADD_TAG = 2;
+    private static final int BUTTON_ADD_ICON = 3;
+    private static final int BUTTON_ADD_COMPLEX = 4;
     private static final int BUTTON_PREVIEW = 99;
     private static final int ROW_HEIGHT = 20;
     private static final int ROW_BUTTON_WIDTH = 16;
@@ -34,6 +36,8 @@ public class GuiValueList extends GuiThemedScreen {
     private GuiTexturedButton btnDone;
     private GuiTexturedButton btnAddValue;
     private GuiTexturedButton btnAddTag;
+    private GuiTexturedButton btnAddIcon;
+    private GuiTexturedButton btnAddComplex;
     private final List<ValueRow> rows = new ArrayList<>();
 
     private int contentTop;
@@ -57,7 +61,7 @@ public class GuiValueList extends GuiThemedScreen {
 
     @Override
     protected int getPreferredPanelWidth() {
-        return 300;
+        return 380;
     }
 
     @Override
@@ -66,9 +70,9 @@ public class GuiValueList extends GuiThemedScreen {
 
         this.btnDone = createDoneButton(BUTTON_DONE);
 
-        int buttonWidth = 90;
+        int buttonWidth = 65;
         int gap = 5;
-        int groupWidth = buttonWidth * 3 + gap * 2;
+        int groupWidth = buttonWidth * 5 + gap * 4;
         int startX = this.width / 2 - groupWidth / 2;
         int buttonY = this.btnDone.y;
 
@@ -77,14 +81,26 @@ public class GuiValueList extends GuiThemedScreen {
                 startX,
                 buttonY,
                 buttonWidth,
-                I18n.format("gui.ingameinfoxml.visualconfig.addvalue"));
+                I18n.format("gui.ingameinfoxml.visualconfig.addstring"));
         this.btnAddTag = new GuiTexturedButton(
                 BUTTON_ADD_TAG,
                 startX + buttonWidth + gap,
                 buttonY,
                 buttonWidth,
-                I18n.format("gui.ingameinfoxml.visualconfig.addtag"));
-        this.btnDone.x = startX + (buttonWidth + gap) * 2;
+                I18n.format("gui.ingameinfoxml.visualconfig.addvar"));
+        this.btnAddIcon = new GuiTexturedButton(
+                BUTTON_ADD_ICON,
+                startX + (buttonWidth + gap) * 2,
+                buttonY,
+                buttonWidth,
+                I18n.format("gui.ingameinfoxml.visualconfig.addicon"));
+        this.btnAddComplex = new GuiTexturedButton(
+                BUTTON_ADD_COMPLEX,
+                startX + (buttonWidth + gap) * 3,
+                buttonY,
+                buttonWidth,
+                I18n.format("gui.ingameinfoxml.visualconfig.addcomplex"));
+        this.btnDone.x = startX + (buttonWidth + gap) * 4;
         this.btnDone.width = buttonWidth;
         initPreviewButton(BUTTON_PREVIEW);
 
@@ -95,8 +111,8 @@ public class GuiValueList extends GuiThemedScreen {
     }
 
     /**
-     * The content area's height doesn't always divide evenly by ROW_HEIGHT, which would otherwise leave the
-     * scrollbar rail poking out past the last row's background by that remainder.
+     * The content area's height doesn't always divide evenly by ROW_HEIGHT, which would otherwise leave the scrollbar
+     * rail poking out past the last row's background by that remainder.
      */
     private int scrollbarHeight() {
         return this.visibleRows * ROW_HEIGHT;
@@ -171,6 +187,18 @@ public class GuiValueList extends GuiThemedScreen {
         onValuesChanged();
     }
 
+    private void addIcon() {
+        this.values.add(Value.fromString("icon"));
+        this.scrollOffset = Math.max(0, this.values.size() - this.visibleRows);
+        onValuesChanged();
+    }
+
+    private void addComplex(String typeName) {
+        this.values.add(Value.fromString(typeName));
+        this.scrollOffset = Math.max(0, this.values.size() - this.visibleRows);
+        onValuesChanged();
+    }
+
     private void onValuesChanged() {
         InGameInfoCore.INSTANCE.markDirty();
         InGameInfoCore.INSTANCE.refreshInfoTexts();
@@ -190,12 +218,8 @@ public class GuiValueList extends GuiThemedScreen {
     @Override
     protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
         if (this.scrollbarDragging && clickedMouseButton == 0) {
-            this.scrollOffset = VisualConfigTheme.scrollOffsetForY(
-                    mouseY,
-                    this.contentTop,
-                    scrollbarHeight(),
-                    this.values.size(),
-                    this.visibleRows);
+            this.scrollOffset = VisualConfigTheme
+                    .scrollOffsetForY(mouseY, this.contentTop, scrollbarHeight(), this.values.size(), this.visibleRows);
             rebuildRows();
         }
     }
@@ -221,6 +245,14 @@ public class GuiValueList extends GuiThemedScreen {
                 this.mc.displayGuiScreen(new GuiTags(this, this::addTag));
                 return;
             }
+            if (this.btnAddIcon.mousePressed(x, y)) {
+                addIcon();
+                return;
+            }
+            if (this.btnAddComplex.mousePressed(x, y)) {
+                this.mc.displayGuiScreen(new GuiValueTypeList(this, this::addComplex));
+                return;
+            }
             if (handlePreviewClick(x, y)) {
                 return;
             }
@@ -230,12 +262,8 @@ public class GuiValueList extends GuiThemedScreen {
                     && y >= this.contentTop
                     && y < this.contentTop + scrollbarHeight()) {
                 this.scrollbarDragging = true;
-                this.scrollOffset = VisualConfigTheme.scrollOffsetForY(
-                        y,
-                        this.contentTop,
-                        scrollbarHeight(),
-                        this.values.size(),
-                        this.visibleRows);
+                this.scrollOffset = VisualConfigTheme
+                        .scrollOffsetForY(y, this.contentTop, scrollbarHeight(), this.values.size(), this.visibleRows);
                 rebuildRows();
                 return;
             }
@@ -290,8 +318,7 @@ public class GuiValueList extends GuiThemedScreen {
             // Rendered mode already carries its own color codes from resolved tags - force a white base ("§f")
             // instead of VisualConfigTheme's UI tint, so unformatted portions match the real HUD instead of
             // whatever color happened to be left active by the last tag.
-            String text = isRenderedPreviewEnabled() ? "§f" + trimmedRaw
-                    : VisualConfigTheme.colorize(trimmedRaw, true);
+            String text = isRenderedPreviewEnabled() ? "§f" + trimmedRaw : VisualConfigTheme.colorize(trimmedRaw, true);
             int textY = row.rowY + (ROW_HEIGHT - this.fontRendererObj.FONT_HEIGHT) / 2 + 1;
             this.fontRendererObj.drawStringWithShadow(text, this.panelX + 10, textY, 0xFFFFFF);
 
@@ -334,6 +361,8 @@ public class GuiValueList extends GuiThemedScreen {
 
         this.btnAddValue.draw(this.fontRendererObj, mouseX, mouseY);
         this.btnAddTag.draw(this.fontRendererObj, mouseX, mouseY);
+        this.btnAddIcon.draw(this.fontRendererObj, mouseX, mouseY);
+        this.btnAddComplex.draw(this.fontRendererObj, mouseX, mouseY);
         this.btnDone.draw(this.fontRendererObj, mouseX, mouseY);
 
         super.drawScreen(mouseX, mouseY, partialTicks);

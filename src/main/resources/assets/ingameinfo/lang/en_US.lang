@@ -324,10 +324,12 @@ commands.ingameinfoxml.disable=InGame Info XML overlay is now disabled.
 # visual config
 gui.ingameinfoxml.visualconfig=Visual Config
 gui.ingameinfoxml.visualconfig.addline=Add Line
-gui.ingameinfoxml.visualconfig.addvalue=Add Value
-gui.ingameinfoxml.visualconfig.addtag=Add Tag
 gui.ingameinfoxml.visualconfig.editline=Edit Line
 gui.ingameinfoxml.visualconfig.editchildren=Edit Children
+gui.ingameinfoxml.visualconfig.addstring=String
+gui.ingameinfoxml.visualconfig.addvar=Variable
+gui.ingameinfoxml.visualconfig.addicon=Icon
+gui.ingameinfoxml.visualconfig.addcomplex=Complex
 gui.ingameinfoxml.visualconfig.picktag=Pick Tag
 gui.ingameinfoxml.visualconfig.preview=Preview
 gui.ingameinfoxml.visualconfig.modconfig=Mod Config

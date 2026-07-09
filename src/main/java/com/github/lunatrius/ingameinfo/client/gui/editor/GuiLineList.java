@@ -117,8 +117,8 @@ public class GuiLineList extends GuiThemedScreen {
     }
 
     /**
-     * The content area's height doesn't always divide evenly by ROW_HEIGHT, which would otherwise leave the
-     * scrollbar rail poking out past the last row's background by that remainder.
+     * The content area's height doesn't always divide evenly by ROW_HEIGHT, which would otherwise leave the scrollbar
+     * rail poking out past the last row's background by that remainder.
      */
     private int scrollbarHeight() {
         return this.visibleRows * ROW_HEIGHT;
@@ -246,12 +246,8 @@ public class GuiLineList extends GuiThemedScreen {
     @Override
     protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
         if (this.scrollbarDragging && clickedMouseButton == 0) {
-            this.scrollOffset = VisualConfigTheme.scrollOffsetForY(
-                    mouseY,
-                    this.contentTop,
-                    scrollbarHeight(),
-                    this.lines.size(),
-                    this.visibleRows);
+            this.scrollOffset = VisualConfigTheme
+                    .scrollOffsetForY(mouseY, this.contentTop, scrollbarHeight(), this.lines.size(), this.visibleRows);
             rebuildRows();
         }
     }
@@ -302,12 +298,8 @@ public class GuiLineList extends GuiThemedScreen {
                     && y >= this.contentTop
                     && y < this.contentTop + scrollbarHeight()) {
                 this.scrollbarDragging = true;
-                this.scrollOffset = VisualConfigTheme.scrollOffsetForY(
-                        y,
-                        this.contentTop,
-                        scrollbarHeight(),
-                        this.lines.size(),
-                        this.visibleRows);
+                this.scrollOffset = VisualConfigTheme
+                        .scrollOffsetForY(y, this.contentTop, scrollbarHeight(), this.lines.size(), this.visibleRows);
                 rebuildRows();
                 return;
             }
@@ -368,8 +360,7 @@ public class GuiLineList extends GuiThemedScreen {
             // Rendered mode already carries its own color codes from resolved tags - force a white base ("§f")
             // instead of VisualConfigTheme's UI tint, so unformatted portions match the real HUD instead of
             // whatever color happened to be left active by the last tag.
-            String text = isRenderedPreviewEnabled() ? "§f" + trimmedRaw
-                    : VisualConfigTheme.colorize(trimmedRaw, true);
+            String text = isRenderedPreviewEnabled() ? "§f" + trimmedRaw : VisualConfigTheme.colorize(trimmedRaw, true);
             int textY = row.rowY + (ROW_HEIGHT - this.fontRendererObj.FONT_HEIGHT) / 2 + 1;
             this.fontRendererObj.drawStringWithShadow(text, this.panelX + 10, textY, 0xFFFFFF);
 

@@ -1,6 +1,9 @@
 package com.github.lunatrius.ingameinfo.value.registry;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.github.lunatrius.ingameinfo.reference.Reference;
@@ -63,6 +66,21 @@ public class ValueRegistry {
     public String forClass(Class<? extends Value> clazz) {
         final String str = this.classStringMap.get(clazz);
         return str != null ? str : "invalid";
+    }
+
+    /**
+     * The canonical (non-alias) name of every registered value type that isn't a ValueSimple - i.e. everything a
+     * "value" can be besides a plain string/number/variable.
+     */
+    public List<String> getComplexTypeNames() {
+        List<String> names = new ArrayList<>();
+        for (Map.Entry<Class<? extends Value>, String> entry : this.classStringMap.entrySet()) {
+            if (!ValueSimple.class.isAssignableFrom(entry.getKey())) {
+                names.add(entry.getValue());
+            }
+        }
+        Collections.sort(names);
+        return names;
     }
 
     public void init() {
