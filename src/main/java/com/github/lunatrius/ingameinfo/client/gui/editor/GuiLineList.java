@@ -116,6 +116,14 @@ public class GuiLineList extends GuiThemedScreen {
         rebuildRows();
     }
 
+    /**
+     * The content area's height doesn't always divide evenly by ROW_HEIGHT, which would otherwise leave the
+     * scrollbar rail poking out past the last row's background by that remainder.
+     */
+    private int scrollbarHeight() {
+        return this.visibleRows * ROW_HEIGHT;
+    }
+
     private void rebuildRows() {
         this.visibleRows = Math.max(1, (this.contentBottom - this.contentTop) / ROW_HEIGHT);
         this.needsScrollbar = this.lines.size() > this.visibleRows;
@@ -241,7 +249,7 @@ public class GuiLineList extends GuiThemedScreen {
             this.scrollOffset = VisualConfigTheme.scrollOffsetForY(
                     mouseY,
                     this.contentTop,
-                    this.contentBottom - this.contentTop,
+                    scrollbarHeight(),
                     this.lines.size(),
                     this.visibleRows);
             rebuildRows();
@@ -292,12 +300,12 @@ public class GuiLineList extends GuiThemedScreen {
             if (this.needsScrollbar && x >= scrollbarX
                     && x < scrollbarX + VisualConfigTheme.SCROLLBAR_RAIL_WIDTH
                     && y >= this.contentTop
-                    && y < this.contentBottom) {
+                    && y < this.contentTop + scrollbarHeight()) {
                 this.scrollbarDragging = true;
                 this.scrollOffset = VisualConfigTheme.scrollOffsetForY(
                         y,
                         this.contentTop,
-                        this.contentBottom - this.contentTop,
+                        scrollbarHeight(),
                         this.lines.size(),
                         this.visibleRows);
                 rebuildRows();
@@ -396,7 +404,7 @@ public class GuiLineList extends GuiThemedScreen {
             VisualConfigTheme.drawScrollbar(
                     scrollbarX,
                     this.contentTop,
-                    this.contentBottom - this.contentTop,
+                    scrollbarHeight(),
                     this.lines.size(),
                     this.visibleRows,
                     this.scrollOffset);
