@@ -22,6 +22,7 @@ public class GuiValueEditor extends GuiThemedScreen {
     private static final int BUTTON_DONE = 0;
     private static final int BUTTON_EDIT_CHILDREN = 1;
     private static final int BUTTON_PICK_TAG = 2;
+    private static final int BUTTON_PREVIEW = 99;
 
     private static final char CTRL_Z = 26;
     private static final int UNDO_HISTORY_LIMIT = 100;
@@ -55,6 +56,7 @@ public class GuiValueEditor extends GuiThemedScreen {
         Keyboard.enableRepeatEvents(true);
 
         this.btnDone = createDoneButton(BUTTON_DONE);
+        initPreviewButton(BUTTON_PREVIEW);
 
         int fieldY = this.panelY + 26;
         int fieldWidth = this.panelWidth - 20;
@@ -135,6 +137,9 @@ public class GuiValueEditor extends GuiThemedScreen {
                 this.mc.displayGuiScreen(new GuiValueList(this, this.value.values));
                 return;
             }
+            if (handlePreviewClick(x, y)) {
+                return;
+            }
         }
         super.mouseClicked(x, y, action);
     }
@@ -160,6 +165,7 @@ public class GuiValueEditor extends GuiThemedScreen {
 
     @Override
     public void updateScreen() {
+        super.updateScreen();
         this.textField.updateCursorCounter();
     }
 
@@ -181,5 +187,7 @@ public class GuiValueEditor extends GuiThemedScreen {
         this.btnDone.draw(this.fontRendererObj, mouseX, mouseY);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
+
+        drawPreview(mouseX, mouseY);
     }
 }

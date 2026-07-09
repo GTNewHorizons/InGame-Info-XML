@@ -13,6 +13,7 @@ import com.github.lunatrius.ingameinfo.reference.Names;
 public class GuiConfigEditor extends GuiThemedScreen {
 
     private static final int BUTTON_DONE = 0;
+    private static final int BUTTON_PREVIEW = 99;
     private static final Alignment[][] GRID = { { Alignment.TOPLEFT, Alignment.TOPCENTER, Alignment.TOPRIGHT },
             { Alignment.MIDDLELEFT, Alignment.MIDDLECENTER, Alignment.MIDDLERIGHT },
             { Alignment.BOTTOMLEFT, Alignment.BOTTOMCENTER, Alignment.BOTTOMRIGHT } };
@@ -34,6 +35,7 @@ public class GuiConfigEditor extends GuiThemedScreen {
         super.initGui();
 
         this.btnDone = createDoneButton(BUTTON_DONE);
+        initPreviewButton(BUTTON_PREVIEW);
 
         this.alignmentButtons.clear();
         int rows = GRID.length;
@@ -75,6 +77,9 @@ public class GuiConfigEditor extends GuiThemedScreen {
                 onDone();
                 return;
             }
+            if (handlePreviewClick(x, y)) {
+                return;
+            }
             for (AlignmentButton alignmentButton : this.alignmentButtons) {
                 if (alignmentButton.button.mousePressed(x, y)) {
                     this.mc.displayGuiScreen(new GuiLineList(this, alignmentButton.alignment));
@@ -99,6 +104,8 @@ public class GuiConfigEditor extends GuiThemedScreen {
         this.btnDone.draw(this.fontRendererObj, mouseX, mouseY);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
+
+        drawPreview(mouseX, mouseY);
     }
 
     private static class AlignmentButton {

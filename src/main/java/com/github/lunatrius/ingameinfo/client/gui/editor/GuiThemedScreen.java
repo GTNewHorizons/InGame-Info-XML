@@ -5,9 +5,18 @@ import net.minecraft.client.resources.I18n;
 
 import org.lwjgl.input.Keyboard;
 
+import com.github.lunatrius.ingameinfo.InGameInfoCore;
+
 public abstract class GuiThemedScreen extends GuiScreen {
 
     protected static final int BUTTON_MARGIN_BOTTOM = 24;
+    
+    private static final int OUTSIDE_ROW_MARGIN = 6;
+    private static final int OUTSIDE_BUTTON_WIDTH = 60;
+    private static final int OUTSIDE_BUTTON_GAP = 5;
+
+    // Shared across every editor screen so the toggle sticks as you navigate between them.
+    private static boolean previewEnabled = false;
 
     protected final GuiScreen parentScreen;
 
@@ -15,6 +24,8 @@ public abstract class GuiThemedScreen extends GuiScreen {
     protected int panelY;
     protected int panelWidth;
     protected int panelHeight;
+
+    private GuiTexturedButton btnPreview;
 
     protected GuiThemedScreen(GuiScreen parentScreen) {
         this.parentScreen = parentScreen;
@@ -60,6 +71,47 @@ public abstract class GuiThemedScreen extends GuiScreen {
                 this.panelY + this.panelHeight - BUTTON_MARGIN_BOTTOM,
                 60,
                 I18n.format("gui.done"));
+    }
+
+    protected GuiTexturedButton createOutsideButton(int id, int slot, String label) {
+        int x = this.panelX + slot * (OUTSIDE_BUTTON_WIDTH + OUTSIDE_BUTTON_GAP);
+        int y = this.panelY + this.panelHeight + OUTSIDE_ROW_MARGIN;
+        return new GuiTexturedButton(id, x, y, OUTSIDE_BUTTON_WIDTH, label);
+    }
+
+    /**
+     * A toggle that renders the live HUD overlay on top of the editor, so edits can be checked against
+     * how they'll actually look in-game.
+     */
+    protected void initPreviewButton(int id) {
+        this.btnPreview = createOutsideButton(id, 0, I18n.format("gui.ingameinfoxml.visualconfig.preview"));
+        this.btnPreview.selected = previewEnabled;
+    }
+
+    protected boolean handlePreviewClick(int x, int y) {
+        if (this.btnPreview != null && this.btnPreview.mousePressed(x, y)) {
+            previewEnabled = !previewEnabled;
+            this.btnPreview.selected = previewEnabled;
+            return true;
+        }
+        return false;
+    }
+
+    protected void drawPreview(int mouseX, int mouseY) {
+        if (previewEnabled) {
+            InGameInfoCore core = InGameInfoCore.INSTANCE;
+            core.onTickRender(core.scaledResolution);
+        }
+        if (this.btnPreview != null) {
+            this.btnPreview.draw(this.fontRendererObj, mouseX, mouseY);
+        }
+    }
+
+    @Override
+    public void updateScreen() {
+        if (previewEnabled) {
+            InGameInfoCore.INSTANCE.onTickClient();
+        }
     }
 
     protected void drawPanel() {

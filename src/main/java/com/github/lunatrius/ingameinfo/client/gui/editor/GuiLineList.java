@@ -19,6 +19,7 @@ public class GuiLineList extends GuiThemedScreen {
 
     private static final int BUTTON_DONE = 0;
     private static final int BUTTON_ADD_LINE = 1;
+    private static final int BUTTON_PREVIEW = 99;
     private static final int ROW_HEIGHT = 20;
     private static final int ROW_BUTTON_WIDTH = 16;
     private static final int ROW_BUTTON_GAP = 2;
@@ -66,6 +67,7 @@ public class GuiLineList extends GuiThemedScreen {
                 I18n.format("gui.ingameinfoxml.visualconfig.addline"));
         this.btnDone = createDoneButton(BUTTON_DONE);
         this.btnDone.x = this.width / 2 + 10;
+        initPreviewButton(BUTTON_PREVIEW);
 
         this.contentTop = this.panelY + 22;
         this.contentBottom = this.btnDone.y - 6;
@@ -179,6 +181,9 @@ public class GuiLineList extends GuiThemedScreen {
                 addLine();
                 return;
             }
+            if (handlePreviewClick(x, y)) {
+                return;
+            }
             int scrollbarX = this.panelX + this.panelWidth - 10 - VisualConfigTheme.SCROLLBAR_RAIL_WIDTH;
             if (x >= scrollbarX && x < scrollbarX + VisualConfigTheme.SCROLLBAR_RAIL_WIDTH
                     && y >= this.contentTop
@@ -280,6 +285,8 @@ public class GuiLineList extends GuiThemedScreen {
         if (hoveredTooltip != null) {
             drawHoveringText(Collections.singletonList(hoveredTooltip), mouseX, mouseY, this.fontRendererObj);
         }
+
+        drawPreview(mouseX, mouseY);
     }
 
     private static String preview(List<Value> line) {

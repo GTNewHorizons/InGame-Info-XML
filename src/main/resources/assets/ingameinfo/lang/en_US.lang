@@ -329,6 +329,7 @@ gui.ingameinfoxml.visualconfig.addtag=Add Tag
 gui.ingameinfoxml.visualconfig.editline=Edit Line
 gui.ingameinfoxml.visualconfig.editchildren=Edit Children
 gui.ingameinfoxml.visualconfig.picktag=Pick Tag
+gui.ingameinfoxml.visualconfig.preview=Preview
 gui.ingameinfoxml.visualconfig.emptyline=(empty)
 gui.ingameinfoxml.visualconfig.tooltip.moveup=Move Up
 gui.ingameinfoxml.visualconfig.tooltip.movedown=Move Down
