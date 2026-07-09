@@ -1,0 +1,157 @@
+package com.github.lunatrius.ingameinfo.client.gui.editor;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
+
+import com.github.lunatrius.ingameinfo.reference.Names;
+
+public final class VisualConfigTheme {
+
+    public static final ResourceLocation TEXTURE = new ResourceLocation("ingameinfo", "textures/gui/visual_config.png");
+
+    private static final int TEXTURE_SIZE = 256;
+
+    private static final int PANEL_U = 0;
+    private static final int PANEL_V = 0;
+    private static final int PANEL_SIZE = 20;
+    private static final int PANEL_CORNER = 7;
+
+    private static final int BUTTON_WIDTH = 15;
+    public static final int BUTTON_HEIGHT = 15;
+    private static final int BUTTON_CAP = 2;
+
+    private static final int SCROLLBAR_THUMB_WIDTH = 6;
+    private static final int SCROLLBAR_RAIL_WIDTH = 8;
+    private static final int SCROLLBAR_HEIGHT = 11;
+    private static final int SCROLLBAR_CAP = 4;
+
+    public enum ButtonState {
+
+        NORMAL(21, 0),
+        HOVERED(37, 0),
+        DISABLED(53, 0),
+        PRESSED(21, 16),
+        PRESSED_HOVERED(37, 16);
+
+        private final int u;
+        private final int v;
+
+        ButtonState(int u, int v) {
+            this.u = u;
+            this.v = v;
+        }
+    }
+
+    private VisualConfigTheme() {}
+
+    public static String colorize(String text, boolean enabled) {
+        String colorPrefix = I18n
+                .format(enabled ? Names.VisualConfig.TEXT_ENABLED : Names.VisualConfig.TEXT_DISABLED);
+        return colorPrefix + text;
+    }
+
+    public static void bind() {
+        Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
+    }
+
+    public static void drawPanel(int x, int y, int width, int height) {
+        bind();
+        drawSliced(
+                x, y, width, height,
+                PANEL_U, PANEL_V, PANEL_SIZE, PANEL_SIZE,
+                PANEL_CORNER, PANEL_CORNER, PANEL_CORNER, PANEL_CORNER);
+    }
+
+    public static void drawButton(int x, int y, int width, ButtonState state) {
+        bind();
+        drawSliced(
+                x, y, width, BUTTON_HEIGHT,
+                state.u, state.v, BUTTON_WIDTH, BUTTON_HEIGHT,
+                BUTTON_CAP, BUTTON_CAP, 0, 0);
+    }
+
+    public static void drawScrollbarThumb(int x, int y, int height, boolean active) {
+        bind();
+        int u = active ? 69 : 76;
+        drawSliced(
+                x, y, SCROLLBAR_THUMB_WIDTH, height,
+                u, 0, SCROLLBAR_THUMB_WIDTH, SCROLLBAR_HEIGHT,
+                0, 0, SCROLLBAR_CAP, SCROLLBAR_CAP);
+    }
+
+    public static void drawScrollbarRail(int x, int y, int height) {
+        bind();
+        drawSliced(
+                x, y, SCROLLBAR_RAIL_WIDTH, height,
+                83, 0, SCROLLBAR_RAIL_WIDTH, SCROLLBAR_HEIGHT,
+                0, 0, SCROLLBAR_CAP, SCROLLBAR_CAP);
+    }
+
+    /**
+     * Draws a 9-slice: fixed-size corners, edges stretched along one axis, center stretched along both.
+     * A cap of 0 on an axis collapses that axis down to a single stretched strip (used for 3-slice buttons/scrollbar).
+     */
+    private static void drawSliced(int x, int y, int width, int height, int u, int v, int srcWidth, int srcHeight,
+            int capLeft, int capRight, int capTop, int capBottom) {
+        int midSrcW = srcWidth - capLeft - capRight;
+        int midSrcH = srcHeight - capTop - capBottom;
+        int midDstW = width - capLeft - capRight;
+        int midDstH = height - capTop - capBottom;
+
+        if (capLeft > 0 && capTop > 0) {
+            drawStretched(x, y, capLeft, capTop, u, v, capLeft, capTop);
+        }
+        if (capRight > 0 && capTop > 0) {
+            drawStretched(x + width - capRight, y, capRight, capTop, u + srcWidth - capRight, v, capRight, capTop);
+        }
+        if (capLeft > 0 && capBottom > 0) {
+            drawStretched(
+                    x, y + height - capBottom, capLeft, capBottom, u, v + srcHeight - capBottom, capLeft, capBottom);
+        }
+        if (capRight > 0 && capBottom > 0) {
+            drawStretched(
+                    x + width - capRight, y + height - capBottom, capRight, capBottom, u + srcWidth - capRight,
+                    v + srcHeight - capBottom, capRight, capBottom);
+        }
+
+        if (capTop > 0 && midDstW > 0) {
+            drawStretched(x + capLeft, y, midDstW, capTop, u + capLeft, v, midSrcW, capTop);
+        }
+        if (capBottom > 0 && midDstW > 0) {
+            drawStretched(
+                    x + capLeft, y + height - capBottom, midDstW, capBottom, u + capLeft, v + srcHeight - capBottom,
+                    midSrcW, capBottom);
+        }
+        if (capLeft > 0 && midDstH > 0) {
+            drawStretched(x, y + capTop, capLeft, midDstH, u, v + capTop, capLeft, midSrcH);
+        }
+        if (capRight > 0 && midDstH > 0) {
+            drawStretched(
+                    x + width - capRight, y + capTop, capRight, midDstH, u + srcWidth - capRight, v + capTop, capRight,
+                    midSrcH);
+        }
+
+        if (midDstW > 0 && midDstH > 0) {
+            drawStretched(x + capLeft, y + capTop, midDstW, midDstH, u + capLeft, v + capTop, midSrcW, midSrcH);
+        }
+    }
+
+    private static void drawStretched(double x, double y, double destWidth, double destHeight, double u, double v,
+            double srcWidth, double srcHeight) {
+        float texel = 1F / TEXTURE_SIZE;
+        float u0 = (float) (u * texel);
+        float u1 = (float) ((u + srcWidth) * texel);
+        float v0 = (float) (v * texel);
+        float v1 = (float) ((v + srcHeight) * texel);
+
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.addVertexWithUV(x, y + destHeight, 0, u0, v1);
+        tessellator.addVertexWithUV(x + destWidth, y + destHeight, 0, u1, v1);
+        tessellator.addVertexWithUV(x + destWidth, y, 0, u1, v0);
+        tessellator.addVertexWithUV(x, y, 0, u0, v0);
+        tessellator.draw();
+    }
+}

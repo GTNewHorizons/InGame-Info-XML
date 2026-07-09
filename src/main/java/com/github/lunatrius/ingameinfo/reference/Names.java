@@ -94,4 +94,10 @@ public final class Names {
         public static final String CATEGORY = "ingameinfoxml.key.category";
         public static final String TOGGLE = "ingameinfoxml.key.toggle";
     }
+
+    public static final class VisualConfig {
+
+        public static final String TEXT_ENABLED = "ingameinfoxml.visual.config.text.enabled";
+        public static final String TEXT_DISABLED = "ingameinfoxml.visual.config.text.disabled";
+    }
 }

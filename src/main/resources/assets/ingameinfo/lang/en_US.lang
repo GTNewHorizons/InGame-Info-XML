@@ -310,7 +310,7 @@ ingameinfoxml.key.category=InGame Info XML
 ingameinfoxml.key.toggle=Toggle Overlay
 
 # commands
-commands.ingameinfoxml.usage=/igi <reload|load|save|enable|disable|taglist|config> [filename]
+commands.ingameinfoxml.usage=/igi <reload|load|save|enable|disable|taglist|config|visualconfig> [filename]
 commands.ingameinfoxml.reload=Reloading...
 commands.ingameinfoxml.load=Loading %s...
 commands.ingameinfoxml.save=Saving %s...
@@ -318,3 +318,9 @@ commands.ingameinfoxml.success=Done!
 commands.ingameinfoxml.failure=Something went wrong!
 commands.ingameinfoxml.enable=InGame Info XML overlay is now enabled.
 commands.ingameinfoxml.disable=InGame Info XML overlay is now disabled.
+
+# visual config
+gui.ingameinfoxml.visualconfig=Visual Config
+gui.ingameinfoxml.visualconfig.button=Visual Config
+ingameinfoxml.visual.config.text.enabled=§f
+ingameinfoxml.visual.config.text.disabled=§8
