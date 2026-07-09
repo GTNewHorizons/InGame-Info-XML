@@ -137,6 +137,7 @@ public class GuiLineList extends GuiThemedScreen {
     }
 
     private void onLinesChanged() {
+        InGameInfoCore.INSTANCE.markDirty();
         InGameInfoCore.INSTANCE.refreshInfoTexts();
         rebuildRows();
     }

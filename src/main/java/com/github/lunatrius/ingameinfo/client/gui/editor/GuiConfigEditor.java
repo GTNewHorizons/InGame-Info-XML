@@ -4,21 +4,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.resources.I18n;
 
 import com.github.lunatrius.ingameinfo.Alignment;
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
+import com.github.lunatrius.ingameinfo.handler.ConfigurationHandler;
+import com.github.lunatrius.ingameinfo.handler.KeyInputHandler;
 import com.github.lunatrius.ingameinfo.reference.Names;
 
-public class GuiConfigEditor extends GuiThemedScreen {
+public class GuiConfigEditor extends GuiThemedScreen implements GuiYesNoCallback {
 
     private static final int BUTTON_DONE = 0;
-    private static final int BUTTON_PREVIEW = 99;
+    private static final int BUTTON_PREVIEW_PRIMARY = 97;
+    private static final int BUTTON_PREVIEW_SECONDARY = 98;
     private static final Alignment[][] GRID = { { Alignment.TOPLEFT, Alignment.TOPCENTER, Alignment.TOPRIGHT },
             { Alignment.MIDDLELEFT, Alignment.MIDDLECENTER, Alignment.MIDDLERIGHT },
             { Alignment.BOTTOMLEFT, Alignment.BOTTOMCENTER, Alignment.BOTTOMRIGHT } };
 
     private GuiTexturedButton btnDone;
+    private GuiTexturedButton btnPreviewPrimary;
+    private GuiTexturedButton btnPreviewSecondary;
+    private String secondaryConfigName;
+    private String pendingSwitchFilename;
     private final List<AlignmentButton> alignmentButtons = new ArrayList<>();
 
     public GuiConfigEditor(GuiScreen parentScreen) {
@@ -35,7 +44,15 @@ public class GuiConfigEditor extends GuiThemedScreen {
         super.initGui();
 
         this.btnDone = createDoneButton(BUTTON_DONE);
-        initPreviewButton(BUTTON_PREVIEW);
+
+        this.secondaryConfigName = KeyInputHandler.getSecondaryConfigName(ConfigurationHandler.configName);
+        boolean hasSecondary = InGameInfoCore.INSTANCE.hasConfigFileWithLocale(this.secondaryConfigName);
+
+        String previewLabel = I18n.format("gui.ingameinfoxml.visualconfig.preview");
+        this.btnPreviewPrimary = createOutsideButton(BUTTON_PREVIEW_PRIMARY, 0, previewLabel + " 1");
+        this.btnPreviewSecondary = createOutsideButton(BUTTON_PREVIEW_SECONDARY, 1, previewLabel + " 2");
+        this.btnPreviewSecondary.enabled = hasSecondary;
+        updatePreviewSelection();
 
         this.alignmentButtons.clear();
         int rows = GRID.length;
@@ -61,6 +78,54 @@ public class GuiConfigEditor extends GuiThemedScreen {
         }
     }
 
+    private void updatePreviewSelection() {
+        String active = InGameInfoCore.INSTANCE.getBaseConfigFileName();
+        boolean primaryActive = ConfigurationHandler.configName.equalsIgnoreCase(active);
+        boolean secondaryActive = this.secondaryConfigName.equalsIgnoreCase(active);
+        this.btnPreviewPrimary.selected = isPreviewEnabled() && primaryActive;
+        this.btnPreviewSecondary.selected = isPreviewEnabled() && secondaryActive;
+    }
+
+    private void requestPreview(String filename) {
+        String active = InGameInfoCore.INSTANCE.getBaseConfigFileName();
+        boolean alreadyActive = filename.equalsIgnoreCase(active);
+
+        if (alreadyActive) {
+            setPreviewEnabled(!isPreviewEnabled());
+            updatePreviewSelection();
+            return;
+        }
+
+        if (InGameInfoCore.INSTANCE.isDirty()) {
+            this.pendingSwitchFilename = filename;
+            this.mc.displayGuiScreen(
+                    new GuiYesNo(
+                            this,
+                            I18n.format("gui.ingameinfoxml.visualconfig.unsaved.title"),
+                            I18n.format("gui.ingameinfoxml.visualconfig.unsaved.message"),
+                            0));
+            return;
+        }
+
+        switchAndPreview(filename);
+    }
+
+    private void switchAndPreview(String filename) {
+        InGameInfoCore.INSTANCE.setConfigFileWithLocale(filename);
+        InGameInfoCore.INSTANCE.reloadConfig();
+        setPreviewEnabled(true);
+        updatePreviewSelection();
+    }
+
+    @Override
+    public void confirmClicked(boolean result, int id) {
+        this.mc.displayGuiScreen(this);
+        if (result && this.pendingSwitchFilename != null) {
+            switchAndPreview(this.pendingSwitchFilename);
+        }
+        this.pendingSwitchFilename = null;
+    }
+
     @Override
     protected void onDone() {
         String filename = InGameInfoCore.INSTANCE.getBaseConfigFileName();
@@ -77,7 +142,12 @@ public class GuiConfigEditor extends GuiThemedScreen {
                 onDone();
                 return;
             }
-            if (handlePreviewClick(x, y)) {
+            if (this.btnPreviewPrimary.mousePressed(x, y)) {
+                requestPreview(ConfigurationHandler.configName);
+                return;
+            }
+            if (this.btnPreviewSecondary.mousePressed(x, y)) {
+                requestPreview(this.secondaryConfigName);
                 return;
             }
             for (AlignmentButton alignmentButton : this.alignmentButtons) {
@@ -102,6 +172,8 @@ public class GuiConfigEditor extends GuiThemedScreen {
         }
 
         this.btnDone.draw(this.fontRendererObj, mouseX, mouseY);
+        this.btnPreviewPrimary.draw(this.fontRendererObj, mouseX, mouseY);
+        this.btnPreviewSecondary.draw(this.fontRendererObj, mouseX, mouseY);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
 

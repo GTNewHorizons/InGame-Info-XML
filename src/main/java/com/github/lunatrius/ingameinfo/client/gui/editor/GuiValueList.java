@@ -158,6 +158,7 @@ public class GuiValueList extends GuiThemedScreen {
     }
 
     private void onValuesChanged() {
+        InGameInfoCore.INSTANCE.markDirty();
         InGameInfoCore.INSTANCE.refreshInfoTexts();
         rebuildRows();
     }

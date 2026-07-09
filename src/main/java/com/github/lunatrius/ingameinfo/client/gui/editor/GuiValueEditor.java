@@ -93,6 +93,7 @@ public class GuiValueEditor extends GuiThemedScreen {
 
     private void save() {
         this.value.setRawValue(this.textField.getText(), true);
+        InGameInfoCore.INSTANCE.markDirty();
         InGameInfoCore.INSTANCE.refreshInfoTexts();
     }
 

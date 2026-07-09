@@ -64,7 +64,7 @@ public class KeyInputHandler {
         core.reloadConfig();
     }
 
-    private static String getSecondaryConfigName(String primaryConfig) {
+    public static String getSecondaryConfigName(String primaryConfig) {
         if (primaryConfig == null || primaryConfig.isEmpty()) {
             return "InGameInfo2.xml";
         }

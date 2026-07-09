@@ -55,8 +55,17 @@ public class InGameInfoCore {
     public int scaledWidth;
     public int scaledHeight;
     private boolean needsRefresh = true;
+    private boolean dirty = false;
 
     private InGameInfoCore() {}
+
+    public boolean isDirty() {
+        return dirty;
+    }
+
+    public void markDirty() {
+        dirty = true;
+    }
 
     public void setConfigDirectory(File directory) {
         configDirectory = directory;
@@ -174,6 +183,7 @@ public class InGameInfoCore {
 
     public boolean reloadConfig() {
         needsRefresh = true;
+        dirty = false;
         format.clear();
 
         if (parser == null) {
@@ -243,7 +253,11 @@ public class InGameInfoCore {
             printer = new TextPrinter();
         }
 
-        return printer != null && printer.print(file, format);
+        boolean success = printer != null && printer.print(file, format);
+        if (success) {
+            dirty = false;
+        }
+        return success;
     }
 
     public void moveConfig(File directory, String fileName) {

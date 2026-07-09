@@ -10,7 +10,7 @@ import com.github.lunatrius.ingameinfo.InGameInfoCore;
 public abstract class GuiThemedScreen extends GuiScreen {
 
     protected static final int BUTTON_MARGIN_BOTTOM = 24;
-    
+
     private static final int OUTSIDE_ROW_MARGIN = 6;
     private static final int OUTSIDE_BUTTON_WIDTH = 60;
     private static final int OUTSIDE_BUTTON_GAP = 5;
@@ -80,8 +80,8 @@ public abstract class GuiThemedScreen extends GuiScreen {
     }
 
     /**
-     * A toggle that renders the live HUD overlay on top of the editor, so edits can be checked against
-     * how they'll actually look in-game.
+     * A toggle that renders the live HUD overlay on top of the editor, so edits can be checked against how they'll
+     * actually look in-game.
      */
     protected void initPreviewButton(int id) {
         this.btnPreview = createOutsideButton(id, 0, I18n.format("gui.ingameinfoxml.visualconfig.preview"));
@@ -95,6 +95,14 @@ public abstract class GuiThemedScreen extends GuiScreen {
             return true;
         }
         return false;
+    }
+
+    protected static boolean isPreviewEnabled() {
+        return previewEnabled;
+    }
+
+    protected static void setPreviewEnabled(boolean enabled) {
+        previewEnabled = enabled;
     }
 
     protected void drawPreview(int mouseX, int mouseY) {
