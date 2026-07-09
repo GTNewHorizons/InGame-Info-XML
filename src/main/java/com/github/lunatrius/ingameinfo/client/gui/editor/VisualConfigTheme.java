@@ -73,8 +73,7 @@ public final class VisualConfigTheme {
     private VisualConfigTheme() {}
 
     public static String colorize(String text, boolean enabled) {
-        String colorPrefix = I18n
-                .format(enabled ? Names.VisualConfig.TEXT_ENABLED : Names.VisualConfig.TEXT_DISABLED);
+        String colorPrefix = I18n.format(enabled ? Names.VisualConfig.TEXT_ENABLED : Names.VisualConfig.TEXT_DISABLED);
         return colorPrefix + text;
     }
 
@@ -96,9 +95,9 @@ public final class VisualConfigTheme {
     }
 
     /**
-     * Tiles the 20x20 row-background pattern across the given width instead of stretching it, so the
-     * pattern repeats cleanly regardless of row width. The trailing partial tile (if width isn't a
-     * multiple of 20) is cropped from the source rather than squashed.
+     * Tiles the 20x20 row-background pattern across the given width instead of stretching it, so the pattern repeats
+     * cleanly regardless of row width. The trailing partial tile (if width isn't a multiple of 20) is cropped from the
+     * source rather than squashed.
      */
     public static void drawLineBackground(int x, int y, int width, boolean hovered) {
         bind();
@@ -109,53 +108,101 @@ public final class VisualConfigTheme {
         int drawX = x;
         for (int i = 0; i < fullTiles; i++) {
             drawStretched(
-                    drawX, y, ROW_BACKGROUND_SIZE, ROW_BACKGROUND_SIZE,
-                    u, ROW_BACKGROUND_V, ROW_BACKGROUND_SIZE, ROW_BACKGROUND_SIZE);
+                    drawX,
+                    y,
+                    ROW_BACKGROUND_SIZE,
+                    ROW_BACKGROUND_SIZE,
+                    u,
+                    ROW_BACKGROUND_V,
+                    ROW_BACKGROUND_SIZE,
+                    ROW_BACKGROUND_SIZE);
             drawX += ROW_BACKGROUND_SIZE;
         }
         if (remainder > 0) {
             drawStretched(
-                    drawX, y, remainder, ROW_BACKGROUND_SIZE,
-                    u, ROW_BACKGROUND_V, remainder, ROW_BACKGROUND_SIZE);
+                    drawX,
+                    y,
+                    remainder,
+                    ROW_BACKGROUND_SIZE,
+                    u,
+                    ROW_BACKGROUND_V,
+                    remainder,
+                    ROW_BACKGROUND_SIZE);
         }
     }
 
     public static void drawPanel(int x, int y, int width, int height) {
         bind();
         drawSliced(
-                x, y, width, height,
-                PANEL_U, PANEL_V, PANEL_SIZE, PANEL_SIZE,
-                PANEL_CORNER, PANEL_CORNER, PANEL_CORNER, PANEL_CORNER);
+                x,
+                y,
+                width,
+                height,
+                PANEL_U,
+                PANEL_V,
+                PANEL_SIZE,
+                PANEL_SIZE,
+                PANEL_CORNER,
+                PANEL_CORNER,
+                PANEL_CORNER,
+                PANEL_CORNER);
     }
 
     public static void drawButton(int x, int y, int width, ButtonState state) {
         bind();
         drawSliced(
-                x, y, width, BUTTON_HEIGHT,
-                state.u, state.v, BUTTON_WIDTH, BUTTON_HEIGHT,
-                BUTTON_CAP, BUTTON_CAP, 0, 0);
+                x,
+                y,
+                width,
+                BUTTON_HEIGHT,
+                state.u,
+                state.v,
+                BUTTON_WIDTH,
+                BUTTON_HEIGHT,
+                BUTTON_CAP,
+                BUTTON_CAP,
+                0,
+                0);
     }
 
     public static void drawScrollbarThumb(int x, int y, int height, boolean active) {
         bind();
         int u = active ? 69 : 76;
         drawSliced(
-                x, y, SCROLLBAR_THUMB_WIDTH, height,
-                u, 0, SCROLLBAR_THUMB_WIDTH, SCROLLBAR_HEIGHT,
-                0, 0, SCROLLBAR_CAP, SCROLLBAR_CAP);
+                x,
+                y,
+                SCROLLBAR_THUMB_WIDTH,
+                height,
+                u,
+                0,
+                SCROLLBAR_THUMB_WIDTH,
+                SCROLLBAR_HEIGHT,
+                0,
+                0,
+                SCROLLBAR_CAP,
+                SCROLLBAR_CAP);
     }
 
     public static void drawScrollbarRail(int x, int y, int height) {
         bind();
         drawSliced(
-                x, y, SCROLLBAR_RAIL_WIDTH, height,
-                83, 0, SCROLLBAR_RAIL_WIDTH, SCROLLBAR_HEIGHT,
-                0, 0, SCROLLBAR_CAP, SCROLLBAR_CAP);
+                x,
+                y,
+                SCROLLBAR_RAIL_WIDTH,
+                height,
+                83,
+                0,
+                SCROLLBAR_RAIL_WIDTH,
+                SCROLLBAR_HEIGHT,
+                0,
+                0,
+                SCROLLBAR_CAP,
+                SCROLLBAR_CAP);
     }
 
     /**
-     * Draws a rail spanning the full content height, plus a thumb sized/positioned to reflect how much of
-     * totalItems is visible and how far scrolled. Draws no thumb if everything already fits.
+     * Draws a rail spanning the full content height, plus a thumb sized/positioned to reflect how much of totalItems is
+     * visible and how far scrolled. Draws no thumb if everything already fits.
      */
     public static void drawScrollbar(int x, int y, int height, int totalItems, int visibleItems, int scrollOffset) {
         drawScrollbarRail(x, y, height);
@@ -167,7 +214,8 @@ public final class VisualConfigTheme {
         int thumbX = x + (SCROLLBAR_RAIL_WIDTH - SCROLLBAR_THUMB_WIDTH) / 2;
         int margin = 1;
         int travelHeight = height - margin * 2;
-        int thumbHeight = Math.min(travelHeight, Math.max(SCROLLBAR_THUMB_MIN_HEIGHT, travelHeight * visibleItems / totalItems));
+        int thumbHeight = Math
+                .min(travelHeight, Math.max(SCROLLBAR_THUMB_MIN_HEIGHT, travelHeight * visibleItems / totalItems));
 
         int maxOffset = totalItems - visibleItems;
         int thumbY = y + margin + (travelHeight - thumbHeight) * scrollOffset / maxOffset;
@@ -175,9 +223,9 @@ public final class VisualConfigTheme {
     }
 
     /**
-     * Inverse of drawScrollbar's thumb positioning: given a click/drag Y on the track, returns the
-     * scrollOffset that would center the thumb under that point. Mirrors the same thumb-size math so
-     * dragging feels 1:1 with what's rendered.
+     * Inverse of drawScrollbar's thumb positioning: given a click/drag Y on the track, returns the scrollOffset that
+     * would center the thumb under that point. Mirrors the same thumb-size math so dragging feels 1:1 with what's
+     * rendered.
      */
     public static int scrollOffsetForY(int mouseY, int trackY, int trackHeight, int totalItems, int visibleItems) {
         int maxOffset = totalItems - visibleItems;
@@ -197,8 +245,8 @@ public final class VisualConfigTheme {
     }
 
     /**
-     * Draws a 9-slice: fixed-size corners, edges stretched along one axis, center stretched along both.
-     * A cap of 0 on an axis collapses that axis down to a single stretched strip (used for 3-slice buttons/scrollbar).
+     * Draws a 9-slice: fixed-size corners, edges stretched along one axis, center stretched along both. A cap of 0 on
+     * an axis collapses that axis down to a single stretched strip (used for 3-slice buttons/scrollbar).
      */
     private static void drawSliced(int x, int y, int width, int height, int u, int v, int srcWidth, int srcHeight,
             int capLeft, int capRight, int capTop, int capBottom) {
@@ -215,12 +263,25 @@ public final class VisualConfigTheme {
         }
         if (capLeft > 0 && capBottom > 0) {
             drawStretched(
-                    x, y + height - capBottom, capLeft, capBottom, u, v + srcHeight - capBottom, capLeft, capBottom);
+                    x,
+                    y + height - capBottom,
+                    capLeft,
+                    capBottom,
+                    u,
+                    v + srcHeight - capBottom,
+                    capLeft,
+                    capBottom);
         }
         if (capRight > 0 && capBottom > 0) {
             drawStretched(
-                    x + width - capRight, y + height - capBottom, capRight, capBottom, u + srcWidth - capRight,
-                    v + srcHeight - capBottom, capRight, capBottom);
+                    x + width - capRight,
+                    y + height - capBottom,
+                    capRight,
+                    capBottom,
+                    u + srcWidth - capRight,
+                    v + srcHeight - capBottom,
+                    capRight,
+                    capBottom);
         }
 
         if (capTop > 0 && midDstW > 0) {
@@ -228,15 +289,27 @@ public final class VisualConfigTheme {
         }
         if (capBottom > 0 && midDstW > 0) {
             drawStretched(
-                    x + capLeft, y + height - capBottom, midDstW, capBottom, u + capLeft, v + srcHeight - capBottom,
-                    midSrcW, capBottom);
+                    x + capLeft,
+                    y + height - capBottom,
+                    midDstW,
+                    capBottom,
+                    u + capLeft,
+                    v + srcHeight - capBottom,
+                    midSrcW,
+                    capBottom);
         }
         if (capLeft > 0 && midDstH > 0) {
             drawStretched(x, y + capTop, capLeft, midDstH, u, v + capTop, capLeft, midSrcH);
         }
         if (capRight > 0 && midDstH > 0) {
             drawStretched(
-                    x + width - capRight, y + capTop, capRight, midDstH, u + srcWidth - capRight, v + capTop, capRight,
+                    x + width - capRight,
+                    y + capTop,
+                    capRight,
+                    midDstH,
+                    u + srcWidth - capRight,
+                    v + capTop,
+                    capRight,
                     midSrcH);
         }
 

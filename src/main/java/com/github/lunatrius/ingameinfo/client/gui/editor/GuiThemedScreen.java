@@ -19,6 +19,7 @@ public abstract class GuiThemedScreen extends GuiScreen {
     protected GuiThemedScreen(GuiScreen parentScreen) {
         this.parentScreen = parentScreen;
     }
+
     protected abstract String getTitleSegment();
 
     protected int getPreferredPanelWidth() {

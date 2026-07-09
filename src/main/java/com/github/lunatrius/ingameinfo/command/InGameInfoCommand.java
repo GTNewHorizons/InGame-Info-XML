@@ -12,8 +12,8 @@ import net.minecraft.util.ChatComponentTranslation;
 import com.github.lunatrius.core.handler.DelayedGuiDisplayTicker;
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
 import com.github.lunatrius.ingameinfo.client.gui.GuiModConfig;
-import com.github.lunatrius.ingameinfo.client.gui.editor.GuiConfigEditor;
 import com.github.lunatrius.ingameinfo.client.gui.GuiTags;
+import com.github.lunatrius.ingameinfo.client.gui.editor.GuiConfigEditor;
 import com.github.lunatrius.ingameinfo.handler.ConfigurationHandler;
 import com.github.lunatrius.ingameinfo.reference.Names;
 

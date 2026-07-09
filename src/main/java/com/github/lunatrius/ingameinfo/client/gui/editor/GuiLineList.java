@@ -152,8 +152,12 @@ public class GuiLineList extends GuiThemedScreen {
     @Override
     protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
         if (this.scrollbarDragging && clickedMouseButton == 0) {
-            this.scrollOffset = VisualConfigTheme
-                    .scrollOffsetForY(mouseY, this.contentTop, this.contentBottom - this.contentTop, this.lines.size(), this.visibleRows);
+            this.scrollOffset = VisualConfigTheme.scrollOffsetForY(
+                    mouseY,
+                    this.contentTop,
+                    this.contentBottom - this.contentTop,
+                    this.lines.size(),
+                    this.visibleRows);
             rebuildRows();
         }
     }
@@ -245,8 +249,7 @@ public class GuiLineList extends GuiThemedScreen {
             row.btnDown.draw(mouseX, mouseY);
             row.btnDelete.draw(mouseX, mouseY);
 
-            boolean textHovered = mouseX >= this.panelX + 10
-                    && mouseX < textRight
+            boolean textHovered = mouseX >= this.panelX + 10 && mouseX < textRight
                     && mouseY >= row.rowY
                     && mouseY < row.rowY + ROW_HEIGHT;
 

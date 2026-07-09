@@ -30,7 +30,10 @@ public class GuiTags extends GuiScreen {
 
     @Override
     public void initGui() {
-        this.guiTagList = new GuiTagList(this, Minecraft.getMinecraft(), this.onPick == null ? null : this::onTagPicked);
+        this.guiTagList = new GuiTagList(
+                this,
+                Minecraft.getMinecraft(),
+                this.onPick == null ? null : this::onTagPicked);
         this.guiTextField = new GuiTextField(this.fontRendererObj, this.width / 2 - 155, this.height - 24, 150, 18);
         this.btnDone = new GuiButton(0, this.width / 2 + 5, this.height - 25, 150, 20, I18n.format("gui.done"));
         this.buttonList.add(this.btnDone);

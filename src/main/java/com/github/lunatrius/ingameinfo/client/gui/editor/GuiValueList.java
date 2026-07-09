@@ -15,7 +15,7 @@ import com.github.lunatrius.ingameinfo.value.Value;
 import com.github.lunatrius.ingameinfo.value.ValueSimple;
 
 /**
- * Generic editor for a list of value objects 
+ * Generic editor for a list of value objects
  */
 public class GuiValueList extends GuiThemedScreen {
 
@@ -240,8 +240,7 @@ public class GuiValueList extends GuiThemedScreen {
             row.btnDown.draw(mouseX, mouseY);
             row.btnDelete.draw(mouseX, mouseY);
 
-            boolean textHovered = mouseX >= this.panelX + 10
-                    && mouseX < this.textRight
+            boolean textHovered = mouseX >= this.panelX + 10 && mouseX < this.textRight
                     && mouseY >= row.rowY
                     && mouseY < row.rowY + ROW_HEIGHT;
 
