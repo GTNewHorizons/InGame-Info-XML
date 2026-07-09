@@ -7,10 +7,17 @@ public abstract class GuiThemedScreen extends GuiScreen {
 
     protected static final int BUTTON_MARGIN_BOTTOM = 24;
 
+    protected final GuiScreen parentScreen;
+
     protected int panelX;
     protected int panelY;
     protected int panelWidth;
     protected int panelHeight;
+
+    protected GuiThemedScreen(GuiScreen parentScreen) {
+        this.parentScreen = parentScreen;
+    }
+    protected abstract String getTitleSegment();
 
     protected int getPreferredPanelWidth() {
         return 300;
@@ -45,7 +52,19 @@ public abstract class GuiThemedScreen extends GuiScreen {
         VisualConfigTheme.drawPanel(this.panelX, this.panelY, this.panelWidth, this.panelHeight);
     }
 
-    protected void drawTitle(String title) {
+    protected final String getParentTitle() {
+        String segment = getTitleSegment();
+        if (this.parentScreen instanceof GuiThemedScreen) {
+            return ((GuiThemedScreen) this.parentScreen).getParentTitle() + " > " + segment;
+        }
+        return segment;
+    }
+
+    protected void drawTitle() {
+        drawTitle(getParentTitle());
+    }
+
+    private void drawTitle(String title) {
         String colored = VisualConfigTheme.colorize(title, true);
         this.fontRendererObj.drawStringWithShadow(
                 colored,

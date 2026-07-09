@@ -9,26 +9,26 @@ import net.minecraft.client.resources.I18n;
 
 import org.lwjgl.input.Mouse;
 
-import com.github.lunatrius.ingameinfo.Alignment;
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
-import com.github.lunatrius.ingameinfo.reference.Names;
 import com.github.lunatrius.ingameinfo.value.Value;
 import com.github.lunatrius.ingameinfo.value.ValueSimple;
 
-public class GuiLineList extends GuiThemedScreen {
+/**
+ * Generic editor for a list of value objects 
+ */
+public class GuiValueList extends GuiThemedScreen {
 
     private static final int BUTTON_DONE = 0;
-    private static final int BUTTON_ADD_LINE = 1;
+    private static final int BUTTON_ADD_VALUE = 1;
     private static final int ROW_HEIGHT = 20;
     private static final int ROW_BUTTON_WIDTH = 16;
     private static final int ROW_BUTTON_GAP = 2;
 
-    private final Alignment alignment;
-    private List<List<Value>> lines;
+    private final List<Value> values;
 
     private GuiTexturedButton btnDone;
-    private GuiTexturedButton btnAddLine;
-    private final List<LineRow> rows = new ArrayList<>();
+    private GuiTexturedButton btnAddValue;
+    private final List<ValueRow> rows = new ArrayList<>();
 
     private int contentTop;
     private int contentBottom;
@@ -36,14 +36,14 @@ public class GuiLineList extends GuiThemedScreen {
     private int scrollOffset;
     private int textRight;
 
-    public GuiLineList(GuiScreen parentScreen, Alignment alignment) {
+    public GuiValueList(GuiScreen parentScreen, List<Value> values) {
         super(parentScreen);
-        this.alignment = alignment;
+        this.values = values;
     }
 
     @Override
     protected String getTitleSegment() {
-        return I18n.format(Names.Config.LANG_PREFIX + "." + this.alignment.toString().toLowerCase());
+        return I18n.format("gui.ingameinfoxml.visualconfig.editline");
     }
 
     @Override
@@ -55,14 +55,12 @@ public class GuiLineList extends GuiThemedScreen {
     public void initGui() {
         super.initGui();
 
-        this.lines = InGameInfoCore.INSTANCE.getFormat().computeIfAbsent(this.alignment, a -> new ArrayList<>());
-
-        this.btnAddLine = new GuiTexturedButton(
-                BUTTON_ADD_LINE,
+        this.btnAddValue = new GuiTexturedButton(
+                BUTTON_ADD_VALUE,
                 this.width / 2 - 70,
                 this.panelY + this.panelHeight - BUTTON_MARGIN_BOTTOM,
                 60,
-                I18n.format("gui.ingameinfoxml.visualconfig.addline"));
+                I18n.format("gui.ingameinfoxml.visualconfig.addvalue"));
         this.btnDone = createDoneButton(BUTTON_DONE);
         this.btnDone.x = this.width / 2 + 10;
 
@@ -74,7 +72,7 @@ public class GuiLineList extends GuiThemedScreen {
 
     private void rebuildRows() {
         this.visibleRows = Math.max(1, (this.contentBottom - this.contentTop) / ROW_HEIGHT);
-        int maxScroll = Math.max(0, this.lines.size() - this.visibleRows);
+        int maxScroll = Math.max(0, this.values.size() - this.visibleRows);
         this.scrollOffset = Math.max(0, Math.min(this.scrollOffset, maxScroll));
 
         this.rows.clear();
@@ -84,9 +82,9 @@ public class GuiLineList extends GuiThemedScreen {
 
         int iconY = (ROW_HEIGHT - VisualConfigTheme.BUTTON_HEIGHT) / 2;
         int y = this.contentTop;
-        for (int i = 0; i < this.visibleRows && this.scrollOffset + i < this.lines.size(); i++) {
+        for (int i = 0; i < this.visibleRows && this.scrollOffset + i < this.values.size(); i++) {
             int index = this.scrollOffset + i;
-            List<Value> line = this.lines.get(index);
+            Value value = this.values.get(index);
 
             GuiIconButton up = new GuiIconButton(
                     buttonsX,
@@ -104,36 +102,34 @@ public class GuiLineList extends GuiThemedScreen {
                     VisualConfigTheme.RowIcon.DELETE,
                     I18n.format("gui.ingameinfoxml.visualconfig.tooltip.delete"));
             up.enabled = index > 0;
-            down.enabled = index < this.lines.size() - 1;
+            down.enabled = index < this.values.size() - 1;
 
-            this.rows.add(new LineRow(line, index, y, up, down, delete));
+            this.rows.add(new ValueRow(value, index, y, up, down, delete));
             y += ROW_HEIGHT;
         }
     }
 
-    private void moveLine(int index, int delta) {
+    private void moveValue(int index, int delta) {
         int target = index + delta;
-        if (target < 0 || target >= this.lines.size()) {
+        if (target < 0 || target >= this.values.size()) {
             return;
         }
-        Collections.swap(this.lines, index, target);
-        onLinesChanged();
+        Collections.swap(this.values, index, target);
+        onValuesChanged();
     }
 
-    private void deleteLine(int index) {
-        this.lines.remove(index);
-        onLinesChanged();
+    private void deleteValue(int index) {
+        this.values.remove(index);
+        onValuesChanged();
     }
 
-    private void addLine() {
-        List<Value> line = new ArrayList<>();
-        line.add(Value.fromString("str"));
-        this.lines.add(line);
-        this.scrollOffset = Math.max(0, this.lines.size() - this.visibleRows);
-        onLinesChanged();
+    private void addValue() {
+        this.values.add(Value.fromString("str"));
+        this.scrollOffset = Math.max(0, this.values.size() - this.visibleRows);
+        onValuesChanged();
     }
 
-    private void onLinesChanged() {
+    private void onValuesChanged() {
         InGameInfoCore.INSTANCE.refreshInfoTexts();
         rebuildRows();
     }
@@ -155,27 +151,24 @@ public class GuiLineList extends GuiThemedScreen {
                 this.mc.displayGuiScreen(this.parentScreen);
                 return;
             }
-            if (this.btnAddLine.mousePressed(x, y)) {
-                addLine();
+            if (this.btnAddValue.mousePressed(x, y)) {
+                addValue();
                 return;
             }
-            for (LineRow row : this.rows) {
+            for (ValueRow row : this.rows) {
                 if (row.btnUp.mousePressed(x, y)) {
-                    moveLine(row.index, -1);
+                    moveValue(row.index, -1);
                     return;
                 }
                 if (row.btnDown.mousePressed(x, y)) {
-                    moveLine(row.index, 1);
+                    moveValue(row.index, 1);
                     return;
                 }
                 if (row.btnDelete.mousePressed(x, y)) {
-                    deleteLine(row.index);
+                    deleteValue(row.index);
                     return;
                 }
-                if (x >= this.panelX + 10 && x < this.textRight && y >= row.rowY && y < row.rowY + ROW_HEIGHT) {
-                    this.mc.displayGuiScreen(new GuiValueList(this, row.line));
-                    return;
-                }
+                // Wire up individual values
             }
         }
         super.mouseClicked(x, y, action);
@@ -194,13 +187,13 @@ public class GuiLineList extends GuiThemedScreen {
         int backgroundWidth = scrollbarX - 3 - (this.panelX + 8);
 
         String hoveredTooltip = null;
-        for (LineRow row : this.rows) {
+        for (ValueRow row : this.rows) {
             boolean rowHovered = mouseY >= row.rowY && mouseY < row.rowY + ROW_HEIGHT
                     && mouseX >= this.panelX + 8
                     && mouseX < this.panelX + 8 + backgroundWidth;
             VisualConfigTheme.drawLineBackground(this.panelX + 8, row.rowY, backgroundWidth, rowHovered);
 
-            String rawPreview = preview(row.line);
+            String rawPreview = preview(row.value);
             String trimmedRaw = this.fontRendererObj.trimStringToWidth(rawPreview, maxTextWidth);
             boolean truncated = !trimmedRaw.equals(rawPreview);
             if (truncated) {
@@ -216,7 +209,7 @@ public class GuiLineList extends GuiThemedScreen {
             row.btnDelete.draw(mouseX, mouseY);
 
             boolean textHovered = mouseX >= this.panelX + 10
-                    && mouseX < textRight
+                    && mouseX < this.textRight
                     && mouseY >= row.rowY
                     && mouseY < row.rowY + ROW_HEIGHT;
 
@@ -235,11 +228,11 @@ public class GuiLineList extends GuiThemedScreen {
                 scrollbarX,
                 this.contentTop,
                 this.contentBottom - this.contentTop,
-                this.lines.size(),
+                this.values.size(),
                 this.visibleRows,
                 this.scrollOffset);
 
-        this.btnAddLine.draw(this.fontRendererObj, mouseX, mouseY);
+        this.btnAddValue.draw(this.fontRendererObj, mouseX, mouseY);
         this.btnDone.draw(this.fontRendererObj, mouseX, mouseY);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
@@ -249,36 +242,28 @@ public class GuiLineList extends GuiThemedScreen {
         }
     }
 
-    private static String preview(List<Value> line) {
-        if (line.isEmpty()) {
-            return I18n.format("gui.ingameinfoxml.visualconfig.emptyline");
+    private static String preview(Value value) {
+        if (value instanceof ValueSimple.ValueVariable) {
+            return "{" + value.getRawValue(false) + "}";
+        } else if (value.isSimple()) {
+            return value.getRawValue(false);
+        } else {
+            return "[" + value.getType() + "]";
         }
-
-        StringBuilder builder = new StringBuilder();
-        for (Value value : line) {
-            if (value instanceof ValueSimple.ValueVariable) {
-                builder.append('{').append(value.getRawValue(false)).append('}');
-            } else if (value.isSimple()) {
-                builder.append(value.getRawValue(false));
-            } else {
-                builder.append('[').append(value.getType()).append(']');
-            }
-        }
-        return builder.toString();
     }
 
-    private static class LineRow {
+    private static class ValueRow {
 
-        private final List<Value> line;
+        private final Value value;
         private final int index;
         private final int rowY;
         private final GuiIconButton btnUp;
         private final GuiIconButton btnDown;
         private final GuiIconButton btnDelete;
 
-        private LineRow(List<Value> line, int index, int rowY, GuiIconButton btnUp, GuiIconButton btnDown,
+        private ValueRow(Value value, int index, int rowY, GuiIconButton btnUp, GuiIconButton btnDown,
                 GuiIconButton btnDelete) {
-            this.line = line;
+            this.value = value;
             this.index = index;
             this.rowY = rowY;
             this.btnUp = btnUp;

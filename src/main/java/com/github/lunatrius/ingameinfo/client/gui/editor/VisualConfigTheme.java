@@ -33,7 +33,8 @@ public final class VisualConfigTheme {
     private static final int ICON_V_NORMAL = 64;
     private static final int ICON_V_DISABLED = 80;
 
-    private static final int ROW_BACKGROUND_U = 0;
+    private static final int ROW_BACKGROUND_U_NORMAL = 0;
+    private static final int ROW_BACKGROUND_U_HOVERED = 20;
     private static final int ROW_BACKGROUND_V = 32;
     private static final int ROW_BACKGROUND_SIZE = 20;
 
@@ -95,8 +96,9 @@ public final class VisualConfigTheme {
      * pattern repeats cleanly regardless of row width. The trailing partial tile (if width isn't a
      * multiple of 20) is cropped from the source rather than squashed.
      */
-    public static void drawLineBackground(int x, int y, int width) {
+    public static void drawLineBackground(int x, int y, int width, boolean hovered) {
         bind();
+        int u = hovered ? ROW_BACKGROUND_U_HOVERED : ROW_BACKGROUND_U_NORMAL;
         int fullTiles = width / ROW_BACKGROUND_SIZE;
         int remainder = width % ROW_BACKGROUND_SIZE;
 
@@ -104,13 +106,13 @@ public final class VisualConfigTheme {
         for (int i = 0; i < fullTiles; i++) {
             drawStretched(
                     drawX, y, ROW_BACKGROUND_SIZE, ROW_BACKGROUND_SIZE,
-                    ROW_BACKGROUND_U, ROW_BACKGROUND_V, ROW_BACKGROUND_SIZE, ROW_BACKGROUND_SIZE);
+                    u, ROW_BACKGROUND_V, ROW_BACKGROUND_SIZE, ROW_BACKGROUND_SIZE);
             drawX += ROW_BACKGROUND_SIZE;
         }
         if (remainder > 0) {
             drawStretched(
                     drawX, y, remainder, ROW_BACKGROUND_SIZE,
-                    ROW_BACKGROUND_U, ROW_BACKGROUND_V, remainder, ROW_BACKGROUND_SIZE);
+                    u, ROW_BACKGROUND_V, remainder, ROW_BACKGROUND_SIZE);
         }
     }
 

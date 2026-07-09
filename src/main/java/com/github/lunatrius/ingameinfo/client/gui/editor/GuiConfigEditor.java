@@ -16,12 +16,16 @@ public class GuiConfigEditor extends GuiThemedScreen {
             { Alignment.MIDDLELEFT, Alignment.MIDDLECENTER, Alignment.MIDDLERIGHT },
             { Alignment.BOTTOMLEFT, Alignment.BOTTOMCENTER, Alignment.BOTTOMRIGHT } };
 
-    private final GuiScreen parentScreen;
     private GuiTexturedButton btnDone;
     private final List<AlignmentButton> alignmentButtons = new ArrayList<>();
 
     public GuiConfigEditor(GuiScreen parentScreen) {
-        this.parentScreen = parentScreen;
+        super(parentScreen);
+    }
+
+    @Override
+    protected String getTitleSegment() {
+        return I18n.format("gui.ingameinfoxml.visualconfig");
     }
 
     @Override
@@ -76,7 +80,7 @@ public class GuiConfigEditor extends GuiThemedScreen {
         drawDefaultBackground();
 
         drawPanel();
-        drawTitle(I18n.format("gui.ingameinfoxml.visualconfig"));
+        drawTitle();
 
         for (AlignmentButton alignmentButton : this.alignmentButtons) {
             alignmentButton.button.draw(this.fontRendererObj, mouseX, mouseY);
