@@ -7,12 +7,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.renderer.Tessellator;
 
+import com.github.lunatrius.ingameinfo.client.gui.editor.VisualConfigTheme;
 import com.github.lunatrius.ingameinfo.tag.Tag;
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
 
@@ -22,11 +24,13 @@ public class GuiTagList extends GuiListExtended {
     public static final int SCROLLBAR_WIDTH = 6;
 
     private final Map<CategoryEntry, Set<TagEntry>> map;
+    private final Consumer<String> onPick;
     private IGuiListEntry[] entries;
 
-    public GuiTagList(GuiTags guiTags, Minecraft minecraft) {
+    public GuiTagList(GuiTags guiTags, Minecraft minecraft, Consumer<String> onPick) {
         super(minecraft, guiTags.width, guiTags.height, 18, guiTags.height - 30, 24);
 
+        this.onPick = onPick;
         this.map = new TreeMap<>();
 
         Map<String, CategoryEntry> stringCategoryEntryMap = new HashMap<>();
@@ -184,6 +188,19 @@ public class GuiTagList extends GuiListExtended {
                         y + (height - lineHeight * this.descArray.length) / 2 + lineHeight * i,
                         0xFFFFFF);
             }
+        }
+
+        @Override
+        public boolean mousePressed(int index, int x, int y, int mouseEvent, int relativeX, int relativeY) {
+            if (onPick == null) {
+                return false;
+            }
+
+            VisualConfigTheme.playClickSound();
+            int bracketIndex = this.name.indexOf('[');
+            String rawName = bracketIndex < 0 ? this.name : this.name.substring(0, bracketIndex);
+            onPick.accept(rawName);
+            return true;
         }
 
         @Override

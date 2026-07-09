@@ -6,6 +6,8 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
+import org.lwjgl.opengl.GL11;
+
 import com.github.lunatrius.ingameinfo.reference.Names;
 
 public final class VisualConfigTheme {
@@ -83,6 +85,8 @@ public final class VisualConfigTheme {
 
     public static void bind() {
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
+        // Stop blinking machine 5000, patent pending
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     public static void drawIcon(int x, int y, RowIcon icon, boolean enabled) {

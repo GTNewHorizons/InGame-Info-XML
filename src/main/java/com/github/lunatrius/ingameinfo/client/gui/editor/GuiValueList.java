@@ -10,6 +10,7 @@ import net.minecraft.client.resources.I18n;
 import org.lwjgl.input.Mouse;
 
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
+import com.github.lunatrius.ingameinfo.client.gui.GuiTags;
 import com.github.lunatrius.ingameinfo.value.Value;
 import com.github.lunatrius.ingameinfo.value.ValueSimple;
 
@@ -20,6 +21,7 @@ public class GuiValueList extends GuiThemedScreen {
 
     private static final int BUTTON_DONE = 0;
     private static final int BUTTON_ADD_VALUE = 1;
+    private static final int BUTTON_ADD_TAG = 2;
     private static final int ROW_HEIGHT = 20;
     private static final int ROW_BUTTON_WIDTH = 16;
     private static final int ROW_BUTTON_GAP = 2;
@@ -28,6 +30,7 @@ public class GuiValueList extends GuiThemedScreen {
 
     private GuiTexturedButton btnDone;
     private GuiTexturedButton btnAddValue;
+    private GuiTexturedButton btnAddTag;
     private final List<ValueRow> rows = new ArrayList<>();
 
     private int contentTop;
@@ -55,14 +58,28 @@ public class GuiValueList extends GuiThemedScreen {
     public void initGui() {
         super.initGui();
 
+        this.btnDone = createDoneButton(BUTTON_DONE);
+
+        int buttonWidth = 90;
+        int gap = 5;
+        int groupWidth = buttonWidth * 3 + gap * 2;
+        int startX = this.width / 2 - groupWidth / 2;
+        int buttonY = this.btnDone.y;
+
         this.btnAddValue = new GuiTexturedButton(
                 BUTTON_ADD_VALUE,
-                this.width / 2 - 70,
-                this.panelY + this.panelHeight - BUTTON_MARGIN_BOTTOM,
-                60,
+                startX,
+                buttonY,
+                buttonWidth,
                 I18n.format("gui.ingameinfoxml.visualconfig.addvalue"));
-        this.btnDone = createDoneButton(BUTTON_DONE);
-        this.btnDone.x = this.width / 2 + 10;
+        this.btnAddTag = new GuiTexturedButton(
+                BUTTON_ADD_TAG,
+                startX + buttonWidth + gap,
+                buttonY,
+                buttonWidth,
+                I18n.format("gui.ingameinfoxml.visualconfig.addtag"));
+        this.btnDone.x = startX + (buttonWidth + gap) * 2;
+        this.btnDone.width = buttonWidth;
 
         this.contentTop = this.panelY + 22;
         this.contentBottom = this.btnDone.y - 6;
@@ -129,6 +146,14 @@ public class GuiValueList extends GuiThemedScreen {
         onValuesChanged();
     }
 
+    private void addTag(String rawName) {
+        Value value = Value.fromString("var");
+        value.setRawValue(rawName, true);
+        this.values.add(value);
+        this.scrollOffset = Math.max(0, this.values.size() - this.visibleRows);
+        onValuesChanged();
+    }
+
     private void onValuesChanged() {
         InGameInfoCore.INSTANCE.refreshInfoTexts();
         rebuildRows();
@@ -155,6 +180,10 @@ public class GuiValueList extends GuiThemedScreen {
                 addValue();
                 return;
             }
+            if (this.btnAddTag.mousePressed(x, y)) {
+                this.mc.displayGuiScreen(new GuiTags(this, this::addTag));
+                return;
+            }
             for (ValueRow row : this.rows) {
                 if (row.btnUp.mousePressed(x, y)) {
                     moveValue(row.index, -1);
@@ -168,7 +197,10 @@ public class GuiValueList extends GuiThemedScreen {
                     deleteValue(row.index);
                     return;
                 }
-                // Wire up individual values
+                if (x >= this.panelX + 10 && x < this.textRight && y >= row.rowY && y < row.rowY + ROW_HEIGHT) {
+                    this.mc.displayGuiScreen(new GuiValueEditor(this, row.value));
+                    return;
+                }
             }
         }
         super.mouseClicked(x, y, action);
@@ -233,6 +265,7 @@ public class GuiValueList extends GuiThemedScreen {
                 this.scrollOffset);
 
         this.btnAddValue.draw(this.fontRendererObj, mouseX, mouseY);
+        this.btnAddTag.draw(this.fontRendererObj, mouseX, mouseY);
         this.btnDone.draw(this.fontRendererObj, mouseX, mouseY);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
