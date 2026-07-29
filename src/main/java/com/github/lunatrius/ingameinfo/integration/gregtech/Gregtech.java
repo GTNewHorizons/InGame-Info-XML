@@ -9,7 +9,7 @@ public class Gregtech extends Plugin {
 
     @Override
     public String getDependency() {
-        return Names.Mods.GREGTECH_MODID;
+        return Names.Mods.GREGTECH_5_U_NH_MODID;
     }
 
     @Override
