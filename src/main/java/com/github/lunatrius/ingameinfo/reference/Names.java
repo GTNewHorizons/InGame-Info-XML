@@ -18,7 +18,7 @@ public final class Names {
         public static final String THAUMCRAFT_NAME = "Thaumcraft";
 
         public static final String GREGTECH_5_U_NH_MODID = "gregtech_nh";
-        public static final String GREGTECH_NAME = "GregTech";
+        public static final String GREGTECH_5_U_NH_NAME = "GregTech 5 Unofficial";
     }
 
     public static final class Command {
