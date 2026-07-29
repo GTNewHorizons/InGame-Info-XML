@@ -14,7 +14,7 @@ public class Gregtech extends Plugin {
 
     @Override
     public String getDependencyName() {
-        return Names.Mods.GREGTECH_NAME;
+        return Names.Mods.GREGTECH_5_U_NH_NAME;
     }
 
     @Override
