@@ -42,6 +42,7 @@ public class InfoItem extends Info {
     @Override
     public void drawInfo() {
         if (itemStack != null && itemStack.getItem() != null) {
+            GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
             RenderHelper.enableGUIStandardItemLighting();
@@ -61,7 +62,7 @@ public class InfoItem extends Info {
 
             RenderHelper.disableStandardItemLighting();
             GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-            GL11.glDisable(GL11.GL_BLEND);
+            GL11.glPopAttrib();
         }
     }
 
