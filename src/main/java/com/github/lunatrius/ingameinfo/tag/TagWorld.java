@@ -173,7 +173,10 @@ public abstract class TagWorld extends Tag {
         public String getValue() {
             int seconds;
             if (server == null) {
-                if (hasNextRainTime && canRainOrSnow(world)) {
+                if (!canRainOrSnow(world)) {
+                    return I18n.format("ingameinfoxml.tag.nextrain.disabled");
+                }
+                if (hasNextRainTime) {
                     seconds = nextRainTime / 20;
                 } else {
                     return "?";
@@ -181,7 +184,7 @@ public abstract class TagWorld extends Tag {
             } else {
                 WorldServer worldServer = DimensionManager.getWorld(player.dimension);
                 if (worldServer != null && !canRainOrSnow(worldServer)) {
-                    return "?";
+                    return I18n.format("ingameinfoxml.tag.nextrain.disabled");
                 }
                 seconds = server.worldServers[0].getWorldInfo().getRainTime() / 20;
             }
