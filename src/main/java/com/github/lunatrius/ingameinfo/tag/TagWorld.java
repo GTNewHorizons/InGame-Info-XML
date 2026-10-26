@@ -3,6 +3,7 @@ package com.github.lunatrius.ingameinfo.tag;
 import java.util.Locale;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.DimensionManager;
@@ -172,12 +173,16 @@ public abstract class TagWorld extends Tag {
         public String getValue() {
             int seconds;
             if (server == null) {
-                if (hasNextRainTime) {
+                if (hasNextRainTime && canRainOrSnow(world)) {
                     seconds = nextRainTime / 20;
                 } else {
                     return "?";
                 }
             } else {
+                WorldServer worldServer = DimensionManager.getWorld(player.dimension);
+                if (worldServer != null && !canRainOrSnow(worldServer)) {
+                    return "?";
+                }
                 seconds = server.worldServers[0].getWorldInfo().getRainTime() / 20;
             }
 
@@ -187,6 +192,23 @@ public abstract class TagWorld extends Tag {
                 return String.format(Locale.ENGLISH, "%dm", seconds / 60);
             }
             return String.format(Locale.ENGLISH, "%dh", seconds / 3600);
+        }
+
+        /**
+         * Whether the given world's provider allows rain/snow at the player's position at all. Dimensions whose weather
+         * is disabled (e.g. a PersonalSpace dimension with weather toggled off) still carry a rain timer, but no storm
+         * can ever start there, so the countdown is meaningless for them. The chunk must already be loaded: getting it
+         * would force-load it, and doing that to the single-player server world from the client tick races the server
+         * thread's own chunk loading.
+         */
+        private boolean canRainOrSnow(World aWorld) {
+            if (aWorld == null || aWorld.provider == null) {
+                return true;
+            }
+            if (!aWorld.blockExists(playerPosition.x, 64, playerPosition.z)) {
+                return true;
+            }
+            return aWorld.provider.canDoRainSnowIce(aWorld.getChunkFromBlockCoords(playerPosition.x, playerPosition.z));
         }
     }
 
