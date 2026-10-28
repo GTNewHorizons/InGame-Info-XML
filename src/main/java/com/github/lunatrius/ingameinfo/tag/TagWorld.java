@@ -173,7 +173,11 @@ public abstract class TagWorld extends Tag {
         public String getValue() {
             int seconds;
             if (server == null) {
-                if (!canRainOrSnow(world)) {
+                Boolean canRain = canRainOrSnow(world);
+                if (canRain == null) {
+                    return "?";
+                }
+                if (!canRain) {
                     return "none";
                 }
                 if (hasNextRainTime) {
@@ -183,10 +187,14 @@ public abstract class TagWorld extends Tag {
                 }
             } else {
                 WorldServer worldServer = DimensionManager.getWorld(player.dimension);
-                if (worldServer != null && !canRainOrSnow(worldServer)) {
+                Boolean canRain = canRainOrSnow(worldServer);
+                if (canRain == null) {
+                    return "?";
+                }
+                if (!canRain) {
                     return "none";
                 }
-                seconds = server.worldServers[0].getWorldInfo().getRainTime() / 20;
+                seconds = worldServer.getWorldInfo().getRainTime() / 20;
             }
 
             if (seconds < 60) {
@@ -198,18 +206,17 @@ public abstract class TagWorld extends Tag {
         }
 
         /**
-         * Whether the given world's provider allows rain/snow at the player's position at all. Dimensions whose weather
-         * is disabled (e.g. a PersonalSpace dimension with weather toggled off) still carry a rain timer, but no storm
-         * can ever start there, so the countdown is meaningless for them. The chunk must already be loaded: getting it
-         * would force-load it, and doing that to the single-player server world from the client tick races the server
-         * thread's own chunk loading.
+         * Whether the given world's provider allows rain/snow at the player's position, or null if that cannot be
+         * determined yet (no world/provider, or the player's chunk is not loaded). The chunk must already be loaded:
+         * getting it would force-load it, racing the single-player server thread's own chunk loading from the client
+         * tick.
          */
-        private boolean canRainOrSnow(World aWorld) {
+        private Boolean canRainOrSnow(World aWorld) {
             if (aWorld == null || aWorld.provider == null) {
-                return true;
+                return null;
             }
             if (!aWorld.blockExists(playerPosition.x, 64, playerPosition.z)) {
-                return true;
+                return null;
             }
             return aWorld.provider.canDoRainSnowIce(aWorld.getChunkFromBlockCoords(playerPosition.x, playerPosition.z));
         }
