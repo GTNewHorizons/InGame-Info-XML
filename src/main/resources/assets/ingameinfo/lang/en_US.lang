@@ -259,6 +259,7 @@ ingameinfoxml.tag.dimension.desc=Dimension name.
 ingameinfoxml.tag.dimensionid.desc=Dimension id.
 ingameinfoxml.tag.biome.desc=Biome name.
 ingameinfoxml.tag.biomeid.desc=Biome id.
+ingameinfoxml.tag.biomeprecipitation.desc=§etrue§r if precipitation can occur in the current biome, §efalse§r otherwise.
 ingameinfoxml.tag.daytime.desc=§etrue§r if it's daytime, §efalse§r otherwise.
 ingameinfoxml.tag.raining.desc=§etrue§r if it's raining, §efalse§r otherwise.
 ingameinfoxml.tag.thundering.desc=§etrue§r if it's thundering, §efalse§r otherwise.

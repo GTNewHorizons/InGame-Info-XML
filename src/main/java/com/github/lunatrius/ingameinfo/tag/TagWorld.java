@@ -129,6 +129,18 @@ public abstract class TagWorld extends Tag {
         }
     }
 
+    public static class BiomePrecipitation extends TagWorld {
+
+        @Override
+        public String getValue() {
+            BiomeGenBase biome = world.getBiomeGenForCoords(playerPosition.x, playerPosition.z);
+            // Both halves matter: space biomes leave rain enabled but set their rainfall
+            // to zero, while dry biomes like the desert disable rain outright and can
+            // still report a positive rainfall.
+            return String.valueOf(biome.enableRain && biome.rainfall > 0.0F);
+        }
+    }
+
     public static class Daytime extends TagWorld {
 
         @Override
@@ -288,6 +300,7 @@ public abstract class TagWorld extends Tag {
         TagRegistry.INSTANCE.register(new DimensionId().setName("dimensionid"));
         TagRegistry.INSTANCE.register(new Biome().setName("biome"));
         TagRegistry.INSTANCE.register(new BiomeId().setName("biomeid"));
+        TagRegistry.INSTANCE.register(new BiomePrecipitation().setName("biomeprecipitation"));
         TagRegistry.INSTANCE.register(new Daytime().setName("daytime"));
         TagRegistry.INSTANCE.register(new Raining().setName("raining"));
         TagRegistry.INSTANCE.register(new Thundering().setName("thundering"));
