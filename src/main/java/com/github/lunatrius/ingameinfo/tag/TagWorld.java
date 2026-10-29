@@ -3,6 +3,7 @@ package com.github.lunatrius.ingameinfo.tag;
 import java.util.Locale;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.DimensionManager;
@@ -172,13 +173,28 @@ public abstract class TagWorld extends Tag {
         public String getValue() {
             int seconds;
             if (server == null) {
+                Boolean canRain = canRainOrSnow(world);
+                if (canRain == null) {
+                    return "?";
+                }
+                if (!canRain) {
+                    return "none";
+                }
                 if (hasNextRainTime) {
                     seconds = nextRainTime / 20;
                 } else {
                     return "?";
                 }
             } else {
-                seconds = server.worldServers[0].getWorldInfo().getRainTime() / 20;
+                WorldServer worldServer = DimensionManager.getWorld(player.dimension);
+                Boolean canRain = canRainOrSnow(worldServer);
+                if (canRain == null) {
+                    return "?";
+                }
+                if (!canRain) {
+                    return "none";
+                }
+                seconds = worldServer.getWorldInfo().getRainTime() / 20;
             }
 
             if (seconds < 60) {
@@ -187,6 +203,22 @@ public abstract class TagWorld extends Tag {
                 return String.format(Locale.ENGLISH, "%dm", seconds / 60);
             }
             return String.format(Locale.ENGLISH, "%dh", seconds / 3600);
+        }
+
+        /**
+         * Whether the given world's provider allows rain/snow at the player's position, or null if that cannot be
+         * determined yet (no world/provider, or the player's chunk is not loaded). The chunk must already be loaded:
+         * getting it would force-load it, racing the single-player server thread's own chunk loading from the client
+         * tick.
+         */
+        private Boolean canRainOrSnow(World aWorld) {
+            if (aWorld == null || aWorld.provider == null) {
+                return null;
+            }
+            if (!aWorld.blockExists(playerPosition.x, 64, playerPosition.z)) {
+                return null;
+            }
+            return aWorld.provider.canDoRainSnowIce(aWorld.getChunkFromBlockCoords(playerPosition.x, playerPosition.z));
         }
     }
 
