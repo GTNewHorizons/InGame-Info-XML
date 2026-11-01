@@ -7,6 +7,8 @@ import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
+import com.github.lunatrius.ingameinfo.client.gui.DashboardHud;
+import com.github.lunatrius.ingameinfo.reference.Reference;
 import com.github.lunatrius.ingameinfo.tag.Tag;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -73,7 +75,7 @@ public class Ticker {
                 }
             }
 
-            if (this.client.currentScreen == null) {
+            if (this.client.currentScreen == null || (Reference.DASHBOARD_LOADED && DashboardHud.isEditorOpen())) {
                 return true;
             }
 
