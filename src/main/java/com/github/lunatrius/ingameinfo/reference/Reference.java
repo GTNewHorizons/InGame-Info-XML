@@ -3,6 +3,8 @@ package com.github.lunatrius.ingameinfo.reference;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import cpw.mods.fml.common.Loader;
+
 public class Reference {
 
     public static final String MODID = "InGameInfoXML";
@@ -10,6 +12,8 @@ public class Reference {
     public static final String PROXY_SERVER = "com.github.lunatrius.ingameinfo.proxy.ServerProxy";
     public static final String PROXY_CLIENT = "com.github.lunatrius.ingameinfo.proxy.ClientProxy";
     public static final String GUI_FACTORY = "com.github.lunatrius.ingameinfo.client.gui.GuiFactory";
+
+    public static final boolean DASHBOARD_LOADED = Loader.isModLoaded("dashboard");
 
     public static Logger logger = LogManager.getLogger(Reference.MODID);
 }
