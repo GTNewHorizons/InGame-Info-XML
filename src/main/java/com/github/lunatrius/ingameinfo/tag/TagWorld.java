@@ -207,18 +207,18 @@ public abstract class TagWorld extends Tag {
 
         /**
          * Whether the given world's provider allows rain/snow at the player's position, or null if that cannot be
-         * determined yet (no world/provider, or the player's chunk is not loaded). The chunk must already be loaded:
-         * getting it would force-load it, racing the single-player server thread's own chunk loading from the client
-         * tick.
+         * determined yet. Chunk checks use the client world: asking the server world would read its chunk map
+         * off-thread, and the client always has the player's chunk.
          */
-        private Boolean canRainOrSnow(World aWorld) {
-            if (aWorld == null || aWorld.provider == null) {
+        private Boolean canRainOrSnow(World providerWorld) {
+            if (providerWorld == null || providerWorld.provider == null || world == null) {
                 return null;
             }
-            if (!aWorld.blockExists(playerPosition.x, 64, playerPosition.z)) {
+            if (!world.blockExists(playerPosition.x, 64, playerPosition.z)) {
                 return null;
             }
-            return aWorld.provider.canDoRainSnowIce(aWorld.getChunkFromBlockCoords(playerPosition.x, playerPosition.z));
+            return providerWorld.provider
+                    .canDoRainSnowIce(world.getChunkFromBlockCoords(playerPosition.x, playerPosition.z));
         }
     }
 
