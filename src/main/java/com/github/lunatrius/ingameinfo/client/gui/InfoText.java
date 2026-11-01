@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import com.github.lunatrius.ingameinfo.Alignment;
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
+import com.github.lunatrius.ingameinfo.reference.Reference;
 import com.github.lunatrius.ingameinfo.value.Value;
 
 public class InfoText extends Info {
@@ -52,6 +53,7 @@ public class InfoText extends Info {
     @Override
     public void drawInfo() {
         if (!isActive) return;
+        if (Reference.DASHBOARD_LOADED && !DashboardHud.beginLine(alignment, getX(), getY(), getWidth())) return;
         fontRenderer.drawStringWithShadow(text, getX(), getY(), 0x00FFFFFF);
 
         for (Info child : attachedValues.values()) {
@@ -59,6 +61,7 @@ public class InfoText extends Info {
             child.offsetY = y;
             child.draw();
         }
+        if (Reference.DASHBOARD_LOADED) DashboardHud.endLine();
     }
 
     private void updateChildren(StringBuilder builder) {
