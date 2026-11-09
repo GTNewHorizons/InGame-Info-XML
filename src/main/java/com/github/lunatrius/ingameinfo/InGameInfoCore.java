@@ -18,6 +18,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import com.github.lunatrius.ingameinfo.client.gui.DashboardHud;
 import com.github.lunatrius.ingameinfo.client.gui.InfoText;
 import com.github.lunatrius.ingameinfo.handler.ClientConfigurationHandler;
 import com.github.lunatrius.ingameinfo.parser.IParser;
@@ -166,6 +167,7 @@ public class InGameInfoCore {
             }
         }
         GL11.glPopMatrix();
+        if (Reference.DASHBOARD_LOADED) DashboardHud.endFrame();
     }
 
     public boolean loadConfig(String filename) {
