@@ -7,7 +7,7 @@
 	"authorList": ["Lunatrius"],
 	"credits": "DaftPVF, bspkrs",
 	"dependants": [  ],
-	"dependencies": [ "LunatriusCore@[1.1.4,)" ],
+	"dependencies": [ "LunatriusCore@[1.1.4,)", "dashboard@[1.0.2,)" ],
 	"parent": "",
 	"requiredMods": [ "LunatriusCore@[1.1.4,)" ],
 	"logoFile": "",

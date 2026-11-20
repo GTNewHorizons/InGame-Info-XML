@@ -5,12 +5,14 @@ import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraftforge.client.ClientCommandHandler;
 
 import com.github.lunatrius.ingameinfo.InGameInfoCore;
+import com.github.lunatrius.ingameinfo.client.gui.DashboardHud;
 import com.github.lunatrius.ingameinfo.command.InGameInfoCommand;
 import com.github.lunatrius.ingameinfo.handler.ClientConfigurationHandler;
 import com.github.lunatrius.ingameinfo.handler.KeyInputHandler;
 import com.github.lunatrius.ingameinfo.handler.TickerManager;
 import com.github.lunatrius.ingameinfo.integration.PluginLoader;
 import com.github.lunatrius.ingameinfo.reference.Names;
+import com.github.lunatrius.ingameinfo.reference.Reference;
 import com.github.lunatrius.ingameinfo.tag.Tag;
 import com.github.lunatrius.ingameinfo.tag.registry.TagRegistry;
 import com.github.lunatrius.ingameinfo.value.registry.ValueRegistry;
@@ -55,6 +57,9 @@ public class ClientProxy extends CommonProxy {
         ClientCommandHandler.instance.registerCommand(new InGameInfoCommand());
         ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager())
                 .registerReloadListener(ClientConfigurationHandler.INSTANCE);
+        if (Reference.DASHBOARD_LOADED) {
+            DashboardHud.register();
+        }
     }
 
     @Override
